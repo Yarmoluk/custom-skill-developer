@@ -6,7 +6,7 @@
 
 **The comprehensive guide to building production Agent Skills — Claude Code-first, cross-platform compatible via the [agentskills.io](https://agentskills.io) open standard.**
 
-17 chapters. 55,000+ words. From your first skill to meta-skill routers, quality scoring systems, and multi-skill pipeline orchestration.
+17 chapters. 73,000+ words. From your first skill to meta-skill routers, quality scoring systems, and multi-skill pipeline orchestration.
 
 Built from the experience of creating 20+ production Agent Skills for business operations.
 
@@ -16,7 +16,7 @@ Built from the experience of creating 20+ production Agent Skills for business o
   <div class="label">Chapters</div>
 </div>
 <div class="cognify-stat">
-  <div class="number" style="color: #5856D6;">55K</div>
+  <div class="number" style="color: #5856D6;">73K</div>
   <div class="label">Words</div>
 </div>
 <div class="cognify-stat">

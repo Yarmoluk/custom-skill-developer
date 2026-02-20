@@ -89,7 +89,7 @@ draw.text((70, title_y + 90), subtitle, fill=(140, 150, 165), font=font_subtitle
 # === CATEGORY PILLS ===
 pills = [
     "17 Chapters",
-    "55K Words",
+    "73K Words",
     "4 MicroSims",
     "Quality Scoring",
     "Meta-Skill Routing",

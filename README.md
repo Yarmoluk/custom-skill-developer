@@ -13,7 +13,7 @@
 
 **The comprehensive guide to building Agent Skills for the [agentskills.io](https://agentskills.io) open standard.**
 
-17 chapters. 55,000+ words. From your first skill to meta-skill routers, quality scoring systems, and multi-skill pipeline orchestration.
+17 chapters. 73,000+ words. From your first skill to meta-skill routers, quality scoring systems, and multi-skill pipeline orchestration.
 
 > Skills work across Claude Code, Claude.ai, VS Code, Cursor, OpenAI Codex, Gemini CLI, and 20+ AI agent platforms.
 
@@ -59,6 +59,23 @@ This guide is part of a three-layer stack for the Agent Skills ecosystem:
 | **Education** | [Custom Skill Developer](https://yarmoluk.github.io/custom-skill-developer/) | Teaches how to build production skills |
 | **Tooling** | [Skill Quality Analyzer](https://github.com/Yarmoluk/skill-quality-analyzer) | Audits skills against the spec (100-point rubric) |
 | **Product** | [Cognify Skills](https://github.com/Yarmoluk/cognify-skills) | 19 production business operations skills |
+
+## Analytics
+
+The guide ships with a full analytics layer built into the site — surfacing learning design quality alongside content depth.
+
+| Metric | Value |
+|--------|-------|
+| **Concepts** | 200 concepts mapped across 12 categories with full dependency chains |
+| **Word Count** | ~47,470 words across 17 chapters (chapter content) |
+| **Code Examples** | 246 |
+| **Diagrams** | 13 |
+| **Tables** | 45 |
+| **Admonitions** | 14 |
+| **Quiz Questions** | 85 multiple-choice questions, 5 per chapter, Bloom's taxonomy aligned |
+| **Cognify Skills Audit** | All 19 Cognify Skills scored against the 100-point rubric — 83.5 average |
+
+The **Learning Graph** visualizes concept dependencies across all 12 categories, showing how foundational patterns build toward advanced pipeline orchestration. The **Cognify Skills Scorecard** publishes the full audit: per-skill scores, grade distribution, and rubric category breakdowns.
 
 ## Related
 
