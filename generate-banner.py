@@ -107,7 +107,7 @@ draw.line([(W // 2 - 80, div_y), (W // 2 + 80, div_y)], fill=(50, 50, 58), width
 # === STAT CARDS ===
 stats = [
     ("17", "Chapters", (0, 122, 255)),
-    ("73K", "Words", (88, 86, 214)),
+    ("82K", "Words", (88, 86, 214)),
     ("200", "Concepts", (52, 199, 89)),
     ("20+", "Skills Built", (255, 159, 10)),
     ("7", "Dimensions", (255, 255, 255)),

@@ -13,7 +13,7 @@
 
 **The comprehensive guide to building Agent Skills for the [agentskills.io](https://agentskills.io) open standard.**
 
-17 chapters. 73,000+ words. From your first skill to meta-skill routers, quality scoring systems, and multi-skill pipeline orchestration.
+17 chapters. 82,000+ words. From your first skill to meta-skill routers, quality scoring systems, and multi-skill pipeline orchestration.
 
 > Skills work across Claude Code, Claude.ai, VS Code, Cursor, OpenAI Codex, Gemini CLI, and 20+ AI agent platforms.
 
