@@ -1,0 +1,93 @@
+site_name: Custom Skill Developer Guide
+site_description: A comprehensive knowledge base for building custom Claude Code skills — from single-purpose agents to meta-skill routers and full pipeline orchestration.
+site_url: https://yarmoluk.github.io/custom-skill-developer/
+repo_url: https://github.com/Yarmoluk/custom-skill-developer
+repo_name: Yarmoluk/custom-skill-developer
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - content.code.copy
+    - content.code.annotate
+    - search.suggest
+    - search.highlight
+  palette:
+    - scheme: default
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Course Description: course-description.md
+  - Foundations:
+    - What Are Claude Code Skills?: chapters/01/index.md
+    - The Skill Ecosystem: chapters/02/index.md
+    - Your First Skill: chapters/03/index.md
+  - Skill Anatomy:
+    - SKILL.md Structure: chapters/04/index.md
+    - YAML Frontmatter: chapters/05/index.md
+    - Workflow Design: chapters/06/index.md
+    - Quality Scoring Systems: chapters/07/index.md
+  - Advanced Patterns:
+    - Meta-Skill Routers: chapters/08/index.md
+    - Token Efficiency Design: chapters/09/index.md
+    - Session Logging: chapters/10/index.md
+    - Pipeline Orchestration: chapters/11/index.md
+  - Specialized Skills:
+    - Data Format Skills: chapters/12/index.md
+    - Code Generation Skills: chapters/13/index.md
+    - Analysis & Validation Skills: chapters/14/index.md
+  - Deployment:
+    - Installation & Registry: chapters/15/index.md
+    - Testing & Debugging: chapters/16/index.md
+    - Publishing & Distribution: chapters/17/index.md
+  - Reference:
+    - Glossary: glossary.md
+    - FAQ: faq.md
