@@ -3,10 +3,12 @@
 </p>
 
 <p align="center">
-  <a href="https://agentskills.io"><img src="https://img.shields.io/badge/Agent_Skills-Open_Standard-007AFF" alt="Agent Skills"></a>
-  <a href="https://yarmoluk.github.io/custom-skill-developer/"><img src="https://img.shields.io/badge/Live_Site-GitHub_Pages-34C759" alt="GitHub Pages"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-FF9F0A" alt="License"></a>
-  <a href="https://github.com/Yarmoluk/cognify-skills"><img src="https://img.shields.io/badge/Cognify-Skills_Ecosystem-5856D6" alt="Cognify"></a>
+  <a href="https://agentskills.io"><img src="https://img.shields.io/badge/Agent_Skills-FF6B35?style=for-the-badge" alt="Agent Skills"></a>
+  <a href="https://yarmoluk.github.io/custom-skill-developer/"><img src="https://img.shields.io/badge/GitHub_Pages-222222?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Pages"></a>
+  <a href="https://squidfunk.github.io/mkdocs-material/"><img src="https://img.shields.io/badge/Material_for_MkDocs-526CFE?style=for-the-badge&logo=MaterialForMkDocs&logoColor=white" alt="Material for MkDocs"></a>
+  <a href="https://unpkg.com/vis-network"><img src="https://img.shields.io/badge/vis--network-3E7FC1?style=for-the-badge" alt="vis-network"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/Apache_2.0-lightgrey?style=for-the-badge" alt="Apache 2.0"></a>
+  <a href="https://github.com/Yarmoluk/cognify-skills"><img src="https://img.shields.io/badge/Cognify-5856D6?style=for-the-badge" alt="Cognify"></a>
 </p>
 
 # Custom Skill Developer Guide
