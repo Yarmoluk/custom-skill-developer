@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/banner.png" alt="Cognify — Custom Skill Developer" width="100%">
+  <img src="social-preview.png" alt="Cognify — Custom Skill Developer" width="100%">
 </p>
 
 <p align="center">
