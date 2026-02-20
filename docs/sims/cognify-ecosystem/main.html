@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cognify Skill Ecosystem</title>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0C0C10;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+      color: #E5E5EA;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #app {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* GRAPH */
+    #graph-container {
+      flex: 1;
+      position: relative;
+    }
+
+    #network {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* HEADER OVERLAY */
+    #header-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 14px 20px;
+      background: linear-gradient(to bottom, rgba(12,12,16,0.95) 0%, rgba(12,12,16,0) 100%);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    #header-overlay h1 {
+      font-size: 15px;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      color: #007AFF;
+      text-transform: uppercase;
+    }
+
+    #header-overlay p {
+      font-size: 11px;
+      color: #636366;
+      margin-top: 2px;
+    }
+
+    /* LEGEND */
+    #legend {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      display: flex;
+      gap: 12px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      color: #8E8E93;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* FILTER BAR */
+    #filter-bar {
+      position: absolute;
+      top: 58px;
+      left: 14px;
+      display: flex;
+      gap: 6px;
+      z-index: 10;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid #28282D;
+      background: #191920;
+      color: #8E8E93;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+
+    .filter-btn:hover { border-color: #3A3A3C; color: #C7C7CC; }
+    .filter-btn.active { border-color: #007AFF; color: #007AFF; background: rgba(0,122,255,0.12); }
+
+    /* DETAIL PANEL */
+    #detail-panel {
+      width: 320px;
+      border-left: 1px solid #28282D;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    #detail-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid #28282D;
+    }
+
+    #detail-header h2 {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #636366;
+    }
+
+    #detail-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    #detail-content::-webkit-scrollbar { width: 3px; }
+    #detail-content::-webkit-scrollbar-thumb { background: #3A3A3C; border-radius: 2px; }
+
+    #detail-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      opacity: 0.4;
+    }
+
+    #detail-placeholder .icon { font-size: 28px; margin-bottom: 8px; }
+    #detail-placeholder p { font-size: 12px; color: #636366; }
+
+    .detail-card { display: none; }
+    .detail-card.visible { display: block; }
+
+    .detail-card .skill-name {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .detail-card .skill-category {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .detail-card .skill-desc {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #C7C7CC;
+      margin-bottom: 14px;
+    }
+
+    .detail-card .meta-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .detail-card .meta-chip {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 10px;
+      border: 1px solid;
+    }
+
+    .detail-card h4 {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #636366;
+      margin-bottom: 6px;
+      margin-top: 14px;
+    }
+
+    .detail-card .output-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .detail-card .output-list li {
+      font-size: 12px;
+      color: #C7C7CC;
+      padding: 4px 0;
+      border-bottom: 1px solid #1C1C22;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .detail-card .output-list li::before {
+      content: '→';
+      color: #007AFF;
+      flex-shrink: 0;
+    }
+
+    .detail-card .connects-section {
+      margin-top: 12px;
+    }
+
+    .detail-card .connects-section .conn-item {
+      font-size: 11px;
+      color: #8E8E93;
+      padding: 3px 0;
+    }
+
+    .detail-card .connects-section .conn-item span {
+      color: #007AFF;
+    }
+
+    /* STATS BAR */
+    #stats-bar {
+      padding: 10px 16px;
+      border-top: 1px solid #28282D;
+      display: flex;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-item .stat-num {
+      font-size: 18px;
+      font-weight: 300;
+    }
+
+    .stat-item .stat-label {
+      font-size: 9px;
+      color: #636366;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div id="graph-container">
+    <div id="network"></div>
+
+    <div id="header-overlay">
+      <h1>C O G N I F Y</h1>
+      <p>Skill Ecosystem — click any node to explore</p>
+    </div>
+
+    <div id="filter-bar">
+      <div class="filter-btn active" data-filter="all">All</div>
+      <div class="filter-btn" data-filter="discovery">Discovery</div>
+      <div class="filter-btn" data-filter="analysis">Analysis</div>
+      <div class="filter-btn" data-filter="strategy">Strategy</div>
+      <div class="filter-btn" data-filter="execution">Execution</div>
+      <div class="filter-btn" data-filter="operations">Operations</div>
+      <div class="filter-btn" data-filter="ecosystem">Ecosystem</div>
+    </div>
+
+    <div id="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#007AFF"></div>Discovery</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#5856D6"></div>Analysis</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#34C759"></div>Strategy</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#FF9F0A"></div>Execution</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#FF3B30"></div>Operations</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#BF5AF2"></div>Ecosystem</div>
+    </div>
+  </div>
+
+  <div id="detail-panel">
+    <div id="detail-header">
+      <h2>Skill Detail</h2>
+    </div>
+    <div id="detail-content">
+      <div id="detail-placeholder">
+        <div class="icon">◈</div>
+        <p>Click a skill node to see<br>details, outputs, and connections</p>
+      </div>
+      <div class="detail-card" id="detail-card"></div>
+    </div>
+    <div id="stats-bar">
+      <div class="stat-item"><div class="stat-num" style="color:#007AFF">19</div><div class="stat-label">Skills</div></div>
+      <div class="stat-item"><div class="stat-num" style="color:#5856D6">6</div><div class="stat-label">Phases</div></div>
+      <div class="stat-item"><div class="stat-num" style="color:#34C759">28</div><div class="stat-label">Connections</div></div>
+      <div class="stat-item"><div class="stat-num" style="color:#FF9F0A">$</div><div class="stat-label">ROI on every output</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// === SKILL DATA ===
+const SKILLS = {
+  'client-discovery': {
+    label: 'Client\nDiscovery',
+    category: 'discovery', color: '#007AFF',
+    name: 'Client Discovery Interview',
+    desc: 'Structured discovery interviews for consultants — problem identification, stakeholder mapping, qualification scoring. Produces a formatted discovery brief with next steps.',
+    outputs: ['Discovery brief (markdown)', 'Qualification score (0-100)', 'Stakeholder map', 'Priority pain points ranked'],
+    feeds: ['workflow-analysis', 'competitive-intel', 'business-roi'],
+    fedBy: [],
+    chips: [{label: 'Interactive', color: '#007AFF'}, {label: '6 Phases', color: '#5856D6'}]
+  },
+  'workflow-analysis': {
+    label: 'Workflow\nAnalysis',
+    category: 'analysis', color: '#5856D6',
+    name: 'Cognify Workflow Analysis',
+    desc: 'Analyzes business workflows to identify automation opportunities. Scores pain points on frequency, impact, and solvability. Matches to proven automation patterns with ROI projections and payback period.',
+    outputs: ['Pain point scorecard', 'Pattern-matched solutions', 'ROI projections per solution', 'Phased implementation timeline'],
+    feeds: ['business-roi', 'process-docs', 'change-mgmt'],
+    fedBy: ['client-discovery'],
+    chips: [{label: 'ROI-First', color: '#34C759'}, {label: 'Pattern Library', color: '#FF9F0A'}]
+  },
+  'competitive-intel': {
+    label: 'Competitive\nIntel',
+    category: 'analysis', color: '#5856D6',
+    name: 'Competitive Intelligence',
+    desc: 'Competitive analysis with positioning matrices, feature comparison, SWOT analysis, and battle cards. Produces a structured report for sales enablement.',
+    outputs: ['Competitive matrix', 'SWOT per competitor', 'Battle cards (1-page each)', 'Positioning recommendations'],
+    feeds: ['abm-campaign', 'seo-strategy'],
+    fedBy: ['client-discovery'],
+    chips: [{label: 'Battle Cards', color: '#FF3B30'}, {label: 'SWOT', color: '#5856D6'}]
+  },
+  'business-roi': {
+    label: 'Business\nROI',
+    category: 'analysis', color: '#5856D6',
+    name: 'Business ROI Analyzer',
+    desc: 'ROI, NPV, IRR, and payback analysis for any business investment with scenario modeling (conservative / moderate / aggressive). Every number is backed by formulas.',
+    outputs: ['ROI calculation with 3 scenarios', 'NPV and IRR analysis', 'Break-even timeline', 'Executive summary (1-page)'],
+    feeds: ['budget-planning', 'vendor-eval', 'strategic-planning'],
+    fedBy: ['workflow-analysis', 'client-discovery'],
+    chips: [{label: 'NPV/IRR', color: '#34C759'}, {label: '3 Scenarios', color: '#FF9F0A'}]
+  },
+  'seo-strategy': {
+    label: 'SEO\nStrategy',
+    category: 'strategy', color: '#34C759',
+    name: 'SEO Strategy Analyzer',
+    desc: 'SEO audit, keyword research, content gap analysis, and prioritized action plan with traffic projections. Includes technical audit checklist and keyword framework.',
+    outputs: ['Keyword opportunity matrix', 'Content gap analysis', 'Technical audit report', '90-day SEO action plan'],
+    feeds: ['abm-campaign'],
+    fedBy: ['competitive-intel'],
+    chips: [{label: 'Keyword Framework', color: '#34C759'}, {label: 'Traffic Projections', color: '#007AFF'}]
+  },
+  'abm-campaign': {
+    label: 'ABM\nCampaign',
+    category: 'strategy', color: '#34C759',
+    name: 'ABM Campaign Builder',
+    desc: 'Full 8-module Account-Based Marketing campaign — ICP definition, TAM/SAM/SOM sizing, buying committee mapping, persona development, and multi-channel outreach sequences.',
+    outputs: ['ICP definition', 'TAM/SAM/SOM analysis', 'Buyer personas with objection maps', 'Outreach sequence (email + LinkedIn)'],
+    feeds: ['sales-pipeline'],
+    fedBy: ['competitive-intel', 'seo-strategy'],
+    chips: [{label: '8 Modules', color: '#34C759'}, {label: 'Cognify Core', color: '#007AFF'}]
+  },
+  'strategic-planning': {
+    label: 'Strategic\nPlanning',
+    category: 'strategy', color: '#34C759',
+    name: 'Strategic Planning Facilitator',
+    desc: 'Facilitates strategic planning sessions — SWOT, OKRs, initiative prioritization with impact/effort matrices, and execution roadmaps.',
+    outputs: ['SWOT analysis', 'OKR framework', 'Initiative priority matrix', 'Quarterly execution roadmap'],
+    feeds: ['change-mgmt', 'budget-planning'],
+    fedBy: ['business-roi'],
+    chips: [{label: 'OKRs', color: '#5856D6'}, {label: 'Roadmaps', color: '#34C759'}]
+  },
+  'sales-pipeline': {
+    label: 'Sales\nPipeline',
+    category: 'execution', color: '#FF9F0A',
+    name: 'Sales Pipeline Analyzer',
+    desc: 'Pipeline health diagnostics, conversion rate analysis, bottleneck scoring, and revenue forecasting. Identifies exactly where deals are dying.',
+    outputs: ['Pipeline health score', 'Stage-by-stage conversion rates', 'Bottleneck diagnosis', 'Revenue forecast (3 scenarios)'],
+    feeds: ['customer-success'],
+    fedBy: ['abm-campaign'],
+    chips: [{label: 'Diagnostics', color: '#FF9F0A'}, {label: 'Forecasting', color: '#34C759'}]
+  },
+  'hiring-analyzer': {
+    label: 'Hiring\nAnalysis',
+    category: 'execution', color: '#FF9F0A',
+    name: 'Hiring Decision Analyzer',
+    desc: 'Hire vs. contract vs. automate analysis — total cost of employment, decision matrix, and break-even calculation.',
+    outputs: ['Hire/contract/automate recommendation', 'Total cost of employment', 'Break-even analysis', 'Decision matrix'],
+    feeds: ['onboarding', 'budget-planning'],
+    fedBy: [],
+    chips: [{label: 'TCO', color: '#FF9F0A'}, {label: 'Decision Matrix', color: '#5856D6'}]
+  },
+  'vendor-eval': {
+    label: 'Vendor\nEval',
+    category: 'execution', color: '#FF9F0A',
+    name: 'Vendor Evaluation Scorecard',
+    desc: 'Weighted vendor comparison — scoring matrix, total cost of ownership analysis, risk assessment, and decision documentation.',
+    outputs: ['Weighted scorecard', 'TCO comparison', 'Risk assessment per vendor', 'Recommendation with rationale'],
+    feeds: ['budget-planning'],
+    fedBy: ['business-roi'],
+    chips: [{label: 'Weighted Scoring', color: '#FF9F0A'}, {label: 'TCO', color: '#34C759'}]
+  },
+  'budget-planning': {
+    label: 'Budget\nPlanning',
+    category: 'execution', color: '#FF9F0A',
+    name: 'Budget Planning Assistant',
+    desc: 'Annual and project budget planning with variance analysis, scenario modeling, and approval workflows.',
+    outputs: ['Budget model (3 scenarios)', 'Variance analysis template', 'Approval workflow', 'Monthly tracking framework'],
+    feeds: [],
+    fedBy: ['business-roi', 'strategic-planning', 'hiring-analyzer', 'vendor-eval'],
+    chips: [{label: 'Scenarios', color: '#FF9F0A'}, {label: 'Variance', color: '#5856D6'}]
+  },
+  'customer-success': {
+    label: 'Customer\nSuccess',
+    category: 'operations', color: '#FF3B30',
+    name: 'Customer Success Playbook',
+    desc: 'CS programs — health scoring models, intervention playbooks, QBR frameworks, and churn early warning systems.',
+    outputs: ['Health scoring model', 'Intervention playbooks (by score tier)', 'QBR template', 'Churn early warning triggers'],
+    feeds: ['feedback-analyzer'],
+    fedBy: ['sales-pipeline'],
+    chips: [{label: 'Health Scoring', color: '#FF3B30'}, {label: 'Churn Prevention', color: '#FF9F0A'}]
+  },
+  'feedback-analyzer': {
+    label: 'Feedback\nAnalyzer',
+    category: 'operations', color: '#FF3B30',
+    name: 'Customer Feedback Analyzer',
+    desc: 'Feedback analysis — sentiment scoring, theme extraction, and prioritized improvement recommendations.',
+    outputs: ['Sentiment analysis', 'Theme clusters', 'Priority improvements', 'Trend report'],
+    feeds: [],
+    fedBy: ['customer-success'],
+    chips: [{label: 'Sentiment', color: '#FF3B30'}, {label: 'Themes', color: '#5856D6'}]
+  },
+  'onboarding': {
+    label: 'Employee\nOnboarding',
+    category: 'operations', color: '#FF3B30',
+    name: 'Employee Onboarding Designer',
+    desc: 'Structured onboarding programs — 30/60/90 day plans, training schedules, milestone tracking, and feedback loops.',
+    outputs: ['30/60/90 day plan', 'Training schedule', 'Milestone checklist', 'Manager feedback framework'],
+    feeds: [],
+    fedBy: ['hiring-analyzer'],
+    chips: [{label: '30/60/90', color: '#FF3B30'}, {label: 'Milestones', color: '#34C759'}]
+  },
+  'process-docs': {
+    label: 'Process\nDocs',
+    category: 'operations', color: '#FF3B30',
+    name: 'Process Documentation',
+    desc: 'SOPs, workflow diagrams, decision trees, and runbooks — publication-ready process documentation.',
+    outputs: ['SOP documents', 'Workflow diagrams (Mermaid)', 'Decision trees', 'Runbooks'],
+    feeds: ['change-mgmt'],
+    fedBy: ['workflow-analysis'],
+    chips: [{label: 'SOPs', color: '#FF3B30'}, {label: 'Mermaid Diagrams', color: '#5856D6'}]
+  },
+  'change-mgmt': {
+    label: 'Change\nMgmt',
+    category: 'operations', color: '#FF3B30',
+    name: 'Change Management Planner',
+    desc: 'Change management planning — stakeholder analysis, communication plans, adoption tracking, and resistance management.',
+    outputs: ['Stakeholder analysis', 'Communication plan', 'Adoption metrics', 'Resistance mitigation strategies'],
+    feeds: [],
+    fedBy: ['workflow-analysis', 'strategic-planning', 'process-docs'],
+    chips: [{label: 'Stakeholders', color: '#FF3B30'}, {label: 'Adoption', color: '#34C759'}]
+  },
+  'risk-matrix': {
+    label: 'Risk\nAssessment',
+    category: 'operations', color: '#FF3B30',
+    name: 'Risk Assessment Matrix',
+    desc: 'Enterprise risk identification, scoring (likelihood x impact), heat mapping, and mitigation planning.',
+    outputs: ['Risk register', 'Heat map', 'Mitigation plans', 'Residual risk scores'],
+    feeds: [],
+    fedBy: [],
+    chips: [{label: 'Heat Map', color: '#FF3B30'}, {label: 'Mitigation', color: '#FF9F0A'}]
+  },
+  'operations-audit': {
+    label: 'Operations\nAudit',
+    category: 'analysis', color: '#5856D6',
+    name: 'Operations Audit',
+    desc: 'Comprehensive SMB operations audit across 8 functional areas with scoring and 90-day action roadmap.',
+    outputs: ['8-area audit scorecard', 'Gap analysis', '90-day action roadmap', 'Quick wins list'],
+    feeds: ['workflow-analysis', 'process-docs'],
+    fedBy: ['client-discovery'],
+    chips: [{label: '8 Areas', color: '#5856D6'}, {label: '90-Day Plan', color: '#34C759'}]
+  },
+  'meeting-optimizer': {
+    label: 'Meeting\nOptimizer',
+    category: 'operations', color: '#FF3B30',
+    name: 'Meeting Agenda Optimizer',
+    desc: 'Meeting design — structured agendas, time allocation, decision frameworks, and action item tracking.',
+    outputs: ['Structured agenda', 'Time allocation model', 'Decision framework', 'Action item tracker'],
+    feeds: [],
+    fedBy: [],
+    chips: [{label: 'Agendas', color: '#FF3B30'}, {label: 'Decisions', color: '#5856D6'}]
+  },
+
+  // ECOSYSTEM LAYER
+  'skill-guide': {
+    label: 'Skill Dev\nGuide',
+    category: 'ecosystem', color: '#BF5AF2',
+    name: 'Custom Skill Developer Guide',
+    desc: '17-chapter, 55K-word knowledge base teaching how to build production Agent Skills. Covers SKILL.md anatomy, quality scoring, meta-skill routing, token efficiency, and pipeline orchestration.',
+    outputs: ['17 chapters', '35-term glossary', '18-question FAQ', '3 interactive MicroSims'],
+    feeds: [],
+    fedBy: [],
+    chips: [{label: '55K Words', color: '#BF5AF2'}, {label: '17 Chapters', color: '#007AFF'}]
+  },
+  'skill-analyzer': {
+    label: 'Quality\nAnalyzer',
+    category: 'ecosystem', color: '#BF5AF2',
+    name: 'Skill Quality Analyzer',
+    desc: 'Audits Agent Skills against the agentskills.io spec with a 100-point scoring rubric across 7 dimensions. Handles single skills or full collections.',
+    outputs: ['Quality report (per skill)', 'Collection leaderboard', 'Priority fixes list', 'Cross-cutting pattern analysis'],
+    feeds: [],
+    fedBy: [],
+    chips: [{label: '100-Point Rubric', color: '#BF5AF2'}, {label: '7 Dimensions', color: '#34C759'}]
+  }
+};
+
+// Build vis-network data
+const nodes = [];
+const edges = [];
+
+// Layout positions by category (arranged as a flow left-to-right)
+const categoryPositions = {
+  discovery: { x: -500, baseY: 0 },
+  analysis:  { x: -200, baseY: 0 },
+  strategy:  { x: 100, baseY: 0 },
+  execution: { x: 400, baseY: 0 },
+  operations:{ x: 650, baseY: 0 },
+  ecosystem: { x: 100, baseY: 350 }
+};
+
+const categoryCounters = {};
+
+Object.entries(SKILLS).forEach(([id, skill]) => {
+  const cat = skill.category;
+  if (!categoryCounters[cat]) categoryCounters[cat] = 0;
+  const idx = categoryCounters[cat]++;
+  const pos = categoryPositions[cat];
+  const ySpread = 90;
+  const totalInCat = Object.values(SKILLS).filter(s => s.category === cat).length;
+  const yOffset = (idx - (totalInCat - 1) / 2) * ySpread;
+
+  nodes.push({
+    id: id,
+    label: skill.label,
+    x: pos.x + (Math.random() - 0.5) * 40,
+    y: pos.baseY + yOffset,
+    color: {
+      background: skill.color + '22',
+      border: skill.color,
+      highlight: { background: skill.color + '44', border: skill.color },
+      hover: { background: skill.color + '33', border: skill.color }
+    },
+    font: {
+      color: '#E5E5EA',
+      size: 11,
+      face: '-apple-system, BlinkMacSystemFont, sans-serif',
+      multi: true
+    },
+    borderWidth: 2,
+    borderWidthSelected: 3,
+    shape: 'box',
+    shapeProperties: { borderRadius: 8 },
+    margin: { top: 10, bottom: 10, left: 14, right: 14 },
+    shadow: { enabled: true, color: skill.color + '30', size: 12, x: 0, y: 0 },
+    _category: cat
+  });
+
+  // Edges from feeds
+  skill.feeds.forEach(target => {
+    if (SKILLS[target]) {
+      edges.push({
+        from: id,
+        to: target,
+        arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+        color: { color: '#28282D', highlight: skill.color + '88', hover: '#3A3A3C' },
+        width: 1.5,
+        smooth: { type: 'curvedCW', roundness: 0.15 }
+      });
+    }
+  });
+});
+
+// Create network
+const container = document.getElementById('network');
+const data = { nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges) };
+const options = {
+  physics: {
+    enabled: true,
+    solver: 'forceAtlas2Based',
+    forceAtlas2Based: {
+      gravitationalConstant: -40,
+      centralGravity: 0.008,
+      springLength: 120,
+      springConstant: 0.04,
+      damping: 0.5
+    },
+    stabilization: { iterations: 150, fit: true }
+  },
+  interaction: {
+    hover: true,
+    tooltipDelay: 0,
+    zoomView: true,
+    dragView: true
+  },
+  layout: {
+    improvedLayout: true
+  }
+};
+
+const network = new vis.Network(container, data, options);
+
+// After stabilization, lock physics
+network.once('stabilizationIterationsDone', () => {
+  setTimeout(() => {
+    network.setOptions({ physics: { enabled: false } });
+  }, 500);
+});
+
+// Click handler — show detail
+network.on('click', function(params) {
+  if (params.nodes.length > 0) {
+    const id = params.nodes[0];
+    showDetail(id);
+  }
+});
+
+function showDetail(id) {
+  const skill = SKILLS[id];
+  if (!skill) return;
+
+  const categoryColors = {
+    discovery: '#007AFF', analysis: '#5856D6', strategy: '#34C759',
+    execution: '#FF9F0A', operations: '#FF3B30', ecosystem: '#BF5AF2'
+  };
+  const catColor = categoryColors[skill.category];
+
+  const chipsHtml = skill.chips.map(c =>
+    `<span class="meta-chip" style="color:${c.color};border-color:${c.color}33;background:${c.color}18">${c.label}</span>`
+  ).join('');
+
+  const outputsHtml = skill.outputs.map(o => `<li>${o}</li>`).join('');
+
+  const feedsHtml = skill.feeds.length > 0
+    ? skill.feeds.map(f => `<div class="conn-item">Feeds → <span>${SKILLS[f]?.name || f}</span></div>`).join('')
+    : '<div class="conn-item" style="color:#3A3A3C">Terminal node — final deliverable</div>';
+
+  const fedByHtml = skill.fedBy.length > 0
+    ? skill.fedBy.map(f => `<div class="conn-item">← Fed by <span>${SKILLS[f]?.name || f}</span></div>`).join('')
+    : '<div class="conn-item" style="color:#3A3A3C">Entry point — no prerequisites</div>';
+
+  const card = document.getElementById('detail-card');
+  card.innerHTML = `
+    <div class="skill-name" style="color:${catColor}">${skill.name}</div>
+    <div class="skill-category" style="color:${catColor}">${skill.category}</div>
+    <div class="meta-row">${chipsHtml}</div>
+    <div class="skill-desc">${skill.desc}</div>
+    <h4>Outputs</h4>
+    <ul class="output-list">${outputsHtml}</ul>
+    <div class="connects-section">
+      <h4>Downstream</h4>
+      ${feedsHtml}
+      <h4>Upstream</h4>
+      ${fedByHtml}
+    </div>
+  `;
+
+  document.getElementById('detail-placeholder').style.display = 'none';
+  card.classList.add('visible');
+}
+
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const filter = btn.dataset.filter;
+
+    nodes.forEach(node => {
+      const match = filter === 'all' || node._category === filter;
+      data.nodes.update({
+        id: node.id,
+        opacity: match ? 1 : 0.12,
+        font: { ...node.font, color: match ? '#E5E5EA' : '#2A2A2E' }
+      });
+    });
+
+    edges.forEach(edge => {
+      const fromNode = SKILLS[edge.from];
+      const toNode = SKILLS[edge.to];
+      const match = filter === 'all' ||
+        fromNode?.category === filter ||
+        toNode?.category === filter;
+      data.edges.update({
+        id: edge.id,
+        hidden: !match && filter !== 'all'
+      });
+    });
+  });
+});
+</script>
+
+</body>
+</html>

@@ -104,6 +104,7 @@ nav:
     - Skill Anatomy Explorer: sims/skill-anatomy-explorer/index.md
     - Meta-Skill Routing Simulator: sims/routing-decision-tree/index.md
     - Quality Score Calculator: sims/quality-score-calculator/index.md
+    - Cognify Ecosystem Graph: sims/cognify-ecosystem/index.md
   - Reference:
     - References: references.md
     - Glossary: glossary.md
