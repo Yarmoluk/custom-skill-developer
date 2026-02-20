@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="The comprehensive guide to building Agent Skills for the agentskills.io open standard — from first skill to meta-skill routers, quality scoring, and pipeline orchestration.">
+        <meta name="description" content="The comprehensive guide to building production Agent Skills — Claude Code-first, cross-platform compatible via the agentskills.io open standard. From first skill to meta-skill routers, quality scoring, and pipeline orchestration.">
       
       
       
@@ -2446,7 +2446,7 @@
 </tr>
 </tbody>
 </table>
-<p>The context window for Claude Sonnet is 200,000 tokens. That sounds large until you realize a multi-hour deep work session with file reads, iterations, and conversation history can consume 80,000-150,000 tokens. A bloated skill definition is dead weight from the moment the session starts.</p>
+<p>The context window for Claude Sonnet is 200,000 tokens (context windows vary by model and platform — Claude Sonnet supports 200K tokens, but other models or deployment environments may differ). That sounds large until you realize a multi-hour deep work session with file reads, iterations, and conversation history can consume 80,000-150,000 tokens. A bloated skill definition is dead weight from the moment the session starts.</p>
 <h3 id="the-cascade-effect">The Cascade Effect<a class="headerlink" href="#the-cascade-effect" title="Permanent link">&para;</a></h3>
 <p>Token waste compounds. A SKILL.md with 8,000 tokens instead of 2,000 does not just cost 6,000 tokens up front. Every time that skill is invoked in a session where Claude maintains context, those tokens remain loaded. In a pipeline session that invokes 8 skills sequentially, an extra 6,000 tokens per skill adds 48,000 tokens of overhead — enough to noticeably shorten how long the session can run before context fills and the user must compact.</p>
 <h3 id="the-real-cost-in-concrete-numbers">The Real Cost in Concrete Numbers<a class="headerlink" href="#the-real-cost-in-concrete-numbers" title="Permanent link">&para;</a></h3>
@@ -2507,8 +2507,11 @@
 <h2 id="the-tiered-information-retrieval-pattern">The Tiered Information Retrieval Pattern<a class="headerlink" href="#the-tiered-information-retrieval-pattern" title="Permanent link">&para;</a></h2>
 <p>Tiered retrieval is the organizing principle of token-efficient skill design. Information is classified by when it is needed and retrieved at the appropriate tier — never earlier.</p>
 <h3 id="tier-0-mcp-server-metadata-0-tokens">Tier 0: MCP Server Metadata (0 tokens)<a class="headerlink" href="#tier-0-mcp-server-metadata-0-tokens" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>Note:</strong> This tier describes how skill discovery works in Claude Code specifically. Other platforms and environments may discover or surface skills differently — for example, through tool registries, API manifests, or explicit user configuration. The zero-token-at-discovery principle is a Claude Code implementation detail, not part of the agentskills.io skill spec itself.</p>
+</blockquote>
 <p>The MCP (Model Context Protocol) server maintains a registry of installed skills. Claude can query this registry to get a skill's name, description, and invocation syntax without reading the skill file itself.</p>
-<p>A skill's MCP metadata — its name, one-line description, and invocation signature — is retrieved from the server at essentially zero token cost to the context window. This is how skill discovery works: Claude can list available skills and describe them without loading any of them.</p>
+<p>A skill's MCP metadata — its name, one-line description, and invocation signature — is retrieved from the server at essentially zero token cost to the context window. This is how skill discovery works in Claude Code: Claude can list available skills and describe them without loading any of them.</p>
 <p>Design implication: your one-line description in the YAML frontmatter needs to be precise enough that a user can select the right skill from a list. This description lives at Tier 0. It needs to work without any supporting context.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="no">Generates four variants of business reports (executive summary,</span>
@@ -2741,7 +2744,7 @@ Q3 closed at $4.2M, 8% above plan, driven by enterprise segment outperformance..
 <hr />
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
 <p>Token efficiency is an engineering discipline, not an afterthought. The key principles:</p>
-<p><strong>Tiered retrieval</strong> classifies information into tiers by when it is needed: MCP metadata (0 tokens), SKILL.md (loaded on invoke), reference guides (loaded on demand), project files (loaded when needed by the workflow).</p>
+<p><strong>Tiered retrieval</strong> classifies information into tiers by when it is needed: discovery metadata (0 tokens, surfaced via MCP in Claude Code or equivalent mechanisms on other platforms), SKILL.md (loaded on invoke), reference guides (loaded on demand), project files (loaded when needed by the workflow). Note that MCP is a separate protocol that complements the skill system — it handles discovery and invocation routing in Claude Code, but is not part of the agentskills.io skill spec itself.</p>
 <p><strong>Lazy loading</strong> defers reference guide reads until routing resolves, and defers project file reads until the specific workflow step that requires them.</p>
 <p><strong>Skip-if-complete</strong> checks for prior output before running the full workflow, enabling safe resumption in batch and pipeline contexts.</p>
 <p><strong>Structural compression</strong> uses tables, templates, and code blocks instead of prose wherever the content is inherently structured.</p>

@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="The comprehensive guide to building Agent Skills for the agentskills.io open standard — from first skill to meta-skill routers, quality scoring, and pipeline orchestration.">
+        <meta name="description" content="The comprehensive guide to building production Agent Skills — Claude Code-first, cross-platform compatible via the agentskills.io open standard. From first skill to meta-skill routers, quality scoring, and pipeline orchestration.">
       
       
       
@@ -2138,8 +2138,6 @@
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>and produces alphabetically ordered entries with relevant examples.
 </code></pre></div>
 <p>The overview is important for two reasons. First, it gives Claude immediate context for interpreting every subsequent instruction. If Step 4 says "generate a definition," Claude already knows from the overview that the definition must meet ISO 11179 standards — it does not need to be told again. Second, the overview is what a new user will read to determine whether this skill is appropriate for their current task.</p>
-<p><strong>What happens if the overview is missing?</strong></p>
-<p>Claude will proceed through the workflow steps without the broader context that the overview provides. This may cause it to interpret ambiguous instructions in unexpected ways. The behavior will appear correct until an edge case arises that the steps do not explicitly address.</p>
 <hr />
 <h3 id="when-to-use-this-skill">When to Use This Skill<a class="headerlink" href="#when-to-use-this-skill" title="Permanent link">&para;</a></h3>
 <p>This section is a bulleted list of specific trigger conditions. It answers the question: "How do I know whether to invoke this skill right now?"</p>
@@ -2162,7 +2160,7 @@
 <hr />
 <h3 id="the-workflow-section">The Workflow Section<a class="headerlink" href="#the-workflow-section" title="Permanent link">&para;</a></h3>
 <p>The workflow is the most important section of any SKILL.md file. It is a numbered sequence of steps that Claude executes in order. Each step is a heading (<code>### Step N: Step Name</code>) followed by detailed instructions.</p>
-<p>The standard numbering convention starts at Step 0, not Step 1. Step 0 is always environment setup.</p>
+<p>The standard numbering convention starts at Step 0, not Step 1. Step 0 is conventionally reserved for environment setup — this is a pattern from the McCreary skill methodology, not an agentskills.io spec requirement, but it is widely used because it separates configuration concerns cleanly from execution.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="gu">## Workflow</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="gu">### Step 0: Setup</span>
@@ -2231,9 +2229,7 @@
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="k">4.</span> Updates to <span class="sb">`mkdocs.yml`</span> navigation if glossary link is missing
 </code></pre></div>
 <p>The three-tier classification (Required / Recommended / Optional) serves a specific purpose. It tells Claude — and the user — which outputs are essential for success, which are valuable but skippable under time pressure, and which are extras that add value but do not block downstream steps.</p>
-<p>Without this section, Claude may produce different files on different runs depending on how it interprets the workflow steps. The Output Files Summary creates a contract: if the skill completes successfully, these files will exist.</p>
-<p><strong>What happens if this section is missing?</strong></p>
-<p>Claude will still produce files, but there is no explicit contract about what those files should be. Different runs may produce different outputs. Downstream skills that depend on specific file paths from this skill may break unpredictably.</p>
+<p>Without this section, Claude may produce different files on different runs depending on how it interprets the workflow steps. The Output Files Summary creates a contract: if the skill completes successfully, these files will exist. Downstream skills that depend on specific file paths from this skill can rely on that contract.</p>
 <hr />
 <h3 id="example-session">Example Session<a class="headerlink" href="#example-session" title="Permanent link">&para;</a></h3>
 <p>The example session shows a realistic interaction — what the user says, what Claude does, and what output is produced.</p>
@@ -2357,7 +2353,7 @@
 <a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="gu">## Workflow</span>
 <a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>
 <a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a><span class="gu">### Step 0: Environment Setup</span>
-<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a><span class="gh"># Step 0 is always environment setup. Never skip it.</span>
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a><span class="gh"># Step 0 is a McCreary methodology convention: always environment setup, always first.</span>
 <a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>
 <a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>Tell the user you are running README Generator version 1.2.
 <a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>
@@ -2532,32 +2528,37 @@ Good: <code>result = transform_csv("input.csv", delimiter=",")</code></p>
 - Below 65: Needs revision — ask user before saving
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>---
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>## Why Every Section Is Non-Optional
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>## Why These Sections Belong in Production Skills
 <a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Consider what happens when you remove each section from a SKILL.md:
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>The agentskills.io spec imposes no body format restrictions — these sections are conventions that produce reliable, high-quality skills. The spec&#39;s exact language: &quot;There are no format restrictions. Write whatever helps agents perform the task effectively.&quot;
 <a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>| Missing Section | Consequence |
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>|----------------|-------------|
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>| Frontmatter | Skill cannot be loaded or invoked |
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>| H1 Title | Claude has no named reference point; logs become ambiguous |
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>| Overview | Ambiguous step instructions are interpreted inconsistently |
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>| When to Use | Users invoke at wrong time in workflow; dependencies not met |
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>| Workflow Steps | Skill has no instructions — produces arbitrary output |
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>| Step 0 | Path variables undefined; filesystem operations fail |
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>| Output Files Summary | No contract on deliverables; downstream skills break |
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>| Example Session | No reference for expected interaction pattern |
-<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>| Common Pitfalls | Known failure modes repeat across runs |
-<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>| Quality Scoring | No self-validation; output quality is unpredictable |
-<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>
-<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>The sections are not decorative. Each one either makes Claude&#39;s behavior more consistent, protects against a known failure mode, or creates a contract that other parts of your system can depend on.
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>That said, each section exists because it prevents a specific class of failure:
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>| Section | What It Prevents |
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>|---------|-----------------|
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>| Frontmatter | Skill cannot be loaded or invoked without it — this is a spec requirement |
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>| H1 Title | Without it, Claude has no named reference point; logs become ambiguous |
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>| Overview | Without context, ambiguous step instructions are interpreted inconsistently |
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>| When to Use | Without it, users invoke at wrong time in workflow; dependencies not met |
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>| Workflow Steps | Without instructions, the skill produces arbitrary output — also a spec requirement |
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>| Step 0 | Without it, path variables are undefined; filesystem operations fail |
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>| Output Files Summary | Without a contract on deliverables, downstream skills break unpredictably |
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>| Example Session | Without a reference, expected interaction patterns drift across runs |
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>| Common Pitfalls | Without explicit anti-patterns, known failure modes repeat |
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>| Quality Scoring | Without self-validation, output quality is unpredictable |
 <a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>
-<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>---
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>The sections are not decorative. The spec gives you total freedom over the body — these conventions are how experienced skill authors use that freedom to produce consistent, reproducible behavior.
 <a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>
-<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>## The Directory Structure for a Skill
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>---
 <a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>
-<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>A SKILL.md file lives inside a directory that may contain supporting files:
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>## The Directory Structure for a Skill
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>A SKILL.md file lives inside a directory that may contain supporting files. Skills can be installed in two locations:
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a>
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>- `~/.claude/skills/` — user-level installation, available across all projects on the machine
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a>- `.github/skills/` — repository-level installation, committed to the project and portable across teams
 </code></pre></div>
-~/.claude/skills/
+~/.claude/skills/          # or .github/skills/ for repo-level installs
 └── my-skill/
     ├── SKILL.md              ← Required. The skill definition.
     ├── assets/
@@ -2575,10 +2576,11 @@ Good: <code>result = transform_csv("input.csv", delimiter=",")</code></p>
 <li>Every SKILL.md contains two logical sections: YAML frontmatter and a markdown body</li>
 <li>The frontmatter is Claude Code's configuration layer — name, description, license, allowed-tools</li>
 <li>The markdown body is Claude's instruction set — every section shapes how it interprets and executes the workflow</li>
-<li>Step 0 is always environment setup and always the first workflow step</li>
+<li>Step 0 is a McCreary methodology convention for environment setup — widely used but not an agentskills.io spec requirement</li>
 <li>The Output Files Summary creates a binding contract on what the skill produces</li>
 <li>Quality scoring sections transform the skill from a generator into a self-validating system</li>
-<li>No section is optional — each one prevents a specific class of failure</li>
+<li>The agentskills.io spec imposes no body format restrictions — the 10-section convention is best practice, not a requirement</li>
+<li>Skills install to <code>~/.claude/skills/</code> (user-level) or <code>.github/skills/</code> (repo-level, portable across teams)</li>
 </ul>
 <p>In Chapter 5, we examine the YAML frontmatter in depth, including how the <code>description</code> field becomes part of Claude's system prompt and how <code>allowed-tools</code> glob patterns control execution permissions.</p>
 
