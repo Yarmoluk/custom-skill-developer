@@ -1,0 +1,2550 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive knowledge base for building custom Claude Code skills — from single-purpose agents to meta-skill routers and full pipeline orchestration.">
+      
+      
+      
+        <link rel="canonical" href="https://yarmoluk.github.io/custom-skill-developer/chapters/10/">
+      
+      
+        <link rel="prev" href="../09/">
+      
+      
+        <link rel="next" href="../11/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Session Logging - Custom Skill Developer Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-10-session-logging" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Custom Skill Developer Guide" class="md-header__button md-logo" aria-label="Custom Skill Developer Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Custom Skill Developer Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Session Logging
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Yarmoluk/custom-skill-developer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Yarmoluk/custom-skill-developer
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../course-description/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Course Description
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01/" class="md-tabs__link">
+          
+  
+  
+  Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../04/" class="md-tabs__link">
+          
+  
+  
+  Skill Anatomy
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../08/" class="md-tabs__link">
+          
+  
+  
+  Advanced Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../12/" class="md-tabs__link">
+          
+  
+  
+  Specialized Skills
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../15/" class="md-tabs__link">
+          
+  
+  
+  Deployment
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../glossary.md" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Custom Skill Developer Guide" class="md-nav__button md-logo" aria-label="Custom Skill Developer Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Custom Skill Developer Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Yarmoluk/custom-skill-developer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Yarmoluk/custom-skill-developer
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../course-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Course Description
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Are Claude Code Skills?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Skill Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill Anatomy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skill Anatomy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SKILL.md Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YAML Frontmatter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Scoring Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Patterns
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meta-Skill Routers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Token Efficiency Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Logging
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-session-logging-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Session Logging Exists
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why Session Logging Exists">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-context-window-fills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Context Window Fills
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch-operations-fail-partway-through" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch Operations Fail Partway Through
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quality-is-invisible-without-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality is Invisible Without Measurement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-logs-directory-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Logs Directory Convention
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Logs Directory Convention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-markdown-not-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Markdown, Not JSON?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-log-per-skill-per-day" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One Log Per Skill Per Day
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-format-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Format Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-log-a-decision-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to Log: A Decision Framework
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#state-tracking-with-json-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State Tracking with JSON Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="State Tracking with JSON Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-sim-statusjson-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The sim-status.json Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lifecycle-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle States
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#writing-skills-that-resume-from-prior-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing Skills That Resume from Prior State
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Writing Skills That Resume from Prior State">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-resume-detection-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Resume Detection Block
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#writing-the-state-file-incrementally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing the State File Incrementally
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-continuity-across-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Continuity Across Sessions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Log Continuity Across Sessions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-resume-session-opening-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Resume Session Opening Protocol
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quality-scoring-in-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality Scoring in Logs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quality Scoring in Logs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scoring-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scoring Mechanics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-scores-for-skill-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Scores for Skill Improvement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementing-logging-in-a-new-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementing Logging in a New Skill
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementing Logging in a New Skill">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimum-viable-log-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum Viable Log Entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-directory-setup-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Directory Setup Step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anti-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anti-Patterns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized Skills
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized Skills
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Format Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Generation Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analysis & Validation Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deployment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation & Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing & Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing & Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-session-logging-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Session Logging Exists
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why Session Logging Exists">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-context-window-fills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Context Window Fills
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch-operations-fail-partway-through" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch Operations Fail Partway Through
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quality-is-invisible-without-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality is Invisible Without Measurement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-logs-directory-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Logs Directory Convention
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Logs Directory Convention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-markdown-not-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Markdown, Not JSON?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-log-per-skill-per-day" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One Log Per Skill Per Day
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-format-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Format Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-log-a-decision-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to Log: A Decision Framework
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#state-tracking-with-json-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State Tracking with JSON Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="State Tracking with JSON Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-sim-statusjson-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The sim-status.json Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lifecycle-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle States
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#writing-skills-that-resume-from-prior-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing Skills That Resume from Prior State
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Writing Skills That Resume from Prior State">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-resume-detection-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Resume Detection Block
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#writing-the-state-file-incrementally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing the State File Incrementally
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-continuity-across-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Continuity Across Sessions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Log Continuity Across Sessions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-resume-session-opening-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Resume Session Opening Protocol
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quality-scoring-in-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality Scoring in Logs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quality Scoring in Logs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scoring-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scoring Mechanics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-scores-for-skill-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Scores for Skill Improvement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementing-logging-in-a-new-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementing Logging in a New Skill
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementing Logging in a New Skill">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimum-viable-log-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum Viable Log Entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-directory-setup-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Directory Setup Step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anti-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anti-Patterns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="chapter-10-session-logging">Chapter 10: Session Logging<a class="headerlink" href="#chapter-10-session-logging" title="Permanent link">&para;</a></h1>
+<p>Complex skills do complex work. A skill that generates a 12-chapter textbook, processes a batch of 20 reports, or orchestrates multiple downstream tools can run for an hour before completing. During that time, the context window fills incrementally with conversation history, file reads, and generated output. Eventually, the session must be compacted or a new session started — and the work must continue.</p>
+<p>Session logging is the infrastructure that makes continuation possible. It is also the infrastructure that makes debugging possible, quality measurement possible, and batch resumption possible.</p>
+<p>This chapter covers why session logs exist, what they must contain, the conventions used across the skill ecosystem, state tracking for batch operations, and how to build skills that detect and resume from prior session state.</p>
+<hr />
+<h2 id="why-session-logging-exists">Why Session Logging Exists<a class="headerlink" href="#why-session-logging-exists" title="Permanent link">&para;</a></h2>
+<h3 id="the-context-window-fills">The Context Window Fills<a class="headerlink" href="#the-context-window-fills" title="Permanent link">&para;</a></h3>
+<p>Every token generated — by Claude and by the user — accumulates in the context window. In a long session involving deep file reads, iterative revisions, and substantial output generation, the window fills faster than you might expect.</p>
+<p>When context fills, there are two options:</p>
+<ol>
+<li><strong>Compact the session</strong> — Claude Code summarizes the conversation, freeing space but losing detail</li>
+<li><strong>Start a new session</strong> — the fresh session has no memory of what was accomplished</li>
+</ol>
+<p>Without session logs, both options destroy continuity. After compaction, Claude may not remember that chapters 1-7 are complete and chapter 8 is in progress. After a new session, Claude has no information at all.</p>
+<p>With a session log, the first step in any continuation session is a single, cheap read: load the log, understand the state, resume from exactly where work stopped. The log is the external memory that survives context resets.</p>
+<h3 id="batch-operations-fail-partway-through">Batch Operations Fail Partway Through<a class="headerlink" href="#batch-operations-fail-partway-through" title="Permanent link">&para;</a></h3>
+<p>When a skill processes 20 items in a batch, statistical reality guarantees occasional failures — a malformed input, an unexpected file format, a tool call that times out. Without state tracking, the only recovery option is to re-run the entire batch and deduplicate the results.</p>
+<p>With a session log and a state file, recovery is precise: identify the failed item, fix the input, and resume from that item. Items 1-19 that completed successfully are not touched.</p>
+<h3 id="quality-is-invisible-without-measurement">Quality is Invisible Without Measurement<a class="headerlink" href="#quality-is-invisible-without-measurement" title="Permanent link">&para;</a></h3>
+<p>If a skill produces output without logging anything, you cannot answer the question "are our outputs getting better or worse over time?" You cannot identify which variants have lower quality scores. You cannot correlate output quality with session duration or input complexity.</p>
+<p>Session logs create the data that makes quality measurement possible. Every logged session contributes to a corpus that answers questions like: "The technical-spec variant has an average quality score of 7.2, while the executive-summary variant scores 8.8 — what accounts for the gap?"</p>
+<hr />
+<h2 id="the-logs-directory-convention">The Logs Directory Convention<a class="headerlink" href="#the-logs-directory-convention" title="Permanent link">&para;</a></h2>
+<p>Every skill that produces substantial output should write logs to a <code>logs/</code> directory relative to the working directory. The convention used across the skill ecosystem is:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>./logs/[skill-name]-v[VERSION]-[YYYY-MM-DD].md
+</code></pre></div>
+<p>Examples:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>./logs/report-generator-v1.2.0-2024-11-15.md
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>./logs/microsim-generator-v2.0.1-2024-11-15.md
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>./logs/chapter-writer-v1.0.0-2024-11-14.md
+</code></pre></div></p>
+<h3 id="why-markdown-not-json">Why Markdown, Not JSON?<a class="headerlink" href="#why-markdown-not-json" title="Permanent link">&para;</a></h3>
+<p>Logs use <code>.md</code> format (not <code>.json</code>) for two reasons:</p>
+<ol>
+<li><strong>Human readability</strong> — a developer can open a log and understand what happened without a parser</li>
+<li><strong>Claude readability</strong> — when Claude reads a session log to resume work, markdown is parsed naturally without any schema overhead</li>
+</ol>
+<p>State files (covered later) use <code>.json</code> because they are read programmatically and precision matters more than human readability.</p>
+<h3 id="one-log-per-skill-per-day">One Log Per Skill Per Day<a class="headerlink" href="#one-log-per-skill-per-day" title="Permanent link">&para;</a></h3>
+<p>The convention is one log file per skill per calendar day. If a skill is invoked three times in a day, all three invocations append to the same log file under separate <code>## Session [N]</code> headers. This keeps the log corpus from proliferating into dozens of tiny files.</p>
+<p>The exception is batch operations, where each batch run gets its own log file identified by batch ID.</p>
+<hr />
+<h2 id="log-format-reference">Log Format Reference<a class="headerlink" href="#log-format-reference" title="Permanent link">&para;</a></h2>
+<p>A complete session log entry has seven sections. Not every section applies to every skill — a simple single-purpose skill might omit timing details — but more complex skills should populate all seven.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="gh"># [Skill Name] Session Log</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="gs">**Version:**</span> [x.y.z] | <span class="gs">**Date:**</span> [YYYY-MM-DD] | <span class="gs">**Session:**</span> [N]
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="gu">## Invocation</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="gs">**Trigger:**</span> [How the skill was invoked — full command or description]
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="gs">**Variant:**</span> [Which variant was selected, if meta-skill]
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="gs">**Routing Confidence:**</span> [High / Medium / Low]
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="gu">## Timing</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>| Phase | Start | End | Duration |
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>|-------|-------|-----|----------|
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>| Routing resolution | 14:03:22 | 14:03:24 | 2s |
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>| Reference guide load | 14:03:24 | 14:03:25 | 1s |
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>| Draft generation | 14:03:25 | 14:11:40 | 8m 15s |
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>| Quality scoring | 14:11:40 | 14:11:55 | 15s |
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>| Log write | 14:11:55 | 14:12:00 | 5s |
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>| <span class="gs">**Total**</span> | | | <span class="gs">**8m 38s**</span> |
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="gu">## Files Created</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>| File | Size | Status |
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>|------|------|--------|
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>| <span class="sb">`./reports/executive-summary-2024-11-15.md`</span> | 612 words | Complete |
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>| <span class="sb">`./reports/executive-summary-2024-11-15-appendix.md`</span> | 203 words | Complete |
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="gu">## Token Usage Estimate</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>| Phase | Estimated Tokens |
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>|-------|------------------|
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>| Skill load (SKILL.md) | 1,840 |
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>| Reference guide load | 720 |
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>| User input | 145 |
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>| Files read | 0 |
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>| Claude output | 3,200 |
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>| <span class="gs">**Session total**</span> | <span class="gs">**5,905**</span> |
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="gu">## Quality Score</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="gs">**Overall Score:**</span> 8.2 / 10
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>| Criterion | Score | Note |
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>|-----------|-------|------|
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>| Findings are quantified | 9/10 | All 4 findings have numbers |
+<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a>| Recommendations have owners | 7/10 | 2/3 have explicit owners |
+<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a>| Register appropriate for audience | 9/10 | Clean executive language |
+<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a>| Length within target | 8/10 | 612 words, target 400-600 |
+<a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a>
+<a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a><span class="gu">## Decisions Made</span>
+<a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a>
+<a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a><span class="k">-</span><span class="w"> </span>Routed to executive-summary variant (confidence: high — &quot;board&quot; keyword present)
+<a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a><span class="k">-</span><span class="w"> </span>Excluded raw financials from body; referenced as appendix per audience guidance
+<a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a><span class="k">-</span><span class="w"> </span>Used Q3 vs Q2 comparison frame rather than Q3 vs plan (data provided supported both)
+<a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a>
+<a id="__codelineno-2-56" name="__codelineno-2-56" href="#__codelineno-2-56"></a><span class="gu">## Resume State</span>
+<a id="__codelineno-2-57" name="__codelineno-2-57" href="#__codelineno-2-57"></a>
+<a id="__codelineno-2-58" name="__codelineno-2-58" href="#__codelineno-2-58"></a><span class="gs">**Status:**</span> Complete
+<a id="__codelineno-2-59" name="__codelineno-2-59" href="#__codelineno-2-59"></a><span class="gs">**Next Step:**</span> N/A — standalone invocation
+<a id="__codelineno-2-60" name="__codelineno-2-60" href="#__codelineno-2-60"></a><span class="gs">**Outstanding:**</span> None
+</code></pre></div>
+<p>Each section serves a purpose:</p>
+<ul>
+<li><strong>Invocation</strong> — lets future sessions understand exactly what was requested</li>
+<li><strong>Timing</strong> — identifies bottlenecks and tracks performance over time</li>
+<li><strong>Files Created</strong> — tells a resume session exactly what exists and is ready</li>
+<li><strong>Token Usage Estimate</strong> — informs optimization decisions</li>
+<li><strong>Quality Score</strong> — creates the measurement corpus</li>
+<li><strong>Decisions Made</strong> — documents judgment calls that might need to be reversed or referenced</li>
+<li><strong>Resume State</strong> — the most critical section for continuation sessions</li>
+</ul>
+<hr />
+<h2 id="what-to-log-a-decision-framework">What to Log: A Decision Framework<a class="headerlink" href="#what-to-log-a-decision-framework" title="Permanent link">&para;</a></h2>
+<p>Not every detail belongs in a log. Over-logging wastes tokens when Claude reads the log to resume. Under-logging defeats the purpose. Apply this decision framework:</p>
+<p><strong>Always log:</strong>
+- Which variant was selected and at what confidence
+- What files were created (name, size, completion status)
+- Overall quality score
+- Resume state (complete / in-progress / blocked)
+- Any decision that involved a judgment call rather than a deterministic rule</p>
+<p><strong>Log if the skill runs for more than 5 minutes:</strong>
+- Timing data for each phase
+- Token usage estimates</p>
+<p><strong>Log if the skill is part of a batch or pipeline:</strong>
+- Item ID or step number
+- Whether this item/step is unblocked for the next stage
+- Dependencies satisfied</p>
+<p><strong>Do not log:</strong>
+- The full text of generated outputs (they are in the output files)
+- Intermediate draft revisions
+- Standard workflow steps that completed normally (only log deviations)
+- Anything that is recoverable from the output files themselves</p>
+<p>The goal of a log is to reconstruct session state, not to duplicate output. If Claude can derive the information by reading the output file, it should not be duplicated in the log.</p>
+<hr />
+<h2 id="state-tracking-with-json-files">State Tracking with JSON Files<a class="headerlink" href="#state-tracking-with-json-files" title="Permanent link">&para;</a></h2>
+<p>For batch operations and pipeline orchestration, a small JSON state file provides precise status tracking at minimal token cost.</p>
+<h3 id="the-sim-statusjson-pattern">The sim-status.json Pattern<a class="headerlink" href="#the-sim-statusjson-pattern" title="Permanent link">&para;</a></h3>
+<p>The name "sim-status.json" comes from the MicroSim Generator skill ecosystem, but the pattern applies to any batch skill. The file tracks the lifecycle state of each item in a batch:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;batch_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;textbook-ch-batch-2024-11-15&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;skill&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chapter-writer&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">&quot;created&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-11-15T10:00:00Z&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">&quot;last_updated&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-11-15T14:23:11Z&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="nt">&quot;total_items&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="nt">&quot;summary&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="nt">&quot;complete&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="nt">&quot;in_progress&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="nt">&quot;pending&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="nt">&quot;failed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="nt">&quot;ch-01&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;complete&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">      </span><span class="nt">&quot;output_file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./docs/chapters/01/index.md&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">      </span><span class="nt">&quot;quality_score&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">8.4</span><span class="p">,</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">      </span><span class="nt">&quot;word_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3241</span><span class="p">,</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">      </span><span class="nt">&quot;completed_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-11-15T10:47:33Z&quot;</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">    </span><span class="nt">&quot;ch-02&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;complete&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">      </span><span class="nt">&quot;output_file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./docs/chapters/02/index.md&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">      </span><span class="nt">&quot;quality_score&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">7.9</span><span class="p">,</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">      </span><span class="nt">&quot;word_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2987</span><span class="p">,</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">      </span><span class="nt">&quot;completed_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-11-15T11:31:05Z&quot;</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">    </span><span class="nt">&quot;ch-08&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;in_progress&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">      </span><span class="nt">&quot;output_file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./docs/chapters/08/index.md&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="w">      </span><span class="nt">&quot;started_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-11-15T14:18:00Z&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="w">      </span><span class="nt">&quot;progress_note&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Draft complete, quality scoring in progress&quot;</span>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="w">    </span><span class="nt">&quot;ch-09&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pending&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="w">      </span><span class="nt">&quot;output_file&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a><span class="w">      </span><span class="nt">&quot;depends_on&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="w">    </span><span class="nt">&quot;ch-10&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a><span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a><span class="w">      </span><span class="nt">&quot;output_file&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a><span class="w">      </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Input data missing: no section outline provided&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a><span class="w">      </span><span class="nt">&quot;failed_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-11-15T13:45:22Z&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a><span class="w">      </span><span class="nt">&quot;retry_ready&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="lifecycle-states">Lifecycle States<a class="headerlink" href="#lifecycle-states" title="Permanent link">&para;</a></h3>
+<p>Items in a batch state file move through defined lifecycle states:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pending → in_progress → complete
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>                     ↘ failed → (retry) → in_progress → complete
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>Resume Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pending</code></td>
+<td>Not yet started</td>
+<td>Start next available</td>
+</tr>
+<tr>
+<td><code>in_progress</code></td>
+<td>Started but not confirmed complete</td>
+<td>Verify output file exists; mark complete or restart</td>
+</tr>
+<tr>
+<td><code>complete</code></td>
+<td>Output file exists and passed quality check</td>
+<td>Skip</td>
+</tr>
+<tr>
+<td><code>failed</code></td>
+<td>Encountered an error</td>
+<td>Check <code>retry_ready</code> flag before re-queueing</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>in_progress</code> state requires special handling on resume. When a session ends unexpectedly (crash, timeout, context limit), items marked <code>in_progress</code> may or may not have produced usable output. The resume protocol for <code>in_progress</code> items:</p>
+<ol>
+<li>Check if the output file exists</li>
+<li>If yes: read the first 200 words and the final 200 words to assess completeness</li>
+<li>If the file appears complete: run quality scoring and mark as <code>complete</code></li>
+<li>If the file appears truncated: mark as <code>failed</code> and add to the retry queue</li>
+<li>If no file: mark as <code>pending</code> and add to the next run queue</li>
+</ol>
+<hr />
+<h2 id="writing-skills-that-resume-from-prior-state">Writing Skills That Resume from Prior State<a class="headerlink" href="#writing-skills-that-resume-from-prior-state" title="Permanent link">&para;</a></h2>
+<p>A skill that supports resumption has a different first step than one that does not. Instead of immediately beginning work, it begins by understanding what has already been done.</p>
+<h3 id="the-resume-detection-block">The Resume Detection Block<a class="headerlink" href="#the-resume-detection-block" title="Permanent link">&para;</a></h3>
+<p>Add this block at the start of your workflow section, before any execution steps:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="gu">## Pre-Flight: Resume Detection</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Before any work begins:
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">1.</span> Check for a state file at <span class="sb">`./[skill-name]-status.json`</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>If found: read it (it is small, ~500 tokens)
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>If not found: this is a fresh run; initialize the state file
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="k">2.</span> If state file found:
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>Report current batch status to user: N complete, M in-progress, K pending
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>Ask: &quot;Resume from in-progress items, or start a fresh run?&quot;
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>If resume: skip all <span class="sb">`complete`</span> items, re-validate <span class="sb">`in_progress`</span> items,
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>     queue <span class="sb">`pending`</span> items
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>If fresh: rename old state file with timestamp, initialize new state file
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="k">3.</span> For each <span class="sb">`in_progress`</span> item found on resume:
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>Check if output file exists at the logged path
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>If yes and &gt;500 words: quality-score and mark complete
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>If yes and &lt;500 words: mark failed, add to queue
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>If no: mark pending, add to queue
+</code></pre></div>
+<p>This block costs the user nothing — it is fast, requires reading only one small file, and almost always produces the right result automatically. The only user prompt is the fresh-vs-resume decision, which cannot be automated because it depends on user intent.</p>
+<h3 id="writing-the-state-file-incrementally">Writing the State File Incrementally<a class="headerlink" href="#writing-the-state-file-incrementally" title="Permanent link">&para;</a></h3>
+<p>The state file must be updated after each item completes, not at the end of the batch. If the session ends after completing item 7 of 12 but before the final write, and the state file only reflects items 1-6, item 7's work is lost.</p>
+<p>The incremental update pattern in a skill's workflow:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="gu">## Batch Execution Protocol</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>For each item in the queue:
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">1.</span> Mark item as <span class="sb">`in_progress`</span> in the state file (write immediately)
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="k">2.</span> Execute the workflow for this item
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">3.</span> Write the output file
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="k">4.</span> Run quality scoring
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="k">5.</span> Mark item as <span class="sb">`complete`</span> in the state file with quality score (write immediately)
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="k">6.</span> Proceed to next item
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>If any step fails:
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="k">-</span><span class="w"> </span>Mark item as <span class="sb">`failed`</span> in the state file with error note (write immediately)
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="k">-</span><span class="w"> </span>Log the failure
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="k">-</span><span class="w"> </span>Continue to next item (do not halt the batch)
+</code></pre></div>
+<p>The two write-immediately instructions are critical. They ensure the state file accurately reflects current reality at every point in execution. A state file that is updated in batches is unreliable during resumption.</p>
+<hr />
+<h2 id="log-continuity-across-sessions">Log Continuity Across Sessions<a class="headerlink" href="#log-continuity-across-sessions" title="Permanent link">&para;</a></h2>
+<p>When a new session reads a log to resume work, it should be able to reconstruct everything it needs from three sources:</p>
+<ol>
+<li><strong>The state file</strong> — what is complete, in-progress, pending, failed</li>
+<li><strong>The log file</strong> — what decisions were made, what quality scores were assigned, what is outstanding</li>
+<li><strong>The output files</strong> — the actual work product</li>
+</ol>
+<p>The resume session should never need to re-read files that are already marked complete in the state file. It should never need to re-derive decisions that are documented in the log. It should never need to re-run quality scoring on outputs that already have scores in the log.</p>
+<p>This is the efficiency principle of session logging: logs exist to eliminate redundant work on resume, not to provide a narrative history.</p>
+<h3 id="the-resume-session-opening-protocol">The Resume Session Opening Protocol<a class="headerlink" href="#the-resume-session-opening-protocol" title="Permanent link">&para;</a></h3>
+<p>Build this into skills that support multi-session work:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="gu">## Session Opening (Resume Mode)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">1.</span> Read state file (one read, ~500 tokens)
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">2.</span> Read the most recent log entry (one read, ~1,000 tokens)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">3.</span> Report to user:
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>Items complete: [N]
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>Items in-progress: [M] (will be re-validated)
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>Items pending: [K]
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>Estimated session work remaining: [time estimate]
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>Quality scores so far: [average and range]
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="k">4.</span> Re-validate any in-progress items
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="k">5.</span> Begin next pending item
+</code></pre></div>
+<p>Total token cost of resuming: ~1,500 tokens for the state + log read, plus the re-validation work on in-progress items. This is dramatically cheaper than re-reading all output files to reconstruct state, which might cost 10,000-50,000 tokens for a large batch.</p>
+<hr />
+<h2 id="quality-scoring-in-logs">Quality Scoring in Logs<a class="headerlink" href="#quality-scoring-in-logs" title="Permanent link">&para;</a></h2>
+<p>Quality scores are a first-class element of session logs. Every skill that produces substantial output should include a quality score in its log, derived from the skill's quality checklist.</p>
+<h3 id="scoring-mechanics">Scoring Mechanics<a class="headerlink" href="#scoring-mechanics" title="Permanent link">&para;</a></h3>
+<p>Quality scores are calculated from a rubric defined in the SKILL.md or reference guide. Each criterion is scored on a 0-10 scale, then averaged (or weighted if some criteria are more important than others).</p>
+<p>Example rubric from the executive summary variant:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="gu">## Quality Scoring</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Score each criterion 0-10:
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>| Criterion | Weight | How to Score |
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>|-----------|--------|--------------|
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>| Findings are quantified | 1.0x | 10 = all findings have numbers; 5 = half do; 0 = no numbers |
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>| Recommendations have owners | 0.8x | 10 = all have owners; 5 = some have owners; 0 = none do |
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>| Register is appropriate | 1.0x | 10 = clean executive language throughout; 5 = some jargon or passive voice |
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>| Length within target | 0.6x | 10 = within target; 7 = 10% over; 3 = 50% over; 0 = 2x over |
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>| One-sentence summary present | 1.0x | 10 = present and strong; 5 = present but weak; 0 = missing |
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>Overall score = weighted average of all criteria × 10
+</code></pre></div>
+<p>The log records both the overall score and the individual criterion scores. This enables diagnosis: if a skill consistently underperforms on one criterion, that is a signal that the workflow step addressing that criterion needs improvement.</p>
+<h3 id="using-scores-for-skill-improvement">Using Scores for Skill Improvement<a class="headerlink" href="#using-scores-for-skill-improvement" title="Permanent link">&para;</a></h3>
+<p>Aggregate quality scores across log files to identify systemic issues:</p>
+<ul>
+<li>If the average score for a variant is below 7.0, the reference guide workflow needs revision</li>
+<li>If one criterion is consistently low, the instruction for that criterion is unclear</li>
+<li>If scores dropped after a version update, the update regressed something</li>
+</ul>
+<p>This feedback loop — log quality scores, aggregate across sessions, identify patterns, revise the skill — is how skills improve over time. Without logs, this loop does not exist.</p>
+<hr />
+<h2 id="implementing-logging-in-a-new-skill">Implementing Logging in a New Skill<a class="headerlink" href="#implementing-logging-in-a-new-skill" title="Permanent link">&para;</a></h2>
+<p>When you build a new skill, add logging from the start. Retrofitting logging into an existing skill is harder than building it in.</p>
+<h3 id="minimum-viable-log-entry">Minimum Viable Log Entry<a class="headerlink" href="#minimum-viable-log-entry" title="Permanent link">&para;</a></h3>
+<p>For a simple single-variant skill, the minimum useful log entry is:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="gu">## [Skill Name] — [YYYY-MM-DD]</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="gs">**Invocation:**</span> [command / description]
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="gs">**Output:**</span> [file path] ([word count] words)
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="gs">**Quality Score:**</span> [X.X / 10]
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="gs">**Status:**</span> Complete
+</code></pre></div>
+<p>That is 4 lines and approximately 60 tokens to write. A resume session can read it in under 50 tokens. This minimum-viable format is enough to answer the question "has this skill run on this input before?" at trivial cost.</p>
+<p>Add more structure as the skill grows in complexity. Do not start with a fully instrumented log if the skill is simple — let the log format evolve with the skill's complexity.</p>
+<h3 id="log-directory-setup-step">Log Directory Setup Step<a class="headerlink" href="#log-directory-setup-step" title="Permanent link">&para;</a></h3>
+<p>Add a log setup step as the first step in every skill's execution protocol:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="gu">## Execution Protocol</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="gs">**Step 0: Initialize logging**</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">-</span><span class="w"> </span>Ensure <span class="sb">`./logs/`</span> directory exists
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">-</span><span class="w"> </span>Open log file: <span class="sb">`./logs/[skill-name]-v[VERSION]-[TODAY].md`</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">-</span><span class="w"> </span>Write the invocation header immediately (before any other work)
+</code></pre></div>
+<p>Writing the invocation header before any work begins ensures that even if the skill crashes in the first step, there is evidence in the log that an attempt was made. This makes debugging significantly easier.</p>
+<hr />
+<h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
+<p><strong>Do not log full output text.</strong> Logs should reference output files, not duplicate them. A log entry that includes the full generated report is wasteful — reading the log to resume work would cost as much as reading the report directly.</p>
+<p><strong>Do not write state files only at the end of a batch.</strong> If the session ends before the final write, the state file is wrong. Write after every item.</p>
+<p><strong>Do not use logs as the primary recovery mechanism.</strong> Logs support recovery; output files are the primary artifact. A log that says "complete" for an item whose output file is missing is in an inconsistent state. The resume protocol must check both.</p>
+<p><strong>Do not skip logging for "simple" skills.</strong> Simple skills become complex over time. A skill that starts as a single-variant, single-output tool often grows into a multi-variant pipeline component. Starting with no logging makes that transition harder. Even a minimum-viable log entry is better than none.</p>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>Session logging exists because complex skills do non-trivial work that cannot be reliably resumed without external memory. The context window fills, sessions end, batches fail partway — and the infrastructure for continuing is the log.</p>
+<p>The key components of a robust logging implementation:</p>
+<p><strong>The logs/ directory</strong> holds human- and Claude-readable <code>.md</code> files, one per skill per day, with multiple sessions appending to the same file under separate headers.</p>
+<p><strong>The log format</strong> captures invocation, timing, files created, token estimates, quality scores, decisions made, and resume state.</p>
+<p><strong>The state file</strong> (JSON) tracks batch item lifecycle states with precision, updated after every item, readable in ~500 tokens.</p>
+<p><strong>Resume detection</strong> is the first step in any multi-session skill — read the state file, report current status, re-validate in-progress items, queue next pending items.</p>
+<p><strong>Quality scores</strong> in logs create the measurement corpus that enables systematic skill improvement over time.</p>
+<p>Chapter 11 extends these concepts into the pipeline context — how multiple skills chain together in dependency order, how checkpoints work, and how a 12-step orchestration manages the continuity of an entire textbook production pipeline.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.code.annotate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

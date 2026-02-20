@@ -1,0 +1,2423 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive knowledge base for building custom Claude Code skills — from single-purpose agents to meta-skill routers and full pipeline orchestration.">
+      
+      
+      
+        <link rel="canonical" href="https://yarmoluk.github.io/custom-skill-developer/chapters/04/">
+      
+      
+        <link rel="prev" href="../03/">
+      
+      
+        <link rel="next" href="../05/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>SKILL.md Structure - Custom Skill Developer Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-4-skillmd-structure" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Custom Skill Developer Guide" class="md-header__button md-logo" aria-label="Custom Skill Developer Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Custom Skill Developer Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SKILL.md Structure
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Yarmoluk/custom-skill-developer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Yarmoluk/custom-skill-developer
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../course-description/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Course Description
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01/" class="md-tabs__link">
+          
+  
+  
+  Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Skill Anatomy
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../08/" class="md-tabs__link">
+          
+  
+  
+  Advanced Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../12/" class="md-tabs__link">
+          
+  
+  
+  Specialized Skills
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../15/" class="md-tabs__link">
+          
+  
+  
+  Deployment
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../glossary.md" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Custom Skill Developer Guide" class="md-nav__button md-logo" aria-label="Custom Skill Developer Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Custom Skill Developer Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Yarmoluk/custom-skill-developer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Yarmoluk/custom-skill-developer
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../course-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Course Description
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Are Claude Code Skills?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Skill Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill Anatomy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skill Anatomy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SKILL.md Structure
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SKILL.md Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-complete-anatomy-of-a-skill-definition-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Complete Anatomy of a Skill Definition File
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-a-skillmd-file-actually-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a SKILL.md File Actually Is
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#document-structure-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Document Structure Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-by-section-anatomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section-by-Section Anatomy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section-by-Section Anatomy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-yaml-frontmatter-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The YAML Frontmatter Block
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-h1-title" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The H1 Title
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-version-line-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Version Line (Optional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview / Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-this-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use This Skill
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-workflow-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Workflow Section
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-files-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Files Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Session
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-pitfalls-to-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls to Avoid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quality-standards-and-scoring-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality Standards and Scoring Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-fully-annotated-skillmd-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Fully Annotated SKILL.md Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YAML Frontmatter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Scoring Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Patterns
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meta-Skill Routers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Token Efficiency Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized Skills
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized Skills
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Format Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Generation Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analysis & Validation Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deployment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation & Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing & Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing & Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-complete-anatomy-of-a-skill-definition-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Complete Anatomy of a Skill Definition File
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-a-skillmd-file-actually-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a SKILL.md File Actually Is
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#document-structure-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Document Structure Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-by-section-anatomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section-by-Section Anatomy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section-by-Section Anatomy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-yaml-frontmatter-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The YAML Frontmatter Block
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-h1-title" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The H1 Title
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-version-line-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Version Line (Optional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview / Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-this-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use This Skill
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-workflow-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Workflow Section
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-files-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Files Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Session
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-pitfalls-to-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls to Avoid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quality-standards-and-scoring-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality Standards and Scoring Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-fully-annotated-skillmd-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Fully Annotated SKILL.md Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="chapter-4-skillmd-structure">Chapter 4: SKILL.md Structure<a class="headerlink" href="#chapter-4-skillmd-structure" title="Permanent link">&para;</a></h1>
+<h2 id="the-complete-anatomy-of-a-skill-definition-file">The Complete Anatomy of a Skill Definition File<a class="headerlink" href="#the-complete-anatomy-of-a-skill-definition-file" title="Permanent link">&para;</a></h2>
+<p>Every skill in the Claude Code ecosystem lives in a single file: <code>SKILL.md</code>. Understanding every section of this file — what it does, why it exists, and what breaks without it — is the foundation of skill authorship.</p>
+<p>This chapter dissects the SKILL.md format completely. By the end, you will be able to read any skill file and understand exactly what Claude will do when it executes it. You will also understand the design decisions behind the format and be able to make intentional choices about every section you write.</p>
+<hr />
+<h2 id="what-a-skillmd-file-actually-is">What a SKILL.md File Actually Is<a class="headerlink" href="#what-a-skillmd-file-actually-is" title="Permanent link">&para;</a></h2>
+<p>A <code>SKILL.md</code> file is simultaneously three things:</p>
+<ol>
+<li><strong>A configuration document</strong> — the YAML frontmatter tells Claude Code metadata about the skill: its name, what it does, what tools it is allowed to use, and its license.</li>
+<li><strong>An instruction set</strong> — the markdown body is a workflow that Claude reads and executes step by step.</li>
+<li><strong>A context injection</strong> — portions of the file, particularly the <code>description</code> field, are injected directly into Claude's context window as part of its operational instructions.</li>
+</ol>
+<p>The file format was designed to be human-readable first. A skill author should be able to read a SKILL.md file and immediately understand what the skill does, when to use it, and what it produces. Claude reads the same file. There is no separate "machine-readable" format — the human instructions and the machine instructions are identical.</p>
+<p>This design principle has a practical consequence: <strong>clarity in your SKILL.md is not a nicety, it is a functional requirement.</strong> Vague instructions produce inconsistent behavior. Precise instructions produce consistent, reproducible output.</p>
+<hr />
+<h2 id="document-structure-overview">Document Structure Overview<a class="headerlink" href="#document-structure-overview" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    A[SKILL.md] --&gt; B[YAML Frontmatter]
+    A --&gt; C[Markdown Body]
+
+    B --&gt; B1[name field]
+    B --&gt; B2[description field]
+    B --&gt; B3[license field]
+    B --&gt; B4[allowed-tools field]
+
+    C --&gt; C1[H1 Title]
+    C --&gt; C2[Version - optional]
+    C --&gt; C3[Overview / Purpose]
+    C --&gt; C4[When to Use This Skill]
+    C --&gt; C5[Workflow Steps]
+    C --&gt; C6[Output Files Summary]
+    C --&gt; C7[Example Session]
+    C --&gt; C8[Common Pitfalls]
+    C --&gt; C9[Quality Standards]
+
+    C5 --&gt; C5a[Step 0: Environment Setup]
+    C5 --&gt; C5b[Step 1: First Action]
+    C5 --&gt; C5c[Step N: Final Action]</code></pre>
+<hr />
+<h2 id="section-by-section-anatomy">Section-by-Section Anatomy<a class="headerlink" href="#section-by-section-anatomy" title="Permanent link">&para;</a></h2>
+<h3 id="the-yaml-frontmatter-block">The YAML Frontmatter Block<a class="headerlink" href="#the-yaml-frontmatter-block" title="Permanent link">&para;</a></h3>
+<p>The frontmatter is the first section of any SKILL.md file. It is enclosed between triple-dash delimiters (<code>---</code>) and written in YAML syntax.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nn">---</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">glossary-generator</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">This skill automatically generates a comprehensive glossary of terms from a learning graph&#39;s concept list, ensuring each definition follows ISO 11179 metadata registry standards (precise, concise, distinct, non-circular, and free of business rules). Use this skill when creating a glossary for an intelligent textbook after the learning graph concept list has been finalized.</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MIT</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">allowed-tools</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bash(~/.claude/skills/glossary-generator:*)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nn">---</span>
+</code></pre></div>
+<p>The frontmatter serves as the skill's identity document. Claude Code reads this before loading the rest of the file and uses it to:</p>
+<ul>
+<li>Register the skill under its <code>name</code></li>
+<li>Surface the <code>description</code> when the user requests skill discovery</li>
+<li>Enforce tool permissions from <code>allowed-tools</code></li>
+<li>Record the <code>license</code> for distribution purposes</li>
+</ul>
+<p><strong>What happens if frontmatter is missing or malformed?</strong></p>
+<p>If the frontmatter is absent, Claude Code will not recognize the file as a valid skill. The skill will not appear in skill listings, and invoking it by name will fail. If the YAML is syntactically invalid (for example, incorrect indentation or unescaped special characters), the skill may load but with corrupted metadata.</p>
+<hr />
+<h3 id="the-h1-title">The H1 Title<a class="headerlink" href="#the-h1-title" title="Permanent link">&para;</a></h3>
+<p>The first line of the markdown body should be an H1 heading that names the skill in plain English.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="gh"># Glossary Generator</span>
+</code></pre></div>
+<p>This is distinct from the <code>name</code> field in the frontmatter. The frontmatter <code>name</code> is the machine identifier (kebab-case, used for invocation). The H1 title is the human-readable name displayed in documentation, logs, and when Claude announces what it is about to do.</p>
+<p><strong>Best practice:</strong> The H1 title should match the skill's purpose directly. If the frontmatter <code>name</code> is <code>course-description-analyzer</code>, the H1 title might be <code>Course Description Analyzer</code> or <code>Course Description Analyzer and Generator</code>. Avoid H1 titles that are clever or metaphorical — they reduce clarity without adding value.</p>
+<hr />
+<h3 id="the-version-line-optional">The Version Line (Optional)<a class="headerlink" href="#the-version-line-optional" title="Permanent link">&para;</a></h3>
+<p>Immediately after the H1 title, you may include a version declaration:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="gh"># Learning Graph Generator</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="gs">**Version:**</span> 0.03
+</code></pre></div>
+<p>Versioning serves multiple purposes:</p>
+<ul>
+<li>It gives users a way to report which version they used when filing bug reports</li>
+<li>It gives Claude a way to announce its version at the start of a session, which helps users confirm the correct skill loaded</li>
+<li>It forces the skill author to think of skills as evolving artifacts, not static documents</li>
+</ul>
+<p>A convention used in the McCreary skill ecosystem is to have Claude announce its version in Step 0:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Tell the user that they are running Version 0.03 of the Learning Graph Generator Skill.
+</code></pre></div>
+<p>This creates an explicit handshake at session start that confirms skill identity and version.</p>
+<hr />
+<h3 id="overview-purpose">Overview / Purpose<a class="headerlink" href="#overview-purpose" title="Permanent link">&para;</a></h3>
+<p>The overview section follows immediately after the version (or H1 if no version is used). It contains one to three paragraphs that explain:</p>
+<ol>
+<li><strong>What the skill does</strong> — the core transformation it performs</li>
+<li><strong>The domain context</strong> — why this matters and where it fits in a larger workflow</li>
+<li><strong>The output quality target</strong> — what standards govern the output</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="gu">## Purpose</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>This skill automates glossary creation for intelligent textbooks by converting concept labels
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>from a learning graph into properly formatted glossary definitions. Each definition follows
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ISO 11179 metadata registry standards: precise, concise, distinct, non-circular, and free of
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>business rules. The skill ensures consistency across terminology, validates cross-references,
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>and produces alphabetically ordered entries with relevant examples.
+</code></pre></div>
+<p>The overview is important for two reasons. First, it gives Claude immediate context for interpreting every subsequent instruction. If Step 4 says "generate a definition," Claude already knows from the overview that the definition must meet ISO 11179 standards — it does not need to be told again. Second, the overview is what a new user will read to determine whether this skill is appropriate for their current task.</p>
+<p><strong>What happens if the overview is missing?</strong></p>
+<p>Claude will proceed through the workflow steps without the broader context that the overview provides. This may cause it to interpret ambiguous instructions in unexpected ways. The behavior will appear correct until an edge case arises that the steps do not explicitly address.</p>
+<hr />
+<h3 id="when-to-use-this-skill">When to Use This Skill<a class="headerlink" href="#when-to-use-this-skill" title="Permanent link">&para;</a></h3>
+<p>This section is a bulleted list of specific trigger conditions. It answers the question: "How do I know whether to invoke this skill right now?"</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="gu">## When to Use This Skill</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Use this skill after the Learning Graph skill has completed and the concept list has been finalized.
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>All markdown content in the /docs area can also be scanned looking for words or phases that might
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>not be clear to the average high-school student.
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Specifically, trigger this skill when:
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="k">-</span><span class="w"> </span>A concept list file exists (typically <span class="sb">`docs/learning-graph/02-concept-list-v1.md`</span>)
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">-</span><span class="w"> </span>The concept list has been reviewed and approved
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="k">-</span><span class="w"> </span>The course description exists with clear learning outcomes
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="k">-</span><span class="w"> </span>Ready to create or update the textbook&#39;s glossary
+</code></pre></div>
+<p>This section matters because skills in a pipeline have dependencies. A glossary generator depends on a finalized concept list. A chapter content generator depends on a finalized learning graph. The "When to Use This Skill" section makes those dependencies explicit as conditions the user can check before invoking.</p>
+<p>The section also helps with skill discovery. When a user describes what they want to do and asks Claude to suggest a skill, Claude reads the "When to Use" sections of available skills and matches them against the user's stated context.</p>
+<p><strong>Design guidance:</strong> Write trigger conditions as things you can verify by checking the filesystem or the current project state. Avoid vague conditions like "when you feel the project is ready." Use specific, checkable conditions like "a concept list file exists at <code>docs/learning-graph/02-concept-list-v1.md</code>."</p>
+<hr />
+<h3 id="the-workflow-section">The Workflow Section<a class="headerlink" href="#the-workflow-section" title="Permanent link">&para;</a></h3>
+<p>The workflow is the most important section of any SKILL.md file. It is a numbered sequence of steps that Claude executes in order. Each step is a heading (<code>### Step N: Step Name</code>) followed by detailed instructions.</p>
+<p>The standard numbering convention starts at Step 0, not Step 1. Step 0 is always environment setup.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="gu">## Workflow</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="gu">### Step 0: Setup</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Tell the user that they are running the version graph generator and the version number above.
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>The default context is that the skill is run from claude code in the home directory of an
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>intelligent textbook that has been checked out from GitHub.
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Detect the project root by looking for mkdocs.yml in the current directory or parent directories.
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Set the following path variables for use throughout this skill:
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="k">-</span><span class="w"> </span>PROJECT_ROOT: directory containing mkdocs.yml
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="k">-</span><span class="w"> </span>DOCS_DIR: PROJECT_ROOT/docs
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="k">-</span><span class="w"> </span>LOG_DIR: PROJECT_ROOT/logs
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>If DOCS_DIR does not exist, halt and ask the user to confirm the working directory.
+</code></pre></div>
+<p>Each subsequent step performs one cohesive action or decision:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="gu">### Step 1: Validate Input Quality</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Before generating definitions, assess the quality of the concept list:
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">1.</span> Read the concept list file (typically <span class="sb">`docs/learning-graph/02-concept-list-v1.md`</span>)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">2.</span> Check for duplicate concept labels (target: 100% unique)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">3.</span> Verify Title Case formatting (target: 95%+ compliance)
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="k">4.</span> Validate length constraints (target: 98% under 32 characters)
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="k">5.</span> Assess concept clarity (no ambiguous terms)
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Calculate a quality score (1-100 scale):
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="k">-</span><span class="w"> </span>90-100: All concepts unique, properly formatted, appropriate length
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="k">-</span><span class="w"> </span>70-89: Most concepts meet standards, minor formatting issues
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="k">-</span><span class="w"> </span>50-69: Some duplicate concepts or formatting inconsistencies
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="k">-</span><span class="w"> </span>Below 50: Significant issues requiring manual review
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="gs">**User Dialog Triggers:**</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="k">-</span><span class="w"> </span>If score &lt; 70: Ask &quot;The concept list has quality issues. Would you like to review and clean
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  it before generating the glossary?&quot;
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="k">-</span><span class="w"> </span>If duplicates found: Ask &quot;Found [N] duplicate concepts. Should I remove duplicates
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>  automatically or would you like to review?&quot;
+</code></pre></div>
+<p>Notice the structure within each step:</p>
+<ul>
+<li><strong>Ordered sub-tasks</strong> (numbered list) for actions that must happen in sequence</li>
+<li><strong>Decision tables</strong> for threshold-based logic</li>
+<li><strong>User Dialog Triggers</strong> as a distinct labeled block so Claude recognizes when to pause and ask</li>
+</ul>
+<hr />
+<h3 id="output-files-summary">Output Files Summary<a class="headerlink" href="#output-files-summary" title="Permanent link">&para;</a></h3>
+<p>This section documents every file the skill creates, organized by priority.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="gu">## Output Files Summary</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="gs">**Required:**</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">1.</span> <span class="sb">`docs/glossary.md`</span> — Complete glossary in alphabetical order with ISO 11179-compliant definitions
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="gs">**Recommended:**</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="k">2.</span> <span class="sb">`docs/learning-graph/glossary-quality-report.md`</span> — Quality assessment and recommendations
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="gs">**Optional:**</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="k">3.</span> <span class="sb">`docs/learning-graph/glossary-cross-ref.json`</span> — JSON mapping for semantic search
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="k">4.</span> Updates to <span class="sb">`mkdocs.yml`</span> navigation if glossary link is missing
+</code></pre></div>
+<p>The three-tier classification (Required / Recommended / Optional) serves a specific purpose. It tells Claude — and the user — which outputs are essential for success, which are valuable but skippable under time pressure, and which are extras that add value but do not block downstream steps.</p>
+<p>Without this section, Claude may produce different files on different runs depending on how it interprets the workflow steps. The Output Files Summary creates a contract: if the skill completes successfully, these files will exist.</p>
+<p><strong>What happens if this section is missing?</strong></p>
+<p>Claude will still produce files, but there is no explicit contract about what those files should be. Different runs may produce different outputs. Downstream skills that depend on specific file paths from this skill may break unpredictably.</p>
+<hr />
+<h3 id="example-session">Example Session<a class="headerlink" href="#example-session" title="Permanent link">&para;</a></h3>
+<p>The example session shows a realistic interaction — what the user says, what Claude does, and what output is produced.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="gu">## Example Session</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="gs">**User:**</span> &quot;Generate a glossary from my concept list&quot;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="gs">**Claude (using this skill):**</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="k">1.</span> Reads <span class="sb">`docs/learning-graph/02-concept-list-v1.md`</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="k">2.</span> Validates quality (checks for duplicates, formatting)
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="k">3.</span> Reads <span class="sb">`docs/course-description.md`</span> for context
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="k">4.</span> Generates ISO 11179-compliant definitions
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="k">5.</span> Adds examples to 70% of terms
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="k">6.</span> Sorts alphabetically
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="k">7.</span> Creates <span class="sb">`docs/glossary.md`</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="k">8.</span> Generates quality report
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="k">9.</span> Reports: &quot;Created glossary with 187 terms. Overall quality score: 89/100.
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>   Added examples to 71% of terms. No circular definitions found.&quot;
+</code></pre></div>
+<p>The example session accomplishes three things:</p>
+<ol>
+<li>It gives Claude a concrete model of the expected interaction pattern</li>
+<li>It gives users a preview of what to expect when they invoke the skill</li>
+<li>It serves as a quick smoke test — if a new version of the skill produces a wildly different interaction pattern than the example shows, something has changed</li>
+</ol>
+<hr />
+<h3 id="common-pitfalls-to-avoid">Common Pitfalls to Avoid<a class="headerlink" href="#common-pitfalls-to-avoid" title="Permanent link">&para;</a></h3>
+<p>This section documents recurring failure modes — things that go wrong in practice that are not obvious from reading the workflow steps.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="gu">## Common Pitfalls to Avoid</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="gs">**Circular Definitions:**</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">-</span><span class="w"> </span>Bad: &quot;A Learning Graph is a graph that shows learning.&quot;
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">-</span><span class="w"> </span>Good: &quot;A directed graph of concepts that reflects the order concepts should be learned.&quot;
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="gs">**Too Vague:**</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="k">-</span><span class="w"> </span>Bad: &quot;A thing used in education.&quot;
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">-</span><span class="w"> </span>Good: &quot;A directed graph of concepts that reflects prerequisite relationships.&quot;
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="gs">**Processing concepts before reading course context:**</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>If you skip Step 2 (Read Course Context) and go directly to generating definitions,
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>the definitions will be generic rather than tailored to this specific course&#39;s
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>terminology and audience level.
+</code></pre></div>
+<p>The before/after format for anti-patterns is particularly effective because it gives Claude explicit negative examples. Claude learns to avoid the "Bad" patterns not through abstract rules but through concrete comparison.</p>
+<hr />
+<h3 id="quality-standards-and-scoring-rubric">Quality Standards and Scoring Rubric<a class="headerlink" href="#quality-standards-and-scoring-rubric" title="Permanent link">&para;</a></h3>
+<p>The quality scoring section defines the rubric Claude uses to assess its own output. This is covered in detail in Chapter 7. For now, understand its structural role:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="gu">## Quality Scoring Reference</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Use this rubric to score each definition (1-100 scale):
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="gs">**85-100: Excellent**</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="k">-</span><span class="w"> </span>Meets all 4 ISO 11179 criteria (20+ pts each)
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="k">-</span><span class="w"> </span>Appropriate length (20-50 words)
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="k">-</span><span class="w"> </span>Includes relevant example
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="k">-</span><span class="w"> </span>Clear, unambiguous language
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="gs">**70-84: Good**</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="k">-</span><span class="w"> </span>Meets 3-4 ISO criteria
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="k">-</span><span class="w"> </span>Acceptable length (15-60 words)
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="k">-</span><span class="w"> </span>May lack example
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="k">-</span><span class="w"> </span>Generally clear
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="gs">**Below 55: Needs Revision**</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="k">-</span><span class="w"> </span>Fails multiple ISO criteria
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="k">-</span><span class="w"> </span>Requires complete rewrite
+</code></pre></div>
+<p>The quality scoring section transforms Claude from a text generator into a self-auditing system. Before reporting completion, Claude compares its output against the rubric and either proceeds (if score &gt;= threshold) or flags the issue to the user (if score &lt; threshold).</p>
+<hr />
+<h2 id="a-fully-annotated-skillmd-example">A Fully Annotated SKILL.md Example<a class="headerlink" href="#a-fully-annotated-skillmd-example" title="Permanent link">&para;</a></h2>
+<p>The following is a complete, production-quality SKILL.md file with inline annotations explaining every design choice.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nn">---</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># FRONTMATTER</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># name: Machine identifier. Must match the directory name. Kebab-case only.</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">readme-generator</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># description: Single paragraph. Two sentences minimum.</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Sentence 1: What the skill does.</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Sentence 2: When to trigger it.</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># This exact text may appear in Claude&#39;s context window during skill selection.</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">This skill generates a comprehensive GitHub README.md file for any</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">repository by analyzing existing code, documentation, and project structure.</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Use this skill when a repository lacks a README or when the existing README</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">needs a complete overhaul to meet professional standards.</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MIT</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># allowed-tools: Restrict what Claude can do while running this skill.</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># Format: ToolName(path-glob:*) or just ToolName for no restriction.</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="c1"># Omitting this field allows all tools — risky for production skills.</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="nt">allowed-tools</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bash(~/.claude/skills/readme-generator:*), Bash(/tmp:*)</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="nn">---</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="gh"># README Generator</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="gh"># H1 title: human-readable, matches skill purpose</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="gs">**Version:**</span> 1.2
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="gh"># Version: enables announcements in Step 0 and helps with bug reports</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="gu">## Overview</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="gh"># Overview: 2-3 paragraphs. Establishes domain context for interpreting later steps.</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>This skill analyzes a repository&#39;s structure, code, documentation, and configuration
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>files to produce a professional README.md. The output follows GitHub&#39;s best practices
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>for open-source documentation, including badges, installation instructions, usage
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>examples, and contribution guidelines.
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>The skill performs a read-only analysis pass before generating any output, ensuring
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>it understands the project before making claims about it. Quality scoring validates
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>the output against a 100-point rubric before delivery.
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="gu">## When to Use This Skill</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="gh"># Trigger conditions: specific, checkable, filesystem-verifiable</span>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="k">-</span><span class="w"> </span>No <span class="sb">`README.md`</span> exists in the repository root
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="k">-</span><span class="w"> </span>Existing <span class="sb">`README.md`</span> is fewer than 200 words
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="k">-</span><span class="w"> </span>Repository has been significantly updated but the README reflects old functionality
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="k">-</span><span class="w"> </span>Preparing a repository for public release or portfolio presentation
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="gu">## Workflow</span>
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a><span class="gu">### Step 0: Environment Setup</span>
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a><span class="gh"># Step 0 is always environment setup. Never skip it.</span>
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>Tell the user you are running README Generator version 1.2.
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>Detect the repository root by looking for <span class="sb">`.git/`</span> in the current directory or
+<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a>parent directories. If not found, halt and ask: &quot;I cannot detect a git repository.
+<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a>Please confirm your working directory.&quot;
+<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a>
+<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a>Set path variables:
+<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a><span class="k">-</span><span class="w"> </span>REPO_ROOT: directory containing <span class="sb">`.git/`</span>
+<a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a><span class="k">-</span><span class="w"> </span>README_PATH: REPO_ROOT/README.md
+<a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a><span class="k">-</span><span class="w"> </span>LOG_PATH: REPO_ROOT/logs/readme-generator-[timestamp].md
+<a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a>
+<a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a>Create the logs directory if it does not exist:
+<a id="__codelineno-13-44" name="__codelineno-13-44" href="#__codelineno-13-44"></a>```bash
+<a id="__codelineno-13-45" name="__codelineno-13-45" href="#__codelineno-13-45"></a>mkdir -p $REPO_ROOT/logs
+</code></pre></div>
+<h1 id="step-0-establishes-all-path-variables-once-all-later-steps-reference-these-variables">Step 0 establishes all path variables once. All later steps reference these variables.<a class="headerlink" href="#step-0-establishes-all-path-variables-once-all-later-steps-reference-these-variables" title="Permanent link">&para;</a></h1>
+<h1 id="this-prevents-hardcoded-paths-that-break-when-the-skill-runs-in-different-projects">This prevents hardcoded paths that break when the skill runs in different projects.<a class="headerlink" href="#this-prevents-hardcoded-paths-that-break-when-the-skill-runs-in-different-projects" title="Permanent link">&para;</a></h1>
+<h3 id="step-1-repository-analysis">Step 1: Repository Analysis<a class="headerlink" href="#step-1-repository-analysis" title="Permanent link">&para;</a></h3>
+<h1 id="each-step-has-a-single-cohesive-purpose">Each step has a single, cohesive purpose<a class="headerlink" href="#each-step-has-a-single-cohesive-purpose" title="Permanent link">&para;</a></h1>
+<p>Perform a read-only scan of the repository structure:</p>
+<ol>
+<li>List all files in the root directory</li>
+<li>Detect the primary programming language from file extensions</li>
+<li>Check for <code>package.json</code>, <code>pyproject.toml</code>, <code>Cargo.toml</code>, <code>go.mod</code> — use whichever
+   exists to determine ecosystem and extract dependencies</li>
+<li>Read the first 50 lines of the main entry point if it can be detected</li>
+<li>Check for existing <code>docs/</code> directory or documentation files</li>
+</ol>
+<p>Record findings in a structured summary (do not write to disk yet).</p>
+<p><strong>Skip-if-complete detection:</strong>
+If <code>README.md</code> exists and has more than 1,000 words, ask: "A substantial README already
+exists. Would you like to overwrite it, or append sections that are missing?"</p>
+<h1 id="skip-if-complete-detection-prevents-accidentally-overwriting-good-work">Skip-if-complete detection prevents accidentally overwriting good work.<a class="headerlink" href="#skip-if-complete-detection-prevents-accidentally-overwriting-good-work" title="Permanent link">&para;</a></h1>
+<h3 id="step-2-content-planning">Step 2: Content Planning<a class="headerlink" href="#step-2-content-planning" title="Permanent link">&para;</a></h3>
+<p>Based on the analysis from Step 1, determine which README sections are applicable:</p>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Include If</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Badges</td>
+<td>Public repo with CI/CD detected</td>
+</tr>
+<tr>
+<td>Installation</td>
+<td>Package or binary detected</td>
+</tr>
+<tr>
+<td>Usage Examples</td>
+<td>Code examples or CLI args detected</td>
+</tr>
+<tr>
+<td>API Reference</td>
+<td>Library or SDK project detected</td>
+</tr>
+<tr>
+<td>Configuration</td>
+<td>Config files detected</td>
+</tr>
+<tr>
+<td>Contributing</td>
+<td>Open-source intent detected</td>
+</tr>
+<tr>
+<td>License</td>
+<td>License file exists</td>
+</tr>
+</tbody>
+</table>
+<p>Plan the section order before writing. Record the plan as a comment in the log.</p>
+<h3 id="step-3-draft-readme">Step 3: Draft README<a class="headerlink" href="#step-3-draft-readme" title="Permanent link">&para;</a></h3>
+<h1 id="generation-step-uses-the-plan-from-step-2">Generation step. Uses the plan from Step 2.<a class="headerlink" href="#generation-step-uses-the-plan-from-step-2" title="Permanent link">&para;</a></h1>
+<p>Generate <code>README.md</code> using the section plan from Step 2. Follow these standards:</p>
+<ul>
+<li>Use H1 for the project name (single occurrence, at the top)</li>
+<li>Use H2 for all main sections</li>
+<li>Use H3 for sub-sections within sections</li>
+<li>Code blocks must specify their language (e.g., <code>bash,</code>python)</li>
+<li>Every code example must be executable — no placeholder pseudocode</li>
+</ul>
+<p><strong>User Dialog Trigger:</strong>
+If the skill cannot determine the project's primary purpose from the file scan, ask:
+"I could not determine what this project does. Can you describe it in 1-2 sentences?"</p>
+<h1 id="dialog-triggers-pause-execution-and-collect-information-that-cannot-be-inferred">Dialog triggers pause execution and collect information that cannot be inferred.<a class="headerlink" href="#dialog-triggers-pause-execution-and-collect-information-that-cannot-be-inferred" title="Permanent link">&para;</a></h1>
+<h3 id="step-4-quality-scoring">Step 4: Quality Scoring<a class="headerlink" href="#step-4-quality-scoring" title="Permanent link">&para;</a></h3>
+<p>Score the draft README against the 100-point rubric (see Quality Scoring section below).</p>
+<p>If score &gt;= 80: Proceed to Step 5.
+If score 65-79: Proceed with a note to the user about improvement areas.
+If score &lt; 65: Ask the user: "The draft scores [N]/100. Key issues: [list].
+  Would you like me to revise before saving, or save and address issues later?"</p>
+<h3 id="step-5-write-output">Step 5: Write Output<a class="headerlink" href="#step-5-write-output" title="Permanent link">&para;</a></h3>
+<p>Write the approved README to <code>README_PATH</code>.</p>
+<p>Append a session log to <code>LOG_PATH</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Session: README Generator v1.2
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Date: [timestamp]
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Repository: [REPO_ROOT]
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>Quality Score: [N]/100
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>Sections Generated: [list]
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>Words: [count]
+</code></pre></div></p>
+<p>Report to the user:
+"README.md created. [N] words, quality score [N]/100. Sections: [list]."</p>
+<h2 id="output-files-summary_1">Output Files Summary<a class="headerlink" href="#output-files-summary_1" title="Permanent link">&para;</a></h2>
+<p><strong>Required:</strong>
+1. <code>README.md</code> — Complete project documentation in the repository root</p>
+<p><strong>Recommended:</strong>
+2. <code>logs/readme-generator-[timestamp].md</code> — Session log with quality score and decisions</p>
+<p><strong>Optional:</strong>
+3. Updates to <code>mkdocs.yml</code> if the project uses MkDocs and README should link to docs</p>
+<h2 id="example-session_1">Example Session<a class="headerlink" href="#example-session_1" title="Permanent link">&para;</a></h2>
+<p><strong>User:</strong> "Generate a README for this project"</p>
+<p><strong>Claude (using this skill):</strong>
+1. Detects repository root at <code>/Users/dan/projects/my-api/</code>
+2. Scans structure — detects Python, <code>pyproject.toml</code>, FastAPI dependency
+3. Plans sections: badges, installation, usage, API reference, contributing, license
+4. Drafts README with FastAPI-specific examples
+5. Scores draft: 84/100 (strong structure, good examples, missing badges)
+6. Writes README.md
+7. Reports: "README.md created. 847 words, quality score 84/100. Missing: CI badge
+   (no CI config detected). Recommend adding GitHub Actions workflow."</p>
+<h2 id="common-pitfalls-to-avoid_1">Common Pitfalls to Avoid<a class="headerlink" href="#common-pitfalls-to-avoid_1" title="Permanent link">&para;</a></h2>
+<p><strong>Inventing functionality:</strong>
+Only document what actually exists in the repository. Do not write "coming soon"
+sections or describe features that are not yet implemented.</p>
+<p><strong>Generic installation instructions:</strong>
+Bad: "Install the dependencies."
+Good: "Run <code>pip install -e .</code> to install the package and all dependencies in
+development mode."</p>
+<p><strong>Placeholder code examples:</strong>
+Bad: <code>my_function(your_data)</code>
+Good: <code>result = transform_csv("input.csv", delimiter=",")</code></p>
+<h2 id="quality-scoring-reference">Quality Scoring Reference<a class="headerlink" href="#quality-scoring-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Weight</th>
+<th>Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Completeness</td>
+<td>30 pts</td>
+<td>All relevant sections present</td>
+</tr>
+<tr>
+<td>Accuracy</td>
+<td>30 pts</td>
+<td>All claims verifiable from codebase</td>
+</tr>
+<tr>
+<td>Usability</td>
+<td>20 pts</td>
+<td>New user can install and run from README alone</td>
+</tr>
+<tr>
+<td>Code Quality</td>
+<td>20 pts</td>
+<td>All examples syntactically correct and executable</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Thresholds:</strong>
+- 80-100: Excellent — deliver immediately
+- 65-79: Good — deliver with improvement notes
+- Below 65: Needs revision — ask user before saving
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>---
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>## Why Every Section Is Non-Optional
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Consider what happens when you remove each section from a SKILL.md:
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>| Missing Section | Consequence |
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>|----------------|-------------|
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>| Frontmatter | Skill cannot be loaded or invoked |
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>| H1 Title | Claude has no named reference point; logs become ambiguous |
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>| Overview | Ambiguous step instructions are interpreted inconsistently |
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>| When to Use | Users invoke at wrong time in workflow; dependencies not met |
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>| Workflow Steps | Skill has no instructions — produces arbitrary output |
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>| Step 0 | Path variables undefined; filesystem operations fail |
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>| Output Files Summary | No contract on deliverables; downstream skills break |
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>| Example Session | No reference for expected interaction pattern |
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>| Common Pitfalls | Known failure modes repeat across runs |
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>| Quality Scoring | No self-validation; output quality is unpredictable |
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>The sections are not decorative. Each one either makes Claude&#39;s behavior more consistent, protects against a known failure mode, or creates a contract that other parts of your system can depend on.
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>---
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>## The Directory Structure for a Skill
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>A SKILL.md file lives inside a directory that may contain supporting files:
+</code></pre></div>
+~/.claude/skills/
+└── my-skill/
+    ├── SKILL.md              ← Required. The skill definition.
+    ├── assets/
+    │   └── templates/        ← Optional. Templates referenced in workflow steps.
+    ├── references/           ← Optional. Sub-skill guides for meta-skills.
+    │   ├── variant-a.md
+    │   └── variant-b.md
+    └── scripts/              ← Optional. Python or bash utilities.
+        └── validate.py
+```</p>
+<p>The SKILL.md file is the only required file. Supporting assets extend the skill's capabilities without bloating the SKILL.md file itself. A skill that generates Python validation scripts, for example, can store those scripts in <code>scripts/</code> and reference them in the workflow steps.</p>
+<hr />
+<h2 id="key-takeaways">Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Every SKILL.md contains two logical sections: YAML frontmatter and a markdown body</li>
+<li>The frontmatter is Claude Code's configuration layer — name, description, license, allowed-tools</li>
+<li>The markdown body is Claude's instruction set — every section shapes how it interprets and executes the workflow</li>
+<li>Step 0 is always environment setup and always the first workflow step</li>
+<li>The Output Files Summary creates a binding contract on what the skill produces</li>
+<li>Quality scoring sections transform the skill from a generator into a self-validating system</li>
+<li>No section is optional — each one prevents a specific class of failure</li>
+</ul>
+<p>In Chapter 5, we examine the YAML frontmatter in depth, including how the <code>description</code> field becomes part of Claude's system prompt and how <code>allowed-tools</code> glob patterns control execution permissions.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.code.annotate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

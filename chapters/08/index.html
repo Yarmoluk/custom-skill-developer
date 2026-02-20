@@ -1,0 +1,2547 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive knowledge base for building custom Claude Code skills — from single-purpose agents to meta-skill routers and full pipeline orchestration.">
+      
+      
+      
+        <link rel="canonical" href="https://yarmoluk.github.io/custom-skill-developer/chapters/08/">
+      
+      
+        <link rel="prev" href="../07/">
+      
+      
+        <link rel="next" href="../09/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Meta-Skill Routers - Custom Skill Developer Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-8-meta-skill-routers" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Custom Skill Developer Guide" class="md-header__button md-logo" aria-label="Custom Skill Developer Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Custom Skill Developer Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Meta-Skill Routers
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Yarmoluk/custom-skill-developer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Yarmoluk/custom-skill-developer
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../course-description/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Course Description
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01/" class="md-tabs__link">
+          
+  
+  
+  Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../04/" class="md-tabs__link">
+          
+  
+  
+  Skill Anatomy
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Advanced Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../12/" class="md-tabs__link">
+          
+  
+  
+  Specialized Skills
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../15/" class="md-tabs__link">
+          
+  
+  
+  Deployment
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../glossary.md" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Custom Skill Developer Guide" class="md-nav__button md-logo" aria-label="Custom Skill Developer Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Custom Skill Developer Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Yarmoluk/custom-skill-developer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Yarmoluk/custom-skill-developer
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../course-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Course Description
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Are Claude Code Skills?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Skill Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill Anatomy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skill Anatomy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SKILL.md Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YAML Frontmatter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Scoring Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Patterns
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meta-Skill Routers
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meta-Skill Routers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-a-meta-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Is a Meta-Skill?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-build-a-meta-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Build a Meta-Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-routing-table-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Routing Table Pattern
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Routing Table Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#keyword-matching-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyword Matching Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-decision-tree-for-ambiguous-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Decision Tree for Ambiguous Requests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-references-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The References Directory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The References Directory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-goes-in-a-reference-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Goes in a Reference Guide
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-report-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked Example: report-generator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Worked Example: report-generator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skillmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SKILL.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#referencesexecutive-summary-guidemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        references/executive-summary-guide.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#referencestechnical-spec-guidemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        references/technical-spec-guide.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#referencessales-report-guidemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        references/sales-report-guide.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#referencesops-dashboard-guidemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        references/ops-dashboard-guide.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-your-own-meta-skill-the-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building Your Own Meta-Skill: The Process
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building Your Own Meta-Skill: The Process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-inventory-your-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Inventory Your Variants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-build-the-routing-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Build the Routing Table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-design-the-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Design the Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-write-the-reference-guides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Write the Reference Guides
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-test-the-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Test the Routing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#routing-failures-and-how-to-handle-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Routing Failures and How to Handle Them
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anti-patterns-to-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anti-Patterns to Avoid
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Token Efficiency Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized Skills
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized Skills
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Format Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Generation Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analysis & Validation Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deployment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation & Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing & Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing & Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-a-meta-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Is a Meta-Skill?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-build-a-meta-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Build a Meta-Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-routing-table-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Routing Table Pattern
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Routing Table Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#keyword-matching-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyword Matching Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-decision-tree-for-ambiguous-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Decision Tree for Ambiguous Requests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-references-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The References Directory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The References Directory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-goes-in-a-reference-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Goes in a Reference Guide
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-report-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked Example: report-generator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Worked Example: report-generator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skillmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SKILL.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#referencesexecutive-summary-guidemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        references/executive-summary-guide.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#referencestechnical-spec-guidemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        references/technical-spec-guide.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#referencessales-report-guidemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        references/sales-report-guide.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#referencesops-dashboard-guidemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        references/ops-dashboard-guide.md
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-your-own-meta-skill-the-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building Your Own Meta-Skill: The Process
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building Your Own Meta-Skill: The Process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-inventory-your-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Inventory Your Variants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-build-the-routing-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Build the Routing Table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-design-the-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Design the Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-write-the-reference-guides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Write the Reference Guides
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-test-the-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Test the Routing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#routing-failures-and-how-to-handle-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Routing Failures and How to Handle Them
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anti-patterns-to-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anti-Patterns to Avoid
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="chapter-8-meta-skill-routers">Chapter 8: Meta-Skill Routers<a class="headerlink" href="#chapter-8-meta-skill-routers" title="Permanent link">&para;</a></h1>
+<p>A single skill handles one job well. But what happens when a domain naturally splits into multiple related workflows — each sharing a common entry point, the same quality standards, and many of the same concepts, but diverging sharply in execution?</p>
+<p>That is the problem meta-skill routers solve.</p>
+<p>This chapter explains the routing pattern in depth: how it works, when to use it, and how to build a production-quality meta-skill from scratch. By the end you will have a complete worked example — a <code>report-generator</code> meta-skill with four distinct sub-skill variants — including every file in the directory structure.</p>
+<hr />
+<h2 id="what-is-a-meta-skill">What Is a Meta-Skill?<a class="headerlink" href="#what-is-a-meta-skill" title="Permanent link">&para;</a></h2>
+<p>A meta-skill is a skill whose primary job is <em>routing</em>. When invoked, it does not immediately begin producing output. Instead, it analyzes the user's request, identifies which sub-skill variant is appropriate, loads the relevant reference guide, and then executes within that variant's context.</p>
+<p>From the user's perspective, they invoke one skill. Under the hood, the meta-skill transparently selects and runs the right workflow for their specific request.</p>
+<p>This pattern solves three real problems:</p>
+<p><strong>1. The proliferation problem.</strong> If every sub-variant were its own skill, users would need to know which variant to pick before they even understood the domain. A <code>report-generator</code> entry point is more intuitive than having to choose between <code>executive-summary-generator</code>, <code>technical-spec-generator</code>, <code>sales-report-generator</code>, and <code>ops-dashboard-generator</code>.</p>
+<p><strong>2. The token budget problem.</strong> A SKILL.md file that tries to embed full instructions for fourteen sub-variants would balloon to 15,000+ tokens. The system prompt budget is fixed. Lazy loading reference guides means you only pay the token cost for the variant you actually need. (This is covered in depth in Chapter 9.)</p>
+<p><strong>3. The maintenance problem.</strong> Shared scaffolding — quality scoring, log format, file naming conventions — lives in the meta-skill SKILL.md. Variant-specific detail lives in the reference guide. You update each in exactly one place.</p>
+<hr />
+<h2 id="when-to-build-a-meta-skill">When to Build a Meta-Skill<a class="headerlink" href="#when-to-build-a-meta-skill" title="Permanent link">&para;</a></h2>
+<p>Use a meta-skill when all of the following are true:</p>
+<ul>
+<li>You have <strong>3 or more sub-variants</strong> that share a common user intent but diverge in workflow steps</li>
+<li>The variants share <strong>quality criteria, output format conventions, or file naming patterns</strong></li>
+<li>The correct variant is usually <strong>determinable from the user's request</strong> without interactive disambiguation</li>
+<li>Each variant's detail is <strong>substantial enough</strong> (500+ tokens) to justify lazy loading</li>
+</ul>
+<p>Do not use a meta-skill for two variants with minor differences. A conditional in a single SKILL.md handles that cleanly. Reserve the routing pattern for genuine divergence.</p>
+<hr />
+<h2 id="the-routing-table-pattern">The Routing Table Pattern<a class="headerlink" href="#the-routing-table-pattern" title="Permanent link">&para;</a></h2>
+<p>The core mechanism is a routing table — a structured mapping from keywords or request patterns to reference file paths.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">routing</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">keywords</span><span class="p">:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">executive</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">references/executive-summary-guide.md</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">summary</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">references/executive-summary-guide.md</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">leadership</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">references/executive-summary-guide.md</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">technical</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">references/technical-spec-guide.md</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w">          </span><span class="l l-Scalar l-Scalar-Plain">references/technical-spec-guide.md</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">architecture</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">references/technical-spec-guide.md</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">sales</span><span class="p">:</span><span class="w">         </span><span class="l l-Scalar l-Scalar-Plain">references/sales-report-guide.md</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">pipeline</span><span class="p">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">references/sales-report-guide.md</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nt">revenue</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">references/sales-report-guide.md</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="nt">ops</span><span class="p">:</span><span class="w">           </span><span class="l l-Scalar l-Scalar-Plain">references/ops-dashboard-guide.md</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="nt">operations</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">references/ops-dashboard-guide.md</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="nt">metrics</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">references/ops-dashboard-guide.md</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="nt">dashboard</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">references/ops-dashboard-guide.md</span>
+</code></pre></div>
+<p>Claude reads this table as part of the SKILL.md. When the user's request contains a matching keyword, Claude loads the corresponding reference file and proceeds with that variant's workflow.</p>
+<p>Multiple keywords mapping to the same file is intentional and important. Users rarely use the exact vocabulary you expect. "Revenue breakdown" should route the same as "sales report." Covering synonyms and related terms dramatically reduces routing failures.</p>
+<h3 id="keyword-matching-rules">Keyword Matching Rules<a class="headerlink" href="#keyword-matching-rules" title="Permanent link">&para;</a></h3>
+<p>The routing logic Claude applies when reading this table follows a priority order:</p>
+<ol>
+<li><strong>Exact keyword match</strong> in the user's request — highest confidence</li>
+<li><strong>Semantic match</strong> — the concept is clearly present even if the word differs ("Q3 numbers" implies sales/revenue context)</li>
+<li><strong>Context from prior messages</strong> — if the conversation already established report type, use it</li>
+<li><strong>Decision tree</strong> — when ambiguity remains after the above</li>
+</ol>
+<p>This is not regex matching. Claude uses natural language understanding, which means the routing table functions as a <em>signal vocabulary</em> rather than a rigid parser. Write your keyword list to seed Claude's semantic understanding, not to enumerate every possible phrasing.</p>
+<hr />
+<h2 id="the-decision-tree-for-ambiguous-requests">The Decision Tree for Ambiguous Requests<a class="headerlink" href="#the-decision-tree-for-ambiguous-requests" title="Permanent link">&para;</a></h2>
+<p>Not every request resolves cleanly to one route. "Generate a report on Q3 performance" is ambiguous — it could be executive, sales, or ops depending on context.</p>
+<p>A decision tree handles this. In the meta-skill SKILL.md, after the routing table, include an explicit disambiguation section:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="gu">## Disambiguation Protocol</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>If routing is ambiguous after keyword matching, apply this decision tree:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">1.</span> Is the primary audience C-suite or board-level?
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   YES → executive-summary-guide.md
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>   NO  → continue
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">2.</span> Does the request emphasize technical architecture, APIs, or system design?
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>   YES → technical-spec-guide.md
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>   NO  → continue
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">3.</span> Does the request emphasize revenue, deals, pipeline, or quota?
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>   YES → sales-report-guide.md
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>   NO  → continue
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="k">4.</span> Default to ops-dashboard-guide.md for operational metrics, KPIs, or
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>   process performance.
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="k">5.</span> If still unclear after applying this tree, ask the user ONE clarifying
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>   question: &quot;Is this report primarily for leadership, technical review,
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>   sales tracking, or operational monitoring?&quot;
+</code></pre></div>
+<p>The decision tree has two properties that make it effective:</p>
+<ul>
+<li><strong>It is deterministic.</strong> Working through the tree from top to bottom always produces an answer.</li>
+<li><strong>It has an escape hatch.</strong> If the tree still cannot resolve ambiguity, Claude asks one targeted question rather than guessing or refusing.</li>
+</ul>
+<p>Keep the escape hatch tight. "Ask ONE clarifying question" is a constraint, not a suggestion. Users who invoke a skill want immediate output, not an interview.</p>
+<hr />
+<h2 id="the-references-directory">The References Directory<a class="headerlink" href="#the-references-directory" title="Permanent link">&para;</a></h2>
+<p>The <code>references/</code> directory lives inside the skill folder:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>~/.claude/skills/report-generator/
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├── SKILL.md
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>└── references/
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    ├── executive-summary-guide.md
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    ├── technical-spec-guide.md
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    ├── sales-report-guide.md
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    └── ops-dashboard-guide.md
+</code></pre></div>
+<p>Each reference guide contains the full, detailed workflow for that variant. It is written as a standalone document that Claude can execute once loaded.</p>
+<p>Reference guides are <strong>never loaded speculatively</strong>. The meta-skill loads exactly one guide — the one that matched the routing decision. All other variant guides consume zero tokens in that session.</p>
+<h3 id="what-goes-in-a-reference-guide">What Goes in a Reference Guide<a class="headerlink" href="#what-goes-in-a-reference-guide" title="Permanent link">&para;</a></h3>
+<p>A reference guide is not a summary or a pointer. It is the complete execution specification for its variant. It should contain:</p>
+<ul>
+<li><strong>Workflow steps</strong> — numbered, sequential, specific</li>
+<li><strong>Output format</strong> — exact structure, sections, headings expected in the output document</li>
+<li><strong>Quality criteria</strong> — what "good" looks like for this variant</li>
+<li><strong>Examples</strong> — at least one condensed example of correct output structure</li>
+<li><strong>Variant-specific warnings</strong> — common mistakes unique to this type</li>
+</ul>
+<p>Think of the reference guide as a sub-skill SKILL.md that happened to be stored separately for token efficiency reasons. Write it with the same completeness you would give a standalone skill.</p>
+<hr />
+<h2 id="worked-example-report-generator">Worked Example: report-generator<a class="headerlink" href="#worked-example-report-generator" title="Permanent link">&para;</a></h2>
+<p>Here is the complete file structure and content for a production <code>report-generator</code> meta-skill.</p>
+<h3 id="file-structure">File Structure<a class="headerlink" href="#file-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>~/.claude/skills/report-generator/
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── SKILL.md
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>└── references/
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    ├── executive-summary-guide.md
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    ├── technical-spec-guide.md
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    ├── sales-report-guide.md
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    └── ops-dashboard-guide.md
+</code></pre></div>
+<hr />
+<h3 id="skillmd">SKILL.md<a class="headerlink" href="#skillmd" title="Permanent link">&para;</a></h3>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>---
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>name: report-generator
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>version: 1.2.0
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>description: &gt;
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  Generates structured business reports. Routes to one of four variants:
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  executive summary, technical specification, sales performance, or
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  operational dashboard. Provide a topic, time period, and any available
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  data — the skill selects the appropriate format automatically.
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>author: your-name
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="gu">tags: [reports, business, meta-skill, router]</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="gu">---</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="gh"># Report Generator</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="gu">## Purpose</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>Generate professional business reports in the format appropriate for your
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>audience and purpose. This skill routes automatically between four variants
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>based on the keywords and context in your request.
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="gu">## Invocation</span>
+</code></pre></div>
+/report-generator [describe your report topic and audience]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Examples:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>- `/report-generator Q3 executive summary for the board`
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>- `/report-generator technical spec for the authentication service redesign`
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>- `/report-generator sales pipeline report, week ending Nov 15`
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>- `/report-generator ops dashboard for customer support team, October`
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>## Routing Table
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>| Keywords | → Variant | Reference |
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>|----------|-----------|-----------|
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>| executive, summary, board, leadership, C-suite | Executive Summary | references/executive-summary-guide.md |
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>| technical, spec, architecture, system, API, design | Technical Spec | references/technical-spec-guide.md |
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>| sales, pipeline, revenue, quota, deals, ARR, MRR | Sales Report | references/sales-report-guide.md |
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>| ops, operations, metrics, dashboard, KPIs, SLA, support | Ops Dashboard | references/ops-dashboard-guide.md |
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>## Disambiguation Protocol
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>If routing is ambiguous after keyword matching:
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>1. Is the primary audience C-suite or board-level? → executive-summary-guide.md
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>2. Does the request center on technical architecture or system design? → technical-spec-guide.md
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>3. Does the request center on revenue, deals, or quota attainment? → sales-report-guide.md
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>4. Default: ops-dashboard-guide.md
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>If still unclear: ask &quot;Is this report for leadership review, technical
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>documentation, sales tracking, or operational monitoring?&quot;
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>## Execution Protocol
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>1. Parse the user&#39;s request for routing keywords
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>2. Apply the routing table (highest-confidence match wins)
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>3. If ambiguous, apply the disambiguation protocol
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>4. Read the matched reference guide
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>5. Execute the variant workflow from the reference guide
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>6. Apply the shared quality checklist below
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>7. Write the session log
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>## Shared Quality Checklist
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>Before delivering any output, verify:
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>- [ ] Report has a clear title with date/period
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>- [ ] Executive summary / TL;DR section present (even technical reports)
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>- [ ] All data claims are attributed or flagged as estimates
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>- [ ] Recommendations section present if report type supports it
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>- [ ] Output written in the correct register for the target audience
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>## Output Location
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a>
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a>Reports are saved to: `./reports/[variant]-[YYYY-MM-DD].md`
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>## Session Log
+<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a>
+<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a>After completion, write a log entry to:
+<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a>`./logs/report-generator-v1.2.0-[DATE].md`
+<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a>
+<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a>Include: variant selected, routing confidence (high/medium/low), time to
+<a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a>complete, word count, quality score (0-10).
+</code></pre></div></p>
+<hr />
+<h3 id="referencesexecutive-summary-guidemd">references/executive-summary-guide.md<a class="headerlink" href="#referencesexecutive-summary-guidemd" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="gh"># Executive Summary Variant — Workflow Guide</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="gu">## Audience</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>C-suite leaders, board members, investors. Readers who have 3 minutes, not 30.
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Every sentence must earn its place. Cut ruthlessly.
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="gu">## Output Structure</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="k">1.</span> <span class="gs">**Title Block**</span> — Report title, date, author, period covered
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="k">2.</span> <span class="gs">**One-Sentence Summary**</span> — The single most important thing
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="k">3.</span> <span class="gs">**Key Findings**</span> (3-5 bullets, each under 20 words)
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="k">4.</span> <span class="gs">**Business Impact**</span> — Dollar amounts, percentages, customer counts
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="k">5.</span> <span class="gs">**Recommended Actions**</span> (2-4 items, each with an owner and deadline)
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="k">6.</span> <span class="gs">**Supporting Context**</span> — Optional, max 200 words, for readers who want more
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>Total target length: 400-600 words. Never exceed 800.
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="gu">## Workflow Steps</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="k">1.</span> Identify the primary business question the report must answer
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="k">2.</span> Extract the 3-5 findings that most directly answer that question
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="k">3.</span> Quantify each finding (no qualitative-only bullets in an exec summary)
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="k">4.</span> Write the one-sentence summary last, after findings are clear
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="k">5.</span> Write recommendations as action verbs: &quot;Hire,&quot; &quot;Approve,&quot; &quot;Pause,&quot; &quot;Redirect&quot;
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="k">6.</span> Remove all jargon. If a term needs defining, the term is wrong for this audience.
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="gu">## Quality Criteria</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="k">-</span><span class="w"> </span>Findings are quantified (not &quot;significantly improved&quot; but &quot;improved 23%&quot;)
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="k">-</span><span class="w"> </span>Recommendations have explicit owners or owner roles
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="k">-</span><span class="w"> </span>No sentence exceeds 25 words
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="k">-</span><span class="w"> </span>A reader who skips to page 2 of supporting context still has everything they need from pages 0-1
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a><span class="gu">## Common Mistakes</span>
+<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a>
+<a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a><span class="k">-</span><span class="w"> </span>Including methodology in the body (it belongs in an appendix if anywhere)
+<a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a><span class="k">-</span><span class="w"> </span>Writing &quot;As you can see...&quot; — the reader should see without narration
+<a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a><span class="k">-</span><span class="w"> </span>Using passive voice for recommendations (&quot;Action should be taken&quot; → &quot;CMO to approve budget by Nov 30&quot;)
+</code></pre></div>
+<hr />
+<h3 id="referencestechnical-spec-guidemd">references/technical-spec-guide.md<a class="headerlink" href="#referencestechnical-spec-guidemd" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="gh"># Technical Specification Variant — Workflow Guide</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="gu">## Audience</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Engineers, architects, technical leads. Readers who will implement or review
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>the system being specified. Precision over brevity. Ambiguity is a defect.
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="gu">## Output Structure</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="k">1.</span> <span class="gs">**Title Block**</span> — Document title, version, date, authors, status (Draft/Review/Approved)
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="k">2.</span> <span class="gs">**Overview**</span> — What the system does and why it exists (2-3 paragraphs)
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="k">3.</span> <span class="gs">**Scope**</span> — What is in scope, what is explicitly out of scope
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="k">4.</span> <span class="gs">**Architecture Diagram**</span> — Mermaid block required for any system with &gt;2 components
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="k">5.</span> <span class="gs">**Component Specifications**</span> — One subsection per component
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="k">6.</span> <span class="gs">**Data Model**</span> — Entity relationships, key fields, types
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="k">7.</span> <span class="gs">**API Contracts**</span> (if applicable) — Endpoint, method, request/response schema
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="k">8.</span> <span class="gs">**Error Handling**</span> — What can go wrong and how the system responds
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="k">9.</span> <span class="gs">**Open Questions**</span> — Unresolved decisions, flagged explicitly
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="k">10.</span> <span class="gs">**Revision History**</span> — Version table at bottom
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="gu">## Workflow Steps</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="k">1.</span> Identify all system components from the user&#39;s description
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="k">2.</span> Determine boundaries (what this system owns vs. what it calls)
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="k">3.</span> Draft the architecture diagram before writing prose
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="k">4.</span> Write component specs in dependency order (upstream components first)
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="k">5.</span> Flag every assumption explicitly as [ASSUMPTION: ...]
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a><span class="k">6.</span> Flag every open decision explicitly as [OPEN: ...]
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a><span class="gu">## Quality Criteria</span>
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a><span class="k">-</span><span class="w"> </span>No ambiguous pronoun references (&quot;it,&quot; &quot;they,&quot; &quot;this&quot;) without clear antecedents
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a><span class="k">-</span><span class="w"> </span>Every interface is specified bidirectionally (what caller sends, what callee returns)
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a><span class="k">-</span><span class="w"> </span>Error states are enumerated, not handwaved (&quot;handles errors appropriately&quot; is not acceptable)
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a><span class="k">-</span><span class="w"> </span>Open questions are distinguished from decisions already made
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a><span class="gu">## Common Mistakes</span>
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a><span class="k">-</span><span class="w"> </span>Writing prose for things that should be tables or diagrams
+<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a><span class="k">-</span><span class="w"> </span>Assuming the reader shares context the author has
+<a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a><span class="k">-</span><span class="w"> </span>Omitting the &quot;out of scope&quot; section (creates scope creep later)
+</code></pre></div>
+<hr />
+<h3 id="referencessales-report-guidemd">references/sales-report-guide.md<a class="headerlink" href="#referencessales-report-guidemd" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="gh"># Sales Performance Report Variant — Workflow Guide</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="gu">## Audience</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Sales leadership, RevOps, finance. Readers tracking quota attainment,
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>pipeline health, and revenue trends against targets.
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="gu">## Output Structure</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="k">1.</span> <span class="gs">**Title Block**</span> — Report title, period, author, date generated
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="k">2.</span> <span class="gs">**Period Summary**</span> (4 key metrics in a 2x2 grid):
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>Closed revenue vs. target
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>Pipeline coverage ratio
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>New opportunities created
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">   </span><span class="k">-</span><span class="w"> </span>Average deal cycle (days)
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="k">3.</span> <span class="gs">**Closed Deals Table**</span> — Deal name, ACV, close date, rep, stage
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="k">4.</span> <span class="gs">**Pipeline Snapshot**</span> — By stage, with aging flags (&gt;90 days at stage = flag)
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="k">5.</span> <span class="gs">**Rep Performance**</span> — Quota attainment % per rep (no names if requested)
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="k">6.</span> <span class="gs">**Trend Line**</span> — Last 4 periods, same metrics as Period Summary
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="k">7.</span> <span class="gs">**Risk Flags**</span> — Deals at risk, slippage, churn signals
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="k">8.</span> <span class="gs">**Forecast**</span> — Current quarter projection with confidence range
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="gu">## Workflow Steps</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="k">1.</span> Extract all deal/revenue data from user input
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="k">2.</span> Compute period-over-period changes for all key metrics
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="k">3.</span> Flag any deal &gt;90 days at current stage
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="k">4.</span> Calculate pipeline coverage (pipeline value / remaining quota target)
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="k">5.</span> Generate forecast as a range, not a point estimate
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="k">6.</span> Write risk flags before recommendations — risks inform recommendations
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="gu">## Quality Criteria</span>
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a><span class="k">-</span><span class="w"> </span>All percentages reference a clear baseline
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a><span class="k">-</span><span class="w"> </span>Forecast includes confidence range, not just a number
+<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a><span class="k">-</span><span class="w"> </span>Aging flags use consistent threshold (default: 90 days)
+<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a><span class="k">-</span><span class="w"> </span>Rep performance section is present even if data is aggregate-only
+<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a>
+<a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a><span class="gu">## Common Mistakes</span>
+<a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a>
+<a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a><span class="k">-</span><span class="w"> </span>Reporting revenue without comparing to target
+<a id="__codelineno-8-42" name="__codelineno-8-42" href="#__codelineno-8-42"></a><span class="k">-</span><span class="w"> </span>Presenting a point forecast without confidence range
+<a id="__codelineno-8-43" name="__codelineno-8-43" href="#__codelineno-8-43"></a><span class="k">-</span><span class="w"> </span>Omitting pipeline coverage ratio (most critical leading indicator)
+</code></pre></div>
+<hr />
+<h3 id="referencesops-dashboard-guidemd">references/ops-dashboard-guide.md<a class="headerlink" href="#referencesops-dashboard-guidemd" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="gh"># Operational Dashboard Variant — Workflow Guide</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="gu">## Audience</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Operations managers, team leads, department heads. Readers monitoring
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>process performance against SLAs, capacity, and efficiency targets.
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="gu">## Output Structure</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="k">1.</span> <span class="gs">**Title Block**</span> — Dashboard title, period, team/system, date generated
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="k">2.</span> <span class="gs">**Health Summary**</span> — RAG (Red/Amber/Green) status for each key area
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="k">3.</span> <span class="gs">**Volume Metrics**</span> — Throughput, load, transaction counts for the period
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="k">4.</span> <span class="gs">**SLA Performance**</span> — Each SLA with target, actual, variance
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="k">5.</span> <span class="gs">**Incident Summary**</span> — Count, severity breakdown, MTTR, top repeat issues
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="k">6.</span> <span class="gs">**Capacity Utilization**</span> — Current utilization vs. designed capacity
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="k">7.</span> <span class="gs">**Trend Comparison**</span> — Same period last month / last quarter
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="k">8.</span> <span class="gs">**Action Items**</span> — Prioritized list, each with owner and due date
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="gu">## Workflow Steps</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="k">1.</span> Identify the team or system being monitored
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="k">2.</span> List all SLAs or KPIs the user has provided
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="k">3.</span> Assign RAG status to each: Red = missed target, Amber = within 10% of threshold, Green = on target
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="k">4.</span> Calculate MTTR for incidents if incident data is available
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="k">5.</span> Flag capacity risks if utilization &gt;80%
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="k">6.</span> Write action items last, after all data sections are populated
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="gu">## Quality Criteria</span>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="k">-</span><span class="w"> </span>Every metric has a target to compare against (no contextless numbers)
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="k">-</span><span class="w"> </span>RAG status is applied consistently using the defined thresholds
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a><span class="k">-</span><span class="w"> </span>Capacity section flags utilization &gt;80% as amber, &gt;95% as red
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a><span class="k">-</span><span class="w"> </span>Action items are specific and assigned (not &quot;review this area&quot;)
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a><span class="gu">## Common Mistakes</span>
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a><span class="k">-</span><span class="w"> </span>Reporting metrics without targets
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a><span class="k">-</span><span class="w"> </span>Mixing rolling averages with point-in-time snapshots without labeling
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a><span class="k">-</span><span class="w"> </span>Burying critical incidents in narrative rather than surfacing in the summary
+</code></pre></div>
+<hr />
+<h2 id="building-your-own-meta-skill-the-process">Building Your Own Meta-Skill: The Process<a class="headerlink" href="#building-your-own-meta-skill-the-process" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-inventory-your-variants">Step 1: Inventory Your Variants<a class="headerlink" href="#step-1-inventory-your-variants" title="Permanent link">&para;</a></h3>
+<p>List all the sub-variants your domain needs. For each one, write a one-sentence description of who uses it and what they need. If you cannot write that sentence clearly, the variant is not well-defined yet — clarify it before building.</p>
+<h3 id="step-2-build-the-routing-table">Step 2: Build the Routing Table<a class="headerlink" href="#step-2-build-the-routing-table" title="Permanent link">&para;</a></h3>
+<p>Extract the vocabulary each variant's users naturally use. Include:
+- The canonical term (what you'd call it)
+- Synonyms users might reach for
+- Related concepts that correlate with this variant</p>
+<p>Aim for 4-6 keywords per variant. Fewer than 3 creates routing gaps. More than 8 starts to introduce false matches across variants.</p>
+<h3 id="step-3-design-the-decision-tree">Step 3: Design the Decision Tree<a class="headerlink" href="#step-3-design-the-decision-tree" title="Permanent link">&para;</a></h3>
+<p>Walk through three deliberately ambiguous request examples. If your routing table resolves all three correctly, the decision tree is a safety net for edge cases. If the table fails on any of the three, refine it before writing the decision tree.</p>
+<p>The decision tree should have at most 4-5 nodes. If it requires more, your variants are not well enough differentiated and you should reconsider the decomposition.</p>
+<h3 id="step-4-write-the-reference-guides">Step 4: Write the Reference Guides<a class="headerlink" href="#step-4-write-the-reference-guides" title="Permanent link">&para;</a></h3>
+<p>Write each reference guide as if it were a standalone SKILL.md. Include the full workflow, complete output structure, quality criteria, and common mistakes. Do not abbreviate or summarize — the whole point of the reference file is to carry the full detail that you offloaded from the main SKILL.md.</p>
+<p>A reference guide that is too thin defeats the purpose. If a guide is under 300 words, it probably should not be a separate file — fold it back into the main SKILL.md as a conditional section.</p>
+<h3 id="step-5-test-the-routing">Step 5: Test the Routing<a class="headerlink" href="#step-5-test-the-routing" title="Permanent link">&para;</a></h3>
+<p>Before deploying, test with a set of requests that includes:
+- One clear example of each variant
+- Two ambiguous requests that require the decision tree
+- One request that should trigger the clarifying question</p>
+<p>Document the routing result for each test case. If any case routes incorrectly, adjust the keyword table or decision tree before releasing.</p>
+<hr />
+<h2 id="routing-failures-and-how-to-handle-them">Routing Failures and How to Handle Them<a class="headerlink" href="#routing-failures-and-how-to-handle-them" title="Permanent link">&para;</a></h2>
+<p>Even well-designed routing tables fail. These are the common failure modes and their fixes:</p>
+<table>
+<thead>
+<tr>
+<th>Failure Mode</th>
+<th>Symptom</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vocabulary mismatch</td>
+<td>User says "briefing" but no variant covers that</td>
+<td>Add synonym to routing table</td>
+</tr>
+<tr>
+<td>Cross-variant pollution</td>
+<td>Technical terms appear in sales requests</td>
+<td>Add negative signals or decision tree guard</td>
+</tr>
+<tr>
+<td>Over-specification</td>
+<td>Decision tree asks 3 questions before routing</td>
+<td>Simplify tree; add more keywords</td>
+</tr>
+<tr>
+<td>Ambiguity explosion</td>
+<td>&gt;30% of requests hit the escape hatch</td>
+<td>Variants are not well-differentiated; redesign</td>
+</tr>
+<tr>
+<td>Reference guide not found</td>
+<td>Claude cannot locate the reference file</td>
+<td>Verify path in routing table exactly matches filesystem</td>
+</tr>
+</tbody>
+</table>
+<p>The most important diagnostic is the escape hatch rate. If more than 20-30% of invocations end up at the clarifying question, the routing design needs work, not just the keyword list.</p>
+<hr />
+<h2 id="anti-patterns-to-avoid">Anti-Patterns to Avoid<a class="headerlink" href="#anti-patterns-to-avoid" title="Permanent link">&para;</a></h2>
+<p><strong>Do not embed full variant workflows in the SKILL.md.</strong> The entire purpose of the meta-skill pattern is to keep the main file lean. If you find yourself writing 2,000 words of variant-specific workflow in SKILL.md, move it to a reference guide.</p>
+<p><strong>Do not build a meta-skill for two variants.</strong> Two variants is a conditional, not a router. Use an <code>if/else</code> block in a single SKILL.md instead.</p>
+<p><strong>Do not let reference guides diverge in quality.</strong> If three guides are excellent and one is thin, routing to that thin guide will produce noticeably worse output. Maintain all guides to the same standard.</p>
+<p><strong>Do not silently default.</strong> If routing fails and the skill silently picks a default variant without informing the user, errors are invisible. Always log the routing decision and, if using the escape hatch, always tell the user which variant you selected and why.</p>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>The meta-skill router pattern solves the consolidation-vs-detail tension by separating routing logic from execution detail. The SKILL.md stays lean and handles routing. The reference guides carry full execution specifications, loaded only when needed.</p>
+<p>The four components are:
+1. A routing table mapping keywords to reference file paths
+2. A decision tree for ambiguous cases with a single escape-hatch question
+3. A <code>references/</code> directory containing complete variant guides
+4. Shared scaffolding (quality checklist, log format, output naming) in the main SKILL.md</p>
+<p>In Chapter 9, we examine why this architecture also solves a token budget problem — and how to measure the token cost of every design decision you make in a skill.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.code.annotate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

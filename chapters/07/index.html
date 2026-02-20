@@ -1,0 +1,2746 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive knowledge base for building custom Claude Code skills — from single-purpose agents to meta-skill routers and full pipeline orchestration.">
+      
+      
+      
+        <link rel="canonical" href="https://yarmoluk.github.io/custom-skill-developer/chapters/07/">
+      
+      
+        <link rel="prev" href="../06/">
+      
+      
+        <link rel="next" href="../08/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Quality Scoring Systems - Custom Skill Developer Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-7-quality-scoring-systems" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Custom Skill Developer Guide" class="md-header__button md-logo" aria-label="Custom Skill Developer Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Custom Skill Developer Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Quality Scoring Systems
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Yarmoluk/custom-skill-developer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Yarmoluk/custom-skill-developer
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../course-description/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Course Description
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01/" class="md-tabs__link">
+          
+  
+  
+  Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../04/" class="md-tabs__link">
+          
+  
+  
+  Skill Anatomy
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../08/" class="md-tabs__link">
+          
+  
+  
+  Advanced Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../12/" class="md-tabs__link">
+          
+  
+  
+  Specialized Skills
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../15/" class="md-tabs__link">
+          
+  
+  
+  Deployment
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../glossary.md" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Custom Skill Developer Guide" class="md-nav__button md-logo" aria-label="Custom Skill Developer Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Custom Skill Developer Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Yarmoluk/custom-skill-developer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Yarmoluk/custom-skill-developer
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../course-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Course Description
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Are Claude Code Skills?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Skill Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill Anatomy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skill Anatomy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SKILL.md Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YAML Frontmatter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Scoring Systems
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Scoring Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#building-self-evaluating-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building Self-Evaluating Skills
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-quality-scoring-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Quality Scoring Exists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-100-point-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 100-Point Scale
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The 100-Point Scale">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-threshold-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard Threshold Definitions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decomposing-quality-into-sub-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decomposing Quality into Sub-Categories
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decomposing Quality into Sub-Categories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-weighting-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Weighting Principle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-weight-distributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Weight Distributions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-example-glossary-generator-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real Example: Glossary Generator Rubric
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real Example: Glossary Generator Rubric">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applying-the-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying the Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threshold-logic-for-the-glossary-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threshold Logic for the Glossary Generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-example-course-description-analyzer-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real Example: Course Description Analyzer Rubric
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real Example: Course Description Analyzer Rubric">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-rubric_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-rubric-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Rubric Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threshold-logic-for-course-description-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threshold Logic for Course Description Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-example-learning-graph-quality-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real Example: Learning Graph Quality Metrics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real Example: Learning Graph Quality Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-rubric_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-critical-sub-category" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Critical Sub-Category
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scoring-vs-checklist-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scoring vs. Checklist Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scoring vs. Checklist Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-quality-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Quality Scoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-checklist-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Checklist Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hybrid-approach-checklist-gates-quality-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hybrid Approach: Checklist Gates + Quality Score
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#designing-your-own-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Designing Your Own Rubric
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Designing Your Own Rubric">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#template-4-category-100-point-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template: 4-Category 100-Point Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-template-application-quiz-question-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked Template Application: Quiz Question Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scoring-in-practice-what-claude-actually-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scoring in Practice: What Claude Actually Does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#calibrating-thresholds-for-your-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calibrating Thresholds for Your Domain
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-rubric-design-mistakes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Rubric Design Mistakes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Patterns
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meta-Skill Routers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Token Efficiency Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized Skills
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized Skills
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Format Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Generation Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analysis & Validation Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deployment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation & Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing & Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing & Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#building-self-evaluating-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building Self-Evaluating Skills
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-quality-scoring-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Quality Scoring Exists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-100-point-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 100-Point Scale
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The 100-Point Scale">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-threshold-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard Threshold Definitions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decomposing-quality-into-sub-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decomposing Quality into Sub-Categories
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decomposing Quality into Sub-Categories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-weighting-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Weighting Principle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-weight-distributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Weight Distributions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-example-glossary-generator-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real Example: Glossary Generator Rubric
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real Example: Glossary Generator Rubric">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applying-the-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying the Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threshold-logic-for-the-glossary-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threshold Logic for the Glossary Generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-example-course-description-analyzer-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real Example: Course Description Analyzer Rubric
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real Example: Course Description Analyzer Rubric">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-rubric_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-rubric-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Rubric Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threshold-logic-for-course-description-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threshold Logic for Course Description Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-example-learning-graph-quality-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real Example: Learning Graph Quality Metrics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real Example: Learning Graph Quality Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-rubric_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-critical-sub-category" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Critical Sub-Category
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scoring-vs-checklist-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scoring vs. Checklist Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scoring vs. Checklist Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-quality-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Quality Scoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-checklist-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Checklist Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hybrid-approach-checklist-gates-quality-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hybrid Approach: Checklist Gates + Quality Score
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#designing-your-own-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Designing Your Own Rubric
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Designing Your Own Rubric">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#template-4-category-100-point-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template: 4-Category 100-Point Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-template-application-quiz-question-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked Template Application: Quiz Question Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scoring-in-practice-what-claude-actually-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scoring in Practice: What Claude Actually Does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#calibrating-thresholds-for-your-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calibrating Thresholds for Your Domain
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-rubric-design-mistakes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Rubric Design Mistakes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="chapter-7-quality-scoring-systems">Chapter 7: Quality Scoring Systems<a class="headerlink" href="#chapter-7-quality-scoring-systems" title="Permanent link">&para;</a></h1>
+<h2 id="building-self-evaluating-skills">Building Self-Evaluating Skills<a class="headerlink" href="#building-self-evaluating-skills" title="Permanent link">&para;</a></h2>
+<p>A skill without a quality scoring system is a generator. It produces output, but it has no mechanism for determining whether that output is good. A skill with a quality scoring system is a self-evaluating agent — it generates output, assesses it against defined criteria, and makes a decision about whether to deliver, revise, or halt based on that assessment.</p>
+<p>This chapter covers everything you need to design quality scoring systems for your skills: the 100-point scale, how to decompose quality into weighted sub-categories, threshold logic, examples from production skills, and a complete template rubric you can adapt for your own work.</p>
+<hr />
+<h2 id="why-quality-scoring-exists">Why Quality Scoring Exists<a class="headerlink" href="#why-quality-scoring-exists" title="Permanent link">&para;</a></h2>
+<p>The fundamental problem quality scoring solves is this: Claude generates text and code fluently, but it has no built-in mechanism for determining whether its output meets your specific standards. Left to its own judgment, Claude will produce output that is superficially plausible — well-formatted, grammatically correct, structurally appropriate — but may miss the specific quality criteria your domain requires.</p>
+<p>Quality scoring externalizes those criteria. Instead of relying on Claude's implicit judgment, you define the criteria explicitly in the SKILL.md file. Claude then applies those criteria to evaluate its own output before delivering it.</p>
+<p>This has three practical benefits:</p>
+<ol>
+<li><strong>Consistency</strong>: The same criteria are applied every run, regardless of context, session state, or how the conversation began.</li>
+<li><strong>Transparency</strong>: Users see the score and understand why the output received it. A score of 74/100 with a note "Missing examples for 3 of 8 terms" is actionable. "The output is okay" is not.</li>
+<li><strong>Automation of revision</strong>: A skill that scores its own output can automatically revise low-scoring sections without user involvement, delivering a better first draft.</li>
+</ol>
+<hr />
+<h2 id="the-100-point-scale">The 100-Point Scale<a class="headerlink" href="#the-100-point-scale" title="Permanent link">&para;</a></h2>
+<p>The 100-point scale is the standard across the McCreary skill ecosystem. It is not arbitrary — it was chosen for three reasons:</p>
+<ol>
+<li><strong>Familiar interpretation</strong>: Humans interpret 100-point scores intuitively. A score of 73 communicates "this is passing but not great" immediately, without explanation.</li>
+<li><strong>Granularity for meaningful weighting</strong>: Sub-categories can be weighted in increments of 5 or 10 points, producing natural integer totals.</li>
+<li><strong>Threshold alignment</strong>: Common thresholds (70, 80, 85) fall on round numbers that align with letter grades and standard quality tiers.</li>
+</ol>
+<h3 id="standard-threshold-definitions">Standard Threshold Definitions<a class="headerlink" href="#standard-threshold-definitions" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Score Range</th>
+<th>Grade</th>
+<th>Standard Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>85-100</td>
+<td>Excellent</td>
+<td>Deliver immediately, no caveats</td>
+</tr>
+<tr>
+<td>70-84</td>
+<td>Good</td>
+<td>Deliver with optional improvement notes</td>
+</tr>
+<tr>
+<td>55-69</td>
+<td>Adequate</td>
+<td>Ask user whether to deliver or revise</td>
+</tr>
+<tr>
+<td>40-54</td>
+<td>Needs Work</td>
+<td>Revise before asking user</td>
+</tr>
+<tr>
+<td>Below 40</td>
+<td>Insufficient</td>
+<td>Halt — cannot produce acceptable output</td>
+</tr>
+</tbody>
+</table>
+<p>These thresholds are defaults. For skills that generate high-stakes content (medical education, legal documentation, production code), you may raise the minimum acceptable threshold to 80. For skills that generate draft content intended for human revision, you may lower the interactive threshold to 60.</p>
+<p>The key is that thresholds must be defined explicitly in the SKILL.md. A skill that says "if quality is acceptable, proceed" leaves "acceptable" undefined and produces inconsistent behavior.</p>
+<hr />
+<h2 id="decomposing-quality-into-sub-categories">Decomposing Quality into Sub-Categories<a class="headerlink" href="#decomposing-quality-into-sub-categories" title="Permanent link">&para;</a></h2>
+<p>A single undifferentiated score is less useful than a score broken into sub-categories. Sub-categories do three things:</p>
+<ol>
+<li>They force you to think precisely about what "quality" means for this specific type of output</li>
+<li>They give Claude a structured framework for assessment rather than a vague instruction to "assess quality"</li>
+<li>They give users specific, actionable feedback: "Your score was low due to Precision (8/25), not Conciseness (23/25)"</li>
+</ol>
+<h3 id="the-weighting-principle">The Weighting Principle<a class="headerlink" href="#the-weighting-principle" title="Permanent link">&para;</a></h3>
+<p>Sub-category weights should reflect the relative importance of each criterion to the final output quality. Not all criteria are equally important. For glossary definitions, Non-circularity is binary — a circular definition is broken regardless of how well it performs on other criteria — so you might weight it higher. For README files, Accuracy is paramount because false claims are actively harmful.</p>
+<p><strong>Design rule:</strong> Weights should sum to 100. Use multiples of 5 for clean arithmetic.</p>
+<h3 id="common-weight-distributions">Common Weight Distributions<a class="headerlink" href="#common-weight-distributions" title="Permanent link">&para;</a></h3>
+<p><strong>Equal weighting (4 criteria):</strong> 25-25-25-25
+Best for: when all four criteria are genuinely equal in importance.
+Used in: glossary-generator (Precision, Conciseness, Distinctiveness, Non-circularity)</p>
+<p><strong>Dominant criterion:</strong> 40-20-20-20
+Best for: when one criterion is primary and failure on it invalidates the output regardless of other scores.
+Used in: course validators where learning outcome completeness is the primary criterion.</p>
+<p><strong>Tiered weighting:</strong> 35-30-20-15
+Best for: when criteria form a priority hierarchy.
+Used in: chapter content generation (Conceptual Accuracy 35, Coverage 30, Clarity 20, Formatting 15).</p>
+<hr />
+<h2 id="real-example-glossary-generator-rubric">Real Example: Glossary Generator Rubric<a class="headerlink" href="#real-example-glossary-generator-rubric" title="Permanent link">&para;</a></h2>
+<p>The glossary-generator skill uses a four-criterion rubric derived directly from ISO 11179 metadata registry standards. Each criterion is equally weighted at 25 points.</p>
+<h3 id="the-rubric">The Rubric<a class="headerlink" href="#the-rubric" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Score each definition on four criteria (25 points each, 100 points total):
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gs">**Precision (25 points)**</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Does the definition accurately capture the concept&#39;s meaning in the course context?
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">-</span><span class="w"> </span>25: Definition is exact, unambiguous, and precisely correct for this domain
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">-</span><span class="w"> </span>20: Definition is accurate but slightly broader or narrower than ideal
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="k">-</span><span class="w"> </span>15: Definition captures the concept but contains one inaccuracy or overstatement
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">-</span><span class="w"> </span>10: Definition is partially correct but misses the core meaning
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="k">-</span><span class="w"> </span>0-9: Definition is inaccurate or misleading
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="gs">**Conciseness (25 points)**</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>Is the definition the shortest it can be while remaining complete?
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="k">-</span><span class="w"> </span>25: 20-50 words, every word necessary
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="k">-</span><span class="w"> </span>20: 15-60 words, one or two unnecessary qualifiers
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="k">-</span><span class="w"> </span>15: 60-80 words, could be shortened by 25%
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="k">-</span><span class="w"> </span>10: Over 80 words, contains redundant explanation
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="k">-</span><span class="w"> </span>0-9: Severely over-length or padded
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="gs">**Distinctiveness (25 points)**</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>Does the definition clearly distinguish this concept from related concepts?
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="k">-</span><span class="w"> </span>25: Definition uniquely identifies this concept; could not be applied to a similar concept
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="k">-</span><span class="w"> </span>20: Mostly distinctive; one related concept could be confused
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="k">-</span><span class="w"> </span>15: Some distinctiveness; student might confuse this with a closely related concept
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="k">-</span><span class="w"> </span>10: Low distinctiveness; definition could apply to multiple concepts
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="k">-</span><span class="w"> </span>0-9: Definition applies equally well to other concepts (not distinctive)
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="gs">**Non-circularity (25 points)**</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>Does the definition avoid circular reasoning?
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="k">-</span><span class="w"> </span>25: No circular references; does not use the term to define itself
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="k">-</span><span class="w"> </span>20: One indirect circularity (uses a near-synonym of the term)
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="k">-</span><span class="w"> </span>10: Direct circularity (defines term using itself)
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="k">-</span><span class="w"> </span>0: Severely circular (definition adds no information)
+</code></pre></div>
+<h3 id="applying-the-rubric">Applying the Rubric<a class="headerlink" href="#applying-the-rubric" title="Permanent link">&para;</a></h3>
+<p>The glossary-generator applies this rubric in Step 7 (Generate Quality Report). For each definition, Claude scores each criterion and computes an overall score:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Learning Graph:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Precision: 25/25 — Exact definition, matches ISO standard precisely
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Conciseness: 20/25 — 47 words, slightly verbose
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Distinctiveness: 25/25 — Clearly distinguishes from Linear Curriculum
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Non-circularity: 25/25 — No self-reference
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Total: 95/100
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Concept Dependency:
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  Precision: 20/25 — Slightly broader than the canonical definition
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  Conciseness: 25/25 — 31 words, concise
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  Distinctiveness: 15/25 — Could be confused with Learning Graph
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  Non-circularity: 25/25 — No self-reference
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  Total: 85/100
+</code></pre></div>
+<p>The skill then aggregates across all definitions:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Overall Quality Score: 89/100
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Definitions below 70: 3 (will list specific issues)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Circular definitions: 0
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Average length: 34 words
+</code></pre></div>
+<h3 id="threshold-logic-for-the-glossary-generator">Threshold Logic for the Glossary Generator<a class="headerlink" href="#threshold-logic-for-the-glossary-generator" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>After scoring all definitions:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="gs">**Overall Score &gt;= 85:**</span> Report score and proceed to write output.
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="gs">**Overall Score 70-84:**</span> Proceed with note about which definitions to review.
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="gs">**Overall Score &lt; 70:**</span> Automatically revise definitions scoring below 60.
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Re-score. If still &lt; 70 overall, ask user whether to proceed or stop.
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="gs">**For individual definitions:**</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="gs">**Score &gt;= 85:**</span> Include as-is.
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="gs">**Score 70-84:**</span> Include with a comment in the quality report.
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="gs">**Score &lt; 70:**</span> Revise before including. Log original and revision.
+</code></pre></div>
+<hr />
+<h2 id="real-example-course-description-analyzer-rubric">Real Example: Course Description Analyzer Rubric<a class="headerlink" href="#real-example-course-description-analyzer-rubric" title="Permanent link">&para;</a></h2>
+<p>The course-description-analyzer uses a completeness-based rubric. Instead of evaluating quality of writing, it evaluates presence and completeness of required structural elements.</p>
+<h3 id="the-rubric_1">The Rubric<a class="headerlink" href="#the-rubric_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>| Element | Points | Criteria for Full Points |
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>|---------|--------|--------------------------|
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>| Title | 5 | Clear, descriptive course title present |
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>| Target Audience | 5 | Specific audience identified |
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>| Prerequisites | 5 | Prerequisites listed or explicitly &quot;None&quot; |
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>| Main Topics Covered | 10 | Comprehensive list of 5-10 topics |
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>| Topics Excluded | 5 | Clear boundaries on scope |
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>| Learning Outcomes Header | 5 | &quot;After this course, students will be able to...&quot; present |
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>| Remember Level | 10 | 3+ specific recall outcomes |
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>| Understand Level | 10 | 3+ specific comprehension outcomes |
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>| Apply Level | 10 | 3+ specific application outcomes |
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>| Analyze Level | 10 | 3+ specific analysis outcomes |
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>| Evaluate Level | 10 | 3+ specific evaluation outcomes |
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>| Create Level | 10 | 3+ specific synthesis outcomes; includes capstone |
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>| Descriptive Context | 5 | Context on course importance and relevance |
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>| <span class="gs">**Total**</span> | <span class="gs">**100**</span> | |
+</code></pre></div>
+<h3 id="why-this-rubric-works">Why This Rubric Works<a class="headerlink" href="#why-this-rubric-works" title="Permanent link">&para;</a></h3>
+<p>This rubric is entirely structural. Each element is either present and complete (full points), present but incomplete (partial points), or missing (zero points). There is almost no subjective judgment required. This makes it:</p>
+<ul>
+<li><strong>Consistent</strong>: Two runs against the same file produce the same score</li>
+<li><strong>Actionable</strong>: A score of 55 with "Create Level: 0" tells you exactly what to add</li>
+<li><strong>Automatable</strong>: Claude can check these conditions mechanically</li>
+</ul>
+<p>For content quality rubrics (like the glossary generator), some judgment is required. For completeness rubrics (like the course description analyzer), the rubric can be almost entirely mechanical.</p>
+<h3 id="threshold-logic-for-course-description-analysis">Threshold Logic for Course Description Analysis<a class="headerlink" href="#threshold-logic-for-course-description-analysis" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="gs">**Score &gt;= 85:**</span> Course description is ready for learning graph generation.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Proceed to recommend the learning-graph-generator skill.
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="gs">**Score 70-84:**</span> Course description is adequate but incomplete.
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Report: &quot;Score [N]/100. The following elements need strengthening: [list].
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  You may proceed to learning graph generation, but the graph quality will
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  be limited by these gaps.&quot;
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="gs">**Score &lt; 70:**</span> Course description needs significant work before generating
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  a learning graph.
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  Report specific missing elements with examples of what should be added.
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  Do not recommend proceeding to learning graph generation yet.
+</code></pre></div>
+<hr />
+<h2 id="real-example-learning-graph-quality-metrics">Real Example: Learning Graph Quality Metrics<a class="headerlink" href="#real-example-learning-graph-quality-metrics" title="Permanent link">&para;</a></h2>
+<p>The learning-graph-generator uses a structural validity rubric that evaluates the mathematical properties of a directed acyclic graph (DAG) rather than content quality.</p>
+<h3 id="the-rubric_2">The Rubric<a class="headerlink" href="#the-rubric_2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="gs">**Learning Graph Quality Score (100 points)**</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Structural Integrity (40 points):
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">-</span><span class="w"> </span>Zero circular dependencies (DAG constraint): 20 pts
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>Any circular dependency: 0 pts (automatic failure indicator)
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="k">-</span><span class="w"> </span>All concepts reachable (connected graph): 10 pts
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">-</span><span class="w"> </span>No orphaned leaf nodes (every concept depends on or is depended on): 10 pts
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Coverage Balance (30 points):
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="k">-</span><span class="w"> </span>Foundational concepts (zero dependencies) are 10-20% of total: 10 pts
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="k">-</span><span class="w"> </span>No single taxonomy category exceeds 30% of concepts: 10 pts
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="k">-</span><span class="w"> </span>Average dependencies per concept is 2-4: 10 pts
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>Vocabulary Quality (30 points):
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="k">-</span><span class="w"> </span>All concept labels in Title Case: 10 pts
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="k">-</span><span class="w"> </span>All concept labels under 32 characters: 10 pts
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="k">-</span><span class="w"> </span>Zero duplicate concept labels: 10 pts
+</code></pre></div>
+<h3 id="the-critical-sub-category">The Critical Sub-Category<a class="headerlink" href="#the-critical-sub-category" title="Permanent link">&para;</a></h3>
+<p>Note that "Zero circular dependencies" receives 20 points but functions as a veto criterion: any circular dependency in the graph means the graph cannot be used, regardless of the other scores. The workflow handles this with special logic:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="gs">**Special Case: Circular Dependency Detected**</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>If analyze-graph.py reports any circular dependencies:
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Halt immediately with this message:
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>&quot;CRITICAL: [N] circular dependencies detected in the learning graph.
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>A circular dependency means concept A depends on B, which depends on A —
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>creating an impossible learning order.
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Circular dependencies found:
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="k">-</span><span class="w"> </span>[Concept A] → [Concept B] → [Concept A]
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="k">-</span><span class="w"> </span>[Concept X] → [Concept Y] → [Concept Z] → [Concept X]
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>The learning graph CANNOT be used until these cycles are removed.
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>Please remove the listed dependency edges and re-run this skill.&quot;
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Do not calculate an overall quality score when circular dependencies exist.
+</code></pre></div>
+<p>This is an example of a sub-category that, when it fails, overrides the overall scoring calculation. Not every rubric needs this pattern, but for constraints that are mathematically required (like DAG acyclicity), it is appropriate.</p>
+<hr />
+<h2 id="scoring-vs-checklist-validation">Scoring vs. Checklist Validation<a class="headerlink" href="#scoring-vs-checklist-validation" title="Permanent link">&para;</a></h2>
+<p>Quality scoring is not always the right tool. Some outputs are better validated by a checklist — a list of binary yes/no conditions that must all be satisfied.</p>
+<h3 id="when-to-use-quality-scoring">When to Use Quality Scoring<a class="headerlink" href="#when-to-use-quality-scoring" title="Permanent link">&para;</a></h3>
+<p>Use a numeric quality score when:</p>
+<ul>
+<li>Output quality exists on a spectrum (not just pass/fail)</li>
+<li>Different users might have different acceptable thresholds</li>
+<li>You want to produce graduated responses (proceed / proceed with notes / ask / halt)</li>
+<li>Sub-category scores provide useful diagnostic information</li>
+</ul>
+<p>Examples: glossary definitions, chapter content, README files, quiz questions</p>
+<h3 id="when-to-use-checklist-validation">When to Use Checklist Validation<a class="headerlink" href="#when-to-use-checklist-validation" title="Permanent link">&para;</a></h3>
+<p>Use a checklist when:</p>
+<ul>
+<li>The conditions are binary (present or absent, valid or invalid)</li>
+<li>All conditions must be satisfied — partial compliance is not acceptable</li>
+<li>Failure on any single item is a blocker</li>
+</ul>
+<p>Examples: DAG cycle detection (a cycle exists or it does not), required file presence checks, syntax validation of generated JSON or YAML</p>
+<h3 id="hybrid-approach-checklist-gates-quality-score">Hybrid Approach: Checklist Gates + Quality Score<a class="headerlink" href="#hybrid-approach-checklist-gates-quality-score" title="Permanent link">&para;</a></h3>
+<p>Many production skills use both:</p>
+<ol>
+<li><strong>Step 1:</strong> Run checklist validation. Halt if any blocker condition is triggered.</li>
+<li><strong>Step 2:</strong> After passing validation, run quality scoring on the content.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="gu">### Step 2: Validate Structure</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Run checklist validation before quality scoring:
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Required conditions (all must pass):
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">- [ ]</span> JSON file is syntactically valid (parseable)
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">- [ ]</span> All required fields present (id, label, dependencies, taxonomyID)
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="k">- [ ]</span> No duplicate ConceptIDs
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="k">- [ ]</span> No circular dependencies (run analyze-graph.py)
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>If any condition fails: Halt with specific error message.
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>If all conditions pass: Proceed to quality scoring.
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="gu">### Step 3: Quality Scoring</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>Only reached if Step 2 passes completely.
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>[Apply quality rubric to concept labels, taxonomy distribution, dependency density...]
+</code></pre></div>
+<hr />
+<h2 id="designing-your-own-rubric">Designing Your Own Rubric<a class="headerlink" href="#designing-your-own-rubric" title="Permanent link">&para;</a></h2>
+<p>The following template is a starting point for any new skill rubric. Fill in the blanks based on your skill's specific output.</p>
+<h3 id="template-4-category-100-point-rubric">Template: 4-Category 100-Point Rubric<a class="headerlink" href="#template-4-category-100-point-rubric" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="gu">## Quality Scoring Reference</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Score the [output type] on four criteria (total: 100 points):
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="gs">**[Category 1 Name] ([Weight] points)**</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>[One sentence describing what this criterion measures]
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Definition of scores:
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="k">-</span><span class="w"> </span>[Weight] points: [Describe excellent performance]
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="k">-</span><span class="w"> </span>[Weight * 0.8] points: [Describe good performance]
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="k">-</span><span class="w"> </span>[Weight * 0.6] points: [Describe adequate performance]
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="k">-</span><span class="w"> </span>[Weight * 0.4] points: [Describe poor performance]
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="k">-</span><span class="w"> </span>0-[Weight * 0.2] points: [Describe failing performance]
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="gs">**[Category 2 Name] ([Weight] points)**</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>[One sentence describing what this criterion measures]
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>[Scoring levels as above]
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="gs">**[Category 3 Name] ([Weight] points)**</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>[One sentence describing what this criterion measures]
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>[Scoring levels as above]
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="gs">**[Category 4 Name] ([Weight] points)**</span>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>[One sentence describing what this criterion measures]
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>[Scoring levels as above]
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="gs">**Overall Score Thresholds:**</span>
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>| Score | Action |
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>|-------|--------|
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>| [High threshold]-100 | [e.g., 85-100: Deliver immediately] |
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>| [Mid threshold]-[High threshold-1] | [e.g., 70-84: Deliver with notes] |
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>| [Low threshold]-[Mid threshold-1] | [e.g., 55-69: Ask user] |
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>| Below [Low threshold] | [e.g., Below 55: Revise before delivering] |
+</code></pre></div>
+<h3 id="worked-template-application-quiz-question-rubric">Worked Template Application: Quiz Question Rubric<a class="headerlink" href="#worked-template-application-quiz-question-rubric" title="Permanent link">&para;</a></h3>
+<p>Here is the template applied to a quiz question generator:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="gu">## Quality Scoring Reference</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Score each quiz question on four criteria (total: 100 points):
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="gs">**Alignment to Bloom&#39;s Level (30 points)**</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Does the question genuinely require the cognitive operation specified by its
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>assigned Bloom&#39;s Taxonomy level?
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">-</span><span class="w"> </span>30 points: Question clearly requires the specified cognitive operation; could not
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>  be answered by a student operating at a lower level
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="k">-</span><span class="w"> </span>24 points: Question mostly aligns; minor ambiguity in required cognitive level
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="k">-</span><span class="w"> </span>18 points: Question is at the right level but the wording allows shortcuts
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>  (e.g., a &quot;Analyze&quot; question that can be answered by recall)
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="k">-</span><span class="w"> </span>12 points: Question is at the wrong level (e.g., labeled &quot;Create&quot; but only
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>  requires recall)
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="k">-</span><span class="w"> </span>0-9 points: Level assignment is incorrect and misleading
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="gs">**Concept Specificity (25 points)**</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>Does the question test a specific, identifiable concept from the learning graph?
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="k">-</span><span class="w"> </span>25 points: Question targets one specific concept; correct answer requires
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>  mastery of exactly that concept
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="k">-</span><span class="w"> </span>20 points: Question targets one concept but has one minor ambiguity
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="k">-</span><span class="w"> </span>15 points: Question could be answered with knowledge of multiple unrelated concepts
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="k">-</span><span class="w"> </span>10 points: Question is too broad (tests general knowledge rather than specific concepts)
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="k">-</span><span class="w"> </span>0-9 points: Question does not map to any concept in the learning graph
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="gs">**Distractors Quality (25 points)**</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>Are the incorrect answer choices plausible but unambiguously wrong?
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a><span class="k">-</span><span class="w"> </span>25 points: All distractors are plausible to a student who misunderstood the concept;
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>  none are obviously wrong
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a><span class="k">-</span><span class="w"> </span>20 points: Most distractors are plausible; one is too easy to eliminate
+<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a><span class="k">-</span><span class="w"> </span>15 points: Some distractors are implausible; a student could guess without knowledge
+<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a><span class="k">-</span><span class="w"> </span>10 points: Multiple distractors are obviously wrong
+<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a><span class="k">-</span><span class="w"> </span>0-9 points: Distractors are trivially wrong; question is a giveaway
+<a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a>
+<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a><span class="gs">**Clarity and Fairness (20 points)**</span>
+<a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a>Is the question unambiguous and fair to all students?
+<a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a>
+<a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a><span class="k">-</span><span class="w"> </span>20 points: Question has one unambiguous correct answer; no cultural or language bias
+<a id="__codelineno-10-42" name="__codelineno-10-42" href="#__codelineno-10-42"></a><span class="k">-</span><span class="w"> </span>16 points: Question is clear but slightly technical in phrasing
+<a id="__codelineno-10-43" name="__codelineno-10-43" href="#__codelineno-10-43"></a><span class="k">-</span><span class="w"> </span>12 points: Question has minor ambiguity that could cause debate about the answer
+<a id="__codelineno-10-44" name="__codelineno-10-44" href="#__codelineno-10-44"></a><span class="k">-</span><span class="w"> </span>8 points: Question is ambiguous; reasonable argument could be made for multiple answers
+<a id="__codelineno-10-45" name="__codelineno-10-45" href="#__codelineno-10-45"></a><span class="k">-</span><span class="w"> </span>0-7 points: Question is ambiguous, biased, or has multiple defensible answers
+<a id="__codelineno-10-46" name="__codelineno-10-46" href="#__codelineno-10-46"></a>
+<a id="__codelineno-10-47" name="__codelineno-10-47" href="#__codelineno-10-47"></a><span class="gs">**Overall Score Thresholds:**</span>
+<a id="__codelineno-10-48" name="__codelineno-10-48" href="#__codelineno-10-48"></a>
+<a id="__codelineno-10-49" name="__codelineno-10-49" href="#__codelineno-10-49"></a>| Score | Action |
+<a id="__codelineno-10-50" name="__codelineno-10-50" href="#__codelineno-10-50"></a>|-------|--------|
+<a id="__codelineno-10-51" name="__codelineno-10-51" href="#__codelineno-10-51"></a>| 80-100 | Include in quiz as-is |
+<a id="__codelineno-10-52" name="__codelineno-10-52" href="#__codelineno-10-52"></a>| 65-79 | Include with a note in the quality log |
+<a id="__codelineno-10-53" name="__codelineno-10-53" href="#__codelineno-10-53"></a>| 50-64 | Revise before including |
+<a id="__codelineno-10-54" name="__codelineno-10-54" href="#__codelineno-10-54"></a>| Below 50 | Discard and regenerate |
+</code></pre></div>
+<hr />
+<h2 id="scoring-in-practice-what-claude-actually-does">Scoring in Practice: What Claude Actually Does<a class="headerlink" href="#scoring-in-practice-what-claude-actually-does" title="Permanent link">&para;</a></h2>
+<p>When you include a quality scoring rubric in your SKILL.md, Claude does not merely output a score. It applies the rubric through a structured self-evaluation process:</p>
+<ol>
+<li><strong>It reads the rubric criteria</strong> from the Quality Scoring section</li>
+<li><strong>It evaluates the output</strong> against each criterion and assigns a score with reasoning</li>
+<li><strong>It computes the total</strong> and applies the threshold logic</li>
+<li><strong>It acts on the result</strong> — proceeding, noting, asking, or halting</li>
+</ol>
+<p>The scoring narration might look like this in practice:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Evaluating definition for &quot;Directed Acyclic Graph&quot;:
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Precision: 22/25 — Captures the mathematical concept accurately, though
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>&quot;directed&quot; could be more clearly explained as &quot;one-directional edges.&quot;
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Conciseness: 25/25 — 28 words, no filler.
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Distinctiveness: 20/25 — Could be confused with &quot;Directed Graph&quot; by a
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>student who does not yet know the difference.
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>Non-circularity: 25/25 — No self-reference.
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>Total: 92/100 — Excellent. Proceeding.
+</code></pre></div>
+<p>This narration is valuable even if the user never explicitly requests it, because it makes the scoring transparent. If the score is unexpectedly low, the user can see exactly why.</p>
+<hr />
+<h2 id="calibrating-thresholds-for-your-domain">Calibrating Thresholds for Your Domain<a class="headerlink" href="#calibrating-thresholds-for-your-domain" title="Permanent link">&para;</a></h2>
+<p>The standard thresholds (85/70/55) are starting points. Adjust them based on the stakes and revision cost of your output:</p>
+<p><strong>Raise thresholds when:</strong>
+- Output will be published without human review
+- Errors in the output are difficult or costly to fix
+- The audience requires high precision (medical, legal, financial domains)</p>
+<p><strong>Lower thresholds when:</strong>
+- Output is a draft intended for human revision
+- The cost of re-running the skill is low
+- The user explicitly wants to see lower-quality output for reference or iteration</p>
+<p><strong>Example: Medical education content</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="gs">**Overall Score Thresholds:**</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>| Score | Action |
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>|-------|--------|
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>| 90-100 | Deliver immediately |
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>| 80-89 | Deliver with specific improvement notes |
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>| 70-79 | Ask: &quot;Score [N]/100. Recommend revision. Deliver or revise?&quot; |
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>| Below 70 | Halt. Medical content with score below 70 should not be delivered. |
+</code></pre></div>
+<p><strong>Example: First-draft blog content</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="gs">**Overall Score Thresholds:**</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>| Score | Action |
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>|-------|--------|
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>| 75-100 | Deliver immediately |
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>| 60-74 | Deliver with notes about weakest sections |
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>| Below 60 | Ask: &quot;Score [N]/100. Continue or revise?&quot; |
+</code></pre></div>
+<hr />
+<h2 id="common-rubric-design-mistakes">Common Rubric Design Mistakes<a class="headerlink" href="#common-rubric-design-mistakes" title="Permanent link">&para;</a></h2>
+<p><strong>Mistake 1: Criteria that overlap</strong></p>
+<p>If two criteria measure the same thing, scores will be inflated and the diagnostic value is lost.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a># Wrong: Precision and Accuracy measure the same thing
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Precision (25 pts): Is the definition correct?
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Accuracy (25 pts): Does the definition accurately describe the concept?
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a># Right: Each criterion measures a distinct dimension
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>Precision (25 pts): Does the definition target the specific concept exactly,
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  without being too broad or too narrow?
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>Accuracy (25 pts): Are all claims in the definition factually correct?
+</code></pre></div>
+<p><strong>Mistake 2: Subjective criteria without anchor descriptions</strong></p>
+<p>A criterion like "Is the definition good?" gives Claude nothing to evaluate against. Every criterion needs level descriptions that anchor the score to observable properties.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a># Wrong: No anchor descriptions
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Clarity (25 pts): Is the definition clear?
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a># Right: Anchored to observable properties
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>Clarity (25 pts):
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>- 25: An intelligent reader unfamiliar with the domain can understand the definition
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  without additional context
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>- 15: The definition is understandable to someone with general domain familiarity
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>- 5: The definition requires domain expertise to interpret correctly
+</code></pre></div>
+<p><strong>Mistake 3: Weights that do not reflect actual importance</strong></p>
+<p>If you use 25-25-25-25 but actually care far more about one criterion, the score will not reflect real quality. Be honest about the relative importance of your criteria.</p>
+<p><strong>Mistake 4: A threshold of exactly 70 as both "proceed" and "ask"</strong></p>
+<p>Define thresholds as ranges with clear boundaries. "Score &gt;= 70: proceed. Score &lt; 70: ask." is clear. "Score = 70: unclear." is ambiguous. Use <code>&gt;=</code> and <code>&lt;</code> with clear boundaries.</p>
+<hr />
+<h2 id="key-takeaways">Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Quality scoring transforms skills from generators into self-evaluating agents</li>
+<li>The 100-point scale is standard across the McCreary ecosystem because it is intuitive and provides natural weighting granularity</li>
+<li>Sub-categories make quality diagnostic: a score of 73/100 with "Distinctiveness: 8/25" is more actionable than just "73/100"</li>
+<li>Standard thresholds are 85 (excellent/deliver), 70 (good/deliver with notes), 55 (adequate/ask), below 55 (needs work/halt)</li>
+<li>Some criteria function as veto conditions: if circular dependencies exist, the learning graph score is irrelevant</li>
+<li>Use quality scoring for spectrum outputs; use checklists for binary conditions; combine them in the order checklist gate → quality score</li>
+<li>Calibrate thresholds to the stakes of your domain — raise them for high-stakes content, lower them for first-draft work</li>
+<li>Anchor every criterion level to observable, measurable properties — not subjective impressions</li>
+</ul>
+<p>This chapter completes the Skill Anatomy section of this guide. You now have everything you need to write complete, production-quality SKILL.md files with proper frontmatter, structured workflows, and self-evaluating quality scoring systems. In Chapter 8, we move into Advanced Patterns — starting with meta-skill routers that consolidate multiple skills under a single invocation point.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.code.annotate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

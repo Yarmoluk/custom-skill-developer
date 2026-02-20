@@ -1,0 +1,2879 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive knowledge base for building custom Claude Code skills — from single-purpose agents to meta-skill routers and full pipeline orchestration.">
+      
+      
+      
+        <link rel="canonical" href="https://yarmoluk.github.io/custom-skill-developer/chapters/03/">
+      
+      
+        <link rel="prev" href="../02/">
+      
+      
+        <link rel="next" href="../04/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Your First Skill - Custom Skill Developer Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-3-your-first-skill" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Custom Skill Developer Guide" class="md-header__button md-logo" aria-label="Custom Skill Developer Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Custom Skill Developer Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Your First Skill
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Yarmoluk/custom-skill-developer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Yarmoluk/custom-skill-developer
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../course-description/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Course Description
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01/" class="md-tabs__link">
+          
+  
+  
+  Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../04/" class="md-tabs__link">
+          
+  
+  
+  Skill Anatomy
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../08/" class="md-tabs__link">
+          
+  
+  
+  Advanced Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../12/" class="md-tabs__link">
+          
+  
+  
+  Specialized Skills
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../15/" class="md-tabs__link">
+          
+  
+  
+  Deployment
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../glossary.md" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Custom Skill Developer Guide" class="md-nav__button md-logo" aria-label="Custom Skill Developer Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Custom Skill Developer Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Yarmoluk/custom-skill-developer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Yarmoluk/custom-skill-developer
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../course-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Course Description
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Are Claude Code Skills?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Skill Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Skill
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#31-choosing-the-right-first-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Choosing the Right First Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#32-stage-1-the-minimal-viable-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Stage 1: The Minimal Viable Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#33-stage-2-adding-the-basic-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Stage 2: Adding the Basic Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.3 Stage 2: Adding the Basic Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-2-categorize-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Categorize Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-format-the-changelog-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Format the Changelog Entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-present-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Present Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-gather-change-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Gather Change Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-confirm-scope-with-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Confirm Scope with User
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-categorize-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Categorize Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-format-the-changelog-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Format the Changelog Entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-write-the-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Write the File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-confirm-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Confirm Completion
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#36-where-to-save-the-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Where to Save the Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#37-testing-your-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Testing Your Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#38-the-iteration-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 The Iteration Loop
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#39-the-complete-stage-4-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 The Complete Stage 4 Skill
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.9 The Complete Stage 4 Skill">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-2-gather-change-information_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Gather Change Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-confirm-scope-with-user_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Confirm Scope with User
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-categorize-changes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Categorize Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-format-the-changelog-entry_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Format the Changelog Entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-write-the-file_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Write the File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-confirm-completion_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Confirm Completion
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-files_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quality-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality Scoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Session
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#311-what-comes-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.11 What Comes Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill Anatomy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skill Anatomy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SKILL.md Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YAML Frontmatter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Scoring Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Patterns
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meta-Skill Routers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Token Efficiency Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized Skills
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized Skills
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Format Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Generation Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analysis & Validation Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deployment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation & Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing & Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing & Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#31-choosing-the-right-first-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Choosing the Right First Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#32-stage-1-the-minimal-viable-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Stage 1: The Minimal Viable Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#33-stage-2-adding-the-basic-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Stage 2: Adding the Basic Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.3 Stage 2: Adding the Basic Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-2-categorize-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Categorize Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-format-the-changelog-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Format the Changelog Entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-present-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Present Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-gather-change-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Gather Change Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-confirm-scope-with-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Confirm Scope with User
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-categorize-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Categorize Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-format-the-changelog-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Format the Changelog Entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-write-the-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Write the File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-confirm-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Confirm Completion
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#36-where-to-save-the-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Where to Save the Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#37-testing-your-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Testing Your Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#38-the-iteration-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 The Iteration Loop
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#39-the-complete-stage-4-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 The Complete Stage 4 Skill
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.9 The Complete Stage 4 Skill">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-2-gather-change-information_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Gather Change Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-confirm-scope-with-user_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Confirm Scope with User
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-categorize-changes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Categorize Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-format-the-changelog-entry_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Format the Changelog Entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-write-the-file_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Write the File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-confirm-completion_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Confirm Completion
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-files_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quality-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality Scoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Session
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#311-what-comes-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.11 What Comes Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="chapter-3-your-first-skill">Chapter 3: Your First Skill<a class="headerlink" href="#chapter-3-your-first-skill" title="Permanent link">&para;</a></h1>
+<p>The best way to understand how skills work is to build one. This chapter walks you through constructing a <code>changelog-generator</code> skill from scratch, starting with the absolute minimum that Claude Code will recognize as a skill, and iterating to a production-quality definition with a complete workflow, user dialog triggers, and a quality scoring rubric.</p>
+<p>By the end of this chapter, you will have:</p>
+<ul>
+<li>A working skill installed at <code>~/.claude/skills/changelog-generator/SKILL.md</code></li>
+<li>A clear understanding of how each component of the skill definition affects Claude's behavior</li>
+<li>A tested iteration loop you can apply to any skill you build</li>
+<li>A production-ready checklist for evaluating when a skill is finished</li>
+</ul>
+<hr />
+<h2 id="31-choosing-the-right-first-skill">3.1 Choosing the Right First Skill<a class="headerlink" href="#31-choosing-the-right-first-skill" title="Permanent link">&para;</a></h2>
+<p>The <code>changelog-generator</code> is an ideal first skill for several reasons.</p>
+<p>It solves a real, recurring problem: tracking changes to a codebase or document collection over time. Every software project, every textbook, every content repository benefits from a clear, readable changelog. Writing changelogs manually is tedious, inconsistent, and easy to skip. This is exactly the profile of a task that benefits from a skill.</p>
+<p>It is also well-scoped. The input is clear (git history or a set of recent changes), the output is clear (a formatted <code>CHANGELOG.md</code> entry), and the workflow has a defined beginning and end. There are no hidden complexities that will derail your first attempt.</p>
+<p>Finally, it is realistic. You will be able to invoke and test this skill immediately, see the output, identify what needs improvement, and iterate. Skills that require complex infrastructure to test are poor choices for learning.</p>
+<hr />
+<h2 id="32-stage-1-the-minimal-viable-skill">3.2 Stage 1: The Minimal Viable Skill<a class="headerlink" href="#32-stage-1-the-minimal-viable-skill" title="Permanent link">&para;</a></h2>
+<p>The minimum file that Claude Code will recognize as a skill contains only a valid YAML frontmatter block. No body content, no workflow steps, just the metadata that registers the skill.</p>
+<p>Create the directory and file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/.claude/skills/changelog-generator
+</code></pre></div>
+<p>Then create <code>~/.claude/skills/changelog-generator/SKILL.md</code> with this content:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nn">---</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">changelog-generator</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="no">Generates a formatted CHANGELOG.md entry from recent git commits or</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="no">a description of recent changes. Use this skill when you need to document</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="no">what changed in a project between two points in time.</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nn">---</span>
+</code></pre></div>
+<p>That is a complete, valid skill definition. Claude Code will register it, and it will appear when you run <code>/skills</code>.</p>
+<p><strong>What happens when you invoke it at this stage.</strong></p>
+<p>Start a new Claude Code session and type <code>/skill changelog-generator</code>. Claude will read the SKILL.md file, find only the frontmatter and no workflow instructions, and... improvise. It will do something reasonable based on the description and its general knowledge of changelogs, but the output will be inconsistent. Some invocations will produce Keep a Changelog format; others will use a different format. Some will run <code>git log</code>; others will ask you what changed.</p>
+<p>This inconsistency is the problem that skills exist to solve. The minimal viable skill proves the registration mechanism works, but it does not yet provide the structured workflow that makes skills valuable.</p>
+<div class="admonition example">
+<p class="admonition-title">What to observe at Stage 1</p>
+<p>Invoke the skill twice in separate sessions without saying anything after the invocation. Observe whether the format of the output is the same both times. It will not be. This inconsistency is what the workflow steps in Stage 2 will fix.</p>
+</div>
+<hr />
+<h2 id="33-stage-2-adding-the-basic-workflow">3.3 Stage 2: Adding the Basic Workflow<a class="headerlink" href="#33-stage-2-adding-the-basic-workflow" title="Permanent link">&para;</a></h2>
+<p>The workflow section transforms a registered skill into a defined procedure. Each numbered step is an instruction to Claude that constrains what it does and in what order.</p>
+<p>Here is the Stage 2 version of the skill:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>---
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>name: changelog-generator
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>description: &gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Generates a formatted CHANGELOG.md entry from recent git commits or
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  a description of recent changes. Use this skill when you need to document
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  what changed in a project between two points in time. Output follows
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="gu">  Keep a Changelog format (keepachangelog.com).</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="gu">---</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="gh"># Changelog Generator</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="gu">## Overview</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>This skill produces a properly formatted <span class="sb">`CHANGELOG.md`</span> entry documenting
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>recent changes to a project. It follows the Keep a Changelog format
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>(keepachangelog.com) with sections for Added, Changed, Fixed, Removed,
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>Deprecated, and Security changes. Output is ready to paste into your
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>CHANGELOG.md file.
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="gu">## When to Use This Skill</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>Use this skill when:
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="k">-</span><span class="w"> </span>You are preparing a release and need to document what changed
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="k">-</span><span class="w"> </span>You want to update CHANGELOG.md after a sprint or milestone
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="k">-</span><span class="w"> </span>A collaborator asks what changed since the last version
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>Do NOT use this skill if:
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="k">-</span><span class="w"> </span>You need automated changelog generation from CI/CD (use a dedicated tool)
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="k">-</span><span class="w"> </span>The project has no version history or semantic versioning scheme
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="gu">## Workflow</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="gu">### Step 1: Gather Change Information</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>Run the following command to get recent git commits:
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>```bash
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>git log --oneline --since=&quot;30 days ago&quot; --no-merges
+</code></pre></div>
+<p>If git is not available or the project is not a git repository, ask the user:
+"Please describe the changes made since the last release."</p>
+<h3 id="step-2-categorize-changes">Step 2: Categorize Changes<a class="headerlink" href="#step-2-categorize-changes" title="Permanent link">&para;</a></h3>
+<p>Review the commit messages or user-provided descriptions and categorize
+each change into the appropriate Keep a Changelog section:</p>
+<ul>
+<li><strong>Added</strong>: New features or capabilities</li>
+<li><strong>Changed</strong>: Changes to existing functionality</li>
+<li><strong>Fixed</strong>: Bug fixes</li>
+<li><strong>Removed</strong>: Removed features or capabilities</li>
+<li><strong>Deprecated</strong>: Features marked for future removal</li>
+<li><strong>Security</strong>: Security fixes or improvements</li>
+</ul>
+<p>Omit sections that have no entries.</p>
+<h3 id="step-3-format-the-changelog-entry">Step 3: Format the Changelog Entry<a class="headerlink" href="#step-3-format-the-changelog-entry" title="Permanent link">&para;</a></h3>
+<p>Format the entry as follows:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gu">## [Unreleased] - YYYY-MM-DD</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="gu">### Added</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">-</span><span class="w"> </span>Item one
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">-</span><span class="w"> </span>Item two
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="gu">### Fixed</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">-</span><span class="w"> </span>Item three
+</code></pre></div>
+<p>Replace YYYY-MM-DD with today's date. Use "Unreleased" as the version
+unless the user specifies a version number.</p>
+<h3 id="step-4-present-output">Step 4: Present Output<a class="headerlink" href="#step-4-present-output" title="Permanent link">&para;</a></h3>
+<p>Display the formatted changelog entry to the user and ask:
+"Does this changelog entry look correct? If you have a version number
+to use instead of 'Unreleased', provide it now."
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>**What is different at Stage 2.**
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>The skill now has a defined structure: an Overview section, a When to Use section, and a four-step workflow. Invoke this skill in two separate sessions and you will see consistent behavior: Claude runs git log, categorizes the commits, formats the output in Keep a Changelog format, and presents it for review.
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>The description field in the frontmatter has also been improved. It now specifies the output format (Keep a Changelog) and the trigger condition more precisely. This helps Claude identify when to suggest the skill during normal conversation.
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>!!! warning &quot;Common mistake at this stage&quot;
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    Beginning builders often write workflow steps that are too vague. &quot;Step 1: Get the changes&quot; is not actionable. &quot;Step 1: Run `git log --oneline --since=&#39;30 days ago&#39; --no-merges` and parse the output&quot; is actionable. Every step should specify exactly what Claude should do, not just what the step is about.
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>---
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>## 3.4 Stage 3: Adding User Dialog and File Writing
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>The Stage 2 skill produces good output, but it does not save it anywhere. It also does not handle the case where the project already has a CHANGELOG.md that needs updating rather than creating from scratch. Stage 3 adds both.
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>```markdown
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>---
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>name: changelog-generator
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>description: &gt;
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>  Generates a formatted CHANGELOG.md entry from recent git commits or
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>  a description of recent changes. Use this skill when you need to document
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>  what changed in a project between two points in time. Output follows
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>  Keep a Changelog format (keepachangelog.com). Reads existing CHANGELOG.md
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>  if present and prepends the new entry.
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>---
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a># Changelog Generator
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>## Overview
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>This skill produces a properly formatted `CHANGELOG.md` entry documenting
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>recent changes to a project. It follows the Keep a Changelog format
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>(keepachangelog.com) with sections for Added, Changed, Fixed, Removed,
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>Deprecated, and Security changes.
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>If a CHANGELOG.md already exists in the project root, this skill reads
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>the existing file and prepends the new entry, preserving all prior history.
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>## When to Use This Skill
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>Use this skill when:
+<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>
+<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>- You are preparing a release and need to document what changed
+<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a>- You want to update CHANGELOG.md after a sprint or milestone
+<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>- A collaborator asks what changed since the last version
+<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a>
+<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a>**Prerequisites:**
+<a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a>
+<a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a>- Project must be a git repository OR the user can describe changes manually
+<a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a>- Must be invoked from the project root directory
+<a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a>
+<a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a>Do NOT use this skill if:
+<a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a>
+<a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a>- You need automated changelog generation from CI/CD (use a dedicated tool)
+<a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a>- The project has no version history or semantic versioning scheme
+<a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a>
+<a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a>## Workflow
+<a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a>
+<a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a>### Step 1: Check for Existing Changelog
+<a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a>
+<a id="__codelineno-4-61" name="__codelineno-4-61" href="#__codelineno-4-61"></a>Check if a CHANGELOG.md file already exists in the current directory:
+<a id="__codelineno-4-62" name="__codelineno-4-62" href="#__codelineno-4-62"></a>
+<a id="__codelineno-4-63" name="__codelineno-4-63" href="#__codelineno-4-63"></a>```bash
+<a id="__codelineno-4-64" name="__codelineno-4-64" href="#__codelineno-4-64"></a>ls -la CHANGELOG.md 2&gt;/dev/null
+</code></pre></div></p>
+<p>If CHANGELOG.md exists, read its current contents to preserve them when
+writing the updated file.</p>
+<h3 id="step-2-gather-change-information">Step 2: Gather Change Information<a class="headerlink" href="#step-2-gather-change-information" title="Permanent link">&para;</a></h3>
+<p>Run the following command to get recent git commits:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>--since<span class="o">=</span><span class="s2">&quot;30 days ago&quot;</span><span class="w"> </span>--no-merges
+</code></pre></div>
+<p>If git is not available or the project is not a git repository, ask:
+"This project does not appear to use git. Please describe the changes
+made since the last release, one change per line."</p>
+<p>Wait for the user response before proceeding to Step 3.</p>
+<p>If git IS available, proceed automatically to Step 3.</p>
+<h3 id="step-3-confirm-scope-with-user">Step 3: Confirm Scope with User<a class="headerlink" href="#step-3-confirm-scope-with-user" title="Permanent link">&para;</a></h3>
+<p>Display the raw commit list to the user and ask:
+"Here are the commits from the last 30 days. Should I use all of them,
+or would you like to specify a different date range or version boundary?
+Also, what version number should I use? (Press Enter to use 'Unreleased')"</p>
+<p>Wait for user response before proceeding.</p>
+<h3 id="step-4-categorize-changes">Step 4: Categorize Changes<a class="headerlink" href="#step-4-categorize-changes" title="Permanent link">&para;</a></h3>
+<p>Review the commits or user-provided descriptions and categorize each
+into the appropriate Keep a Changelog section:</p>
+<ul>
+<li><strong>Added</strong>: New features or capabilities (feat: prefix in conventional commits)</li>
+<li><strong>Changed</strong>: Changes to existing functionality (refactor:, perf: prefixes)</li>
+<li><strong>Fixed</strong>: Bug fixes (fix: prefix)</li>
+<li><strong>Removed</strong>: Removed features (feat: with removal language)</li>
+<li><strong>Deprecated</strong>: Features marked for future removal</li>
+<li><strong>Security</strong>: Security fixes (security: prefix or CVE mentions)</li>
+</ul>
+<p>Omit sections that have no entries.</p>
+<p><strong>Rewrite commit messages for readability.</strong> Conventional commit prefixes
+(feat:, fix:, chore:) should be removed. Cryptic internal references
+should be paraphrased. Write entries as a human would read them, not as
+a developer wrote them at 2 AM.</p>
+<h3 id="step-5-format-the-changelog-entry">Step 5: Format the Changelog Entry<a class="headerlink" href="#step-5-format-the-changelog-entry" title="Permanent link">&para;</a></h3>
+<p>Format the new entry:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="gu">## [VERSION] - YYYY-MM-DD</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="gu">### Added</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">-</span><span class="w"> </span>Item one, written in plain language
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="gu">### Fixed</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">-</span><span class="w"> </span>Item two, written in plain language
+</code></pre></div>
+<p>Replace VERSION with the user-provided version or "Unreleased".
+Replace YYYY-MM-DD with today's date.</p>
+<h3 id="step-6-write-the-file">Step 6: Write the File<a class="headerlink" href="#step-6-write-the-file" title="Permanent link">&para;</a></h3>
+<p>If CHANGELOG.md did not exist: write the new entry with a standard header.</p>
+<p>Standard header format:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="gh"># Changelog</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>All notable changes to this project will be documented in this file.
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>The format is based on [<span class="nt">Keep a Changelog</span>](<span class="na">https://keepachangelog.com/en/1.0.0/</span>).
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="gu">## [VERSION] - YYYY-MM-DD</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>...entries...
+</code></pre></div></p>
+<p>If CHANGELOG.md already existed: prepend the new entry after the header
+(the first <code>##</code> heading), preserving all existing entries below it.</p>
+<p>Confirm with the user before overwriting an existing file:
+"I will prepend the new entry to your existing CHANGELOG.md.
+Does this look correct? (y/n)"</p>
+<p>Wait for confirmation. If "n", ask what changes the user wants and
+revise before writing.</p>
+<h3 id="step-7-confirm-completion">Step 7: Confirm Completion<a class="headerlink" href="#step-7-confirm-completion" title="Permanent link">&para;</a></h3>
+<p>After writing the file, display:
+"CHANGELOG.md updated. New entry:
+[show the entry]
+Run <code>git diff CHANGELOG.md</code> to review the full change."</p>
+<h2 id="output-files">Output Files<a class="headerlink" href="#output-files" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>CHANGELOG.md</code> — Created or updated in the current directory
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>**What is different at Stage 3.**
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Three significant additions appear in this version:
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>**Prerequisite specification.** The &quot;When to Use This Skill&quot; section now lists explicit prerequisites. Claude will check these before proceeding and report missing prerequisites rather than failing mid-workflow.
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>**Conditional user dialog.** Step 2 branches: if git is not available, Claude asks the user for changes. If git is available, Claude proceeds automatically. This conditional logic makes the skill robust to different project setups without requiring the user to tell Claude which case applies.
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>**Destructive action confirmation.** Step 6 asks the user to confirm before overwriting an existing file. This is a critical pattern for any skill that writes files. Never overwrite without asking.
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>---
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>## 3.5 Stage 4: Adding Quality Scoring
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>Quality scoring is what separates skills from scripts. A script either produces output or fails. A skill produces output, evaluates that output against defined criteria, and reports gaps before handing the result to the user.
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>Add the following sections to the end of your Stage 3 skill:
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>```markdown
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>## Quality Scoring
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>Before confirming completion, evaluate the changelog entry against this
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>rubric. Score each item and calculate the total. If total score is below
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>75/100, flag the specific gaps and offer to revise.
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>| Criterion | Points | Evaluation |
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>|-----------|--------|------------|
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>| All commits accounted for | 20 | Every commit in the selected range appears in at least one section |
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>| Correct categorization | 20 | Added/Changed/Fixed/Removed used per Keep a Changelog definitions |
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>| Plain language | 20 | No commit hashes, branch names, internal jargon, or raw prefixes |
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>| Completeness | 15 | No empty sections included; all populated sections present |
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>| Date accuracy | 10 | Date matches today&#39;s date (verify before writing) |
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>| Version format | 10 | Version is &quot;Unreleased&quot; or follows semver (X.Y.Z) |
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>| File integrity | 5 | Existing CHANGELOG.md history preserved, no content removed |
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>| **Total** | **100** | **Minimum passing score: 75** |
+<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>
+<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a>If score &lt; 75: Present the gap report with specific items that failed,
+<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a>ask the user if they want revisions before writing the file.
+<a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a>
+<a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a>## Example Session
+<a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a>
+<a id="__codelineno-8-42" name="__codelineno-8-42" href="#__codelineno-8-42"></a>**User:** `/skill changelog-generator`
+<a id="__codelineno-8-43" name="__codelineno-8-43" href="#__codelineno-8-43"></a>
+<a id="__codelineno-8-44" name="__codelineno-8-44" href="#__codelineno-8-44"></a>**Claude:** Checking for existing CHANGELOG.md... Found. Reading current contents.
+<a id="__codelineno-8-45" name="__codelineno-8-45" href="#__codelineno-8-45"></a>
+<a id="__codelineno-8-46" name="__codelineno-8-46" href="#__codelineno-8-46"></a>Running git log for the last 30 days...
+<a id="__codelineno-8-47" name="__codelineno-8-47" href="#__codelineno-8-47"></a>
+<a id="__codelineno-8-48" name="__codelineno-8-48" href="#__codelineno-8-48"></a>Found 12 commits. Here they are:
+<a id="__codelineno-8-49" name="__codelineno-8-49" href="#__codelineno-8-49"></a>- a1b2c3d feat: add dark mode toggle
+<a id="__codelineno-8-50" name="__codelineno-8-50" href="#__codelineno-8-50"></a>- d4e5f6g fix: broken link in header nav
+<a id="__codelineno-8-51" name="__codelineno-8-51" href="#__codelineno-8-51"></a>- h7i8j9k chore: update dependencies
+<a id="__codelineno-8-52" name="__codelineno-8-52" href="#__codelineno-8-52"></a>- ... (9 more)
+<a id="__codelineno-8-53" name="__codelineno-8-53" href="#__codelineno-8-53"></a>
+<a id="__codelineno-8-54" name="__codelineno-8-54" href="#__codelineno-8-54"></a>Should I use all of these, or would you like a different date range?
+<a id="__codelineno-8-55" name="__codelineno-8-55" href="#__codelineno-8-55"></a>What version number? (Enter for &quot;Unreleased&quot;)
+<a id="__codelineno-8-56" name="__codelineno-8-56" href="#__codelineno-8-56"></a>
+<a id="__codelineno-8-57" name="__codelineno-8-57" href="#__codelineno-8-57"></a>**User:** Use all of them. Version is 2.3.0.
+<a id="__codelineno-8-58" name="__codelineno-8-58" href="#__codelineno-8-58"></a>
+<a id="__codelineno-8-59" name="__codelineno-8-59" href="#__codelineno-8-59"></a>**Claude:** Categorizing and formatting...
+<a id="__codelineno-8-60" name="__codelineno-8-60" href="#__codelineno-8-60"></a>
+<a id="__codelineno-8-61" name="__codelineno-8-61" href="#__codelineno-8-61"></a>Quality check: 95/100. One dependency update commit categorized as
+<a id="__codelineno-8-62" name="__codelineno-8-62" href="#__codelineno-8-62"></a>&quot;Changed&quot; since it affects behavior — confirming this is correct.
+<a id="__codelineno-8-63" name="__codelineno-8-63" href="#__codelineno-8-63"></a>
+<a id="__codelineno-8-64" name="__codelineno-8-64" href="#__codelineno-8-64"></a>New entry looks like:
+<a id="__codelineno-8-65" name="__codelineno-8-65" href="#__codelineno-8-65"></a>
+<a id="__codelineno-8-66" name="__codelineno-8-66" href="#__codelineno-8-66"></a>## [2.3.0] - 2025-09-14
+<a id="__codelineno-8-67" name="__codelineno-8-67" href="#__codelineno-8-67"></a>
+<a id="__codelineno-8-68" name="__codelineno-8-68" href="#__codelineno-8-68"></a>### Added
+<a id="__codelineno-8-69" name="__codelineno-8-69" href="#__codelineno-8-69"></a>- Dark mode toggle for user interface
+<a id="__codelineno-8-70" name="__codelineno-8-70" href="#__codelineno-8-70"></a>
+<a id="__codelineno-8-71" name="__codelineno-8-71" href="#__codelineno-8-71"></a>### Fixed
+<a id="__codelineno-8-72" name="__codelineno-8-72" href="#__codelineno-8-72"></a>- Broken navigation link in site header
+<a id="__codelineno-8-73" name="__codelineno-8-73" href="#__codelineno-8-73"></a>
+<a id="__codelineno-8-74" name="__codelineno-8-74" href="#__codelineno-8-74"></a>### Changed
+<a id="__codelineno-8-75" name="__codelineno-8-75" href="#__codelineno-8-75"></a>- Updated third-party library dependencies
+<a id="__codelineno-8-76" name="__codelineno-8-76" href="#__codelineno-8-76"></a>
+<a id="__codelineno-8-77" name="__codelineno-8-77" href="#__codelineno-8-77"></a>Prepending to CHANGELOG.md. Confirm? (y/n)
+<a id="__codelineno-8-78" name="__codelineno-8-78" href="#__codelineno-8-78"></a>
+<a id="__codelineno-8-79" name="__codelineno-8-79" href="#__codelineno-8-79"></a>**User:** y
+<a id="__codelineno-8-80" name="__codelineno-8-80" href="#__codelineno-8-80"></a>
+<a id="__codelineno-8-81" name="__codelineno-8-81" href="#__codelineno-8-81"></a>**Claude:** CHANGELOG.md updated. Run `git diff CHANGELOG.md` to review.
+<a id="__codelineno-8-82" name="__codelineno-8-82" href="#__codelineno-8-82"></a>
+<a id="__codelineno-8-83" name="__codelineno-8-83" href="#__codelineno-8-83"></a>## Common Pitfalls
+<a id="__codelineno-8-84" name="__codelineno-8-84" href="#__codelineno-8-84"></a>
+<a id="__codelineno-8-85" name="__codelineno-8-85" href="#__codelineno-8-85"></a>### Pitfall 1: Running git log from the wrong directory
+<a id="__codelineno-8-86" name="__codelineno-8-86" href="#__codelineno-8-86"></a>
+<a id="__codelineno-8-87" name="__codelineno-8-87" href="#__codelineno-8-87"></a>If invoked from a subdirectory, git log may produce incorrect results or
+<a id="__codelineno-8-88" name="__codelineno-8-88" href="#__codelineno-8-88"></a>fail. Always verify you are in the project root before running git commands.
+<a id="__codelineno-8-89" name="__codelineno-8-89" href="#__codelineno-8-89"></a>
+<a id="__codelineno-8-90" name="__codelineno-8-90" href="#__codelineno-8-90"></a>**Prevention:** Add `pwd &amp;&amp; git rev-parse --show-toplevel` as the first
+<a id="__codelineno-8-91" name="__codelineno-8-91" href="#__codelineno-8-91"></a>bash command in Step 2 to confirm the current directory is the git root.
+<a id="__codelineno-8-92" name="__codelineno-8-92" href="#__codelineno-8-92"></a>
+<a id="__codelineno-8-93" name="__codelineno-8-93" href="#__codelineno-8-93"></a>### Pitfall 2: Including merge commits
+<a id="__codelineno-8-94" name="__codelineno-8-94" href="#__codelineno-8-94"></a>
+<a id="__codelineno-8-95" name="__codelineno-8-95" href="#__codelineno-8-95"></a>Merge commits appear in git log by default and produce changelog noise.
+<a id="__codelineno-8-96" name="__codelineno-8-96" href="#__codelineno-8-96"></a>Always use `--no-merges` flag.
+<a id="__codelineno-8-97" name="__codelineno-8-97" href="#__codelineno-8-97"></a>
+<a id="__codelineno-8-98" name="__codelineno-8-98" href="#__codelineno-8-98"></a>### Pitfall 3: 30-day window misses release boundary
+<a id="__codelineno-8-99" name="__codelineno-8-99" href="#__codelineno-8-99"></a>
+<a id="__codelineno-8-100" name="__codelineno-8-100" href="#__codelineno-8-100"></a>The 30-day window may include commits from before the last release or
+<a id="__codelineno-8-101" name="__codelineno-8-101" href="#__codelineno-8-101"></a>miss commits that are part of this release. The Step 3 confirmation prompt
+<a id="__codelineno-8-102" name="__codelineno-8-102" href="#__codelineno-8-102"></a>exists to catch this — but users often skip it without reviewing.
+<a id="__codelineno-8-103" name="__codelineno-8-103" href="#__codelineno-8-103"></a>
+<a id="__codelineno-8-104" name="__codelineno-8-104" href="#__codelineno-8-104"></a>**Prevention:** The Step 3 prompt should display the oldest and newest
+<a id="__codelineno-8-105" name="__codelineno-8-105" href="#__codelineno-8-105"></a>commit dates, making it obvious whether the window is correct.
+<a id="__codelineno-8-106" name="__codelineno-8-106" href="#__codelineno-8-106"></a>
+<a id="__codelineno-8-107" name="__codelineno-8-107" href="#__codelineno-8-107"></a>### Pitfall 4: Conventional commit prefix pollution
+<a id="__codelineno-8-108" name="__codelineno-8-108" href="#__codelineno-8-108"></a>
+<a id="__codelineno-8-109" name="__codelineno-8-109" href="#__codelineno-8-109"></a>Commits that follow conventional commit format (feat:, fix:, chore:)
+<a id="__codelineno-8-110" name="__codelineno-8-110" href="#__codelineno-8-110"></a>should have their prefixes stripped in the output. &quot;feat: add dark mode&quot;
+<a id="__codelineno-8-111" name="__codelineno-8-111" href="#__codelineno-8-111"></a>becomes &quot;Added dark mode&quot;. The skill already instructs this in Step 4,
+<a id="__codelineno-8-112" name="__codelineno-8-112" href="#__codelineno-8-112"></a>but review the output before confirming.
+</code></pre></div></li>
+</ul>
+<p><strong>What is different at Stage 4.</strong></p>
+<p>The quality scoring rubric gives Claude a framework for evaluating its own output. The numerical scoring creates a threshold (75/100) below which Claude must flag gaps rather than silently deliver substandard results. The example session shows exactly what a correct interaction looks like. The common pitfalls section encodes hard-won knowledge about what goes wrong.</p>
+<hr />
+<h2 id="36-where-to-save-the-skill">3.6 Where to Save the Skill<a class="headerlink" href="#36-where-to-save-the-skill" title="Permanent link">&para;</a></h2>
+<p>The complete Stage 4 skill lives at:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>~/.claude/skills/changelog-generator/SKILL.md
+</code></pre></div>
+<p>Create the directory if it does not exist:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/.claude/skills/changelog-generator
+</code></pre></div>
+<p>Then write the file with the Stage 4 content.</p>
+<p>To confirm the skill is registered, start a new Claude Code session and run <code>/skills</code>. You should see <code>changelog-generator</code> in the list.</p>
+<div class="admonition tip">
+<p class="admonition-title">Project-local vs. global installation</p>
+<p>If the <code>changelog-generator</code> skill is useful across all your projects (it is), install it globally in <code>~/.claude/skills/</code>. If you are building a skill that is specific to one project — perhaps one that reads from that project's specific data files — install it project-locally in <code>.claude/skills/</code> within the project root.</p>
+</div>
+<hr />
+<h2 id="37-testing-your-skill">3.7 Testing Your Skill<a class="headerlink" href="#37-testing-your-skill" title="Permanent link">&para;</a></h2>
+<p>Testing a skill means invoking it and observing whether it behaves as specified. This is different from testing software: you are not looking for deterministic output, you are looking for consistent, high-quality output that follows the workflow.</p>
+<p><strong>Test 1: First invocation.</strong> Start a new session in a git project directory. Type <code>/skill changelog-generator</code>. Observe each step. Does Claude run git log? Does it ask for version confirmation? Does it format the output correctly?</p>
+<p><strong>Test 2: Existing CHANGELOG.md.</strong> Create a minimal <code>CHANGELOG.md</code> in the project root. Invoke the skill again. Does Claude detect the existing file? Does it ask for confirmation before overwriting?</p>
+<p><strong>Test 3: Non-git project.</strong> Invoke the skill from a directory with no git repository. Does Claude detect the missing git history and ask you to describe changes manually?</p>
+<p><strong>Test 4: Quality scoring trigger.</strong> After Claude produces the changelog entry, examine it critically. Does the quality score seem accurate? Are the common pitfalls section's failure modes reflected in the rubric?</p>
+<p>Record what you observe. If behavior deviates from specification, the fix is in the skill definition, not in how you invoke it.</p>
+<hr />
+<h2 id="38-the-iteration-loop">3.8 The Iteration Loop<a class="headerlink" href="#38-the-iteration-loop" title="Permanent link">&para;</a></h2>
+<p>Skills improve through a tight loop of invocation, observation, and refinement. The loop has four steps:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[Invoke the skill] --&gt; B[Observe actual behavior]
+    B --&gt; C[Compare to intended behavior]
+    C --&gt; D{Gap found?}
+    D -- Yes --&gt; E[Edit SKILL.md to close the gap]
+    E --&gt; A
+    D -- No --&gt; F[Skill is working as intended]</code></pre>
+<p><strong>Common gaps and their fixes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Observed behavior</th>
+<th>Likely cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Output format varies between invocations</td>
+<td>Workflow step too vague</td>
+<td>Add explicit format specification</td>
+</tr>
+<tr>
+<td>Claude skips a step</td>
+<td>Step 2 does not follow from Step 1 clearly</td>
+<td>Add explicit "then proceed to Step X" instructions</td>
+</tr>
+<tr>
+<td>Claude asks unnecessary questions</td>
+<td>Step does not specify when to proceed automatically</td>
+<td>Add "If X is true, proceed automatically"</td>
+</tr>
+<tr>
+<td>Claude does not ask at critical decision points</td>
+<td>Missing user dialog trigger</td>
+<td>Add explicit "Ask the user: '...'" instruction</td>
+</tr>
+<tr>
+<td>Quality score never below 75</td>
+<td>Rubric criteria too lenient</td>
+<td>Raise point values for critical criteria</td>
+</tr>
+<tr>
+<td>Wrong files written</td>
+<td>Output section not specific enough</td>
+<td>Add exact file paths and formats to Output section</td>
+</tr>
+<tr>
+<td>Skill invoked for wrong task</td>
+<td>Description too broad</td>
+<td>Narrow the description and add "Do NOT use if" criteria</td>
+</tr>
+</tbody>
+</table>
+<p>Most gaps are in the workflow steps: either too vague, missing conditional logic, or not specifying when to pause for user input. The example session section of a skill is particularly valuable here — if you write a precise example session and Claude's actual behavior matches it, the skill is working correctly. If there is a divergence, the skill definition needs adjustment.</p>
+<div class="admonition warning">
+<p class="admonition-title">Do not compensate for a bad skill definition by reprompting</p>
+<p>When a skill does not behave correctly, the instinct is to add clarifying instructions during the session: "No, I meant for you to do X first." Resist this. Instead, identify what the skill definition lacks and add it there. The fix should be in the skill, not in the session. If you fix it in the session, the problem will recur on the next invocation.</p>
+</div>
+<hr />
+<h2 id="39-the-complete-stage-4-skill">3.9 The Complete Stage 4 Skill<a class="headerlink" href="#39-the-complete-stage-4-skill" title="Permanent link">&para;</a></h2>
+<p>Here is the complete, production-ready <code>changelog-generator</code> skill in a single code block for easy copying:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>---
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>name: changelog-generator
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>description: &gt;
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  Generates a formatted CHANGELOG.md entry from recent git commits or
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  a description of recent changes. Use this skill when you need to document
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  what changed in a project between two points in time. Output follows
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  Keep a Changelog format (keepachangelog.com). Reads existing CHANGELOG.md
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="gu">  if present and prepends the new entry.</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="gu">---</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="gh"># Changelog Generator</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="gu">## Overview</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>This skill produces a properly formatted CHANGELOG.md entry documenting
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>recent changes to a project. It follows the Keep a Changelog format
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>(keepachangelog.com) with sections for Added, Changed, Fixed, Removed,
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>Deprecated, and Security changes.
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>If a CHANGELOG.md already exists in the project root, this skill reads
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>the existing file and prepends the new entry, preserving all prior history.
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="gu">## When to Use This Skill</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>Use this skill when:
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="k">-</span><span class="w"> </span>You are preparing a release and need to document what changed
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="k">-</span><span class="w"> </span>You want to update CHANGELOG.md after a sprint or milestone
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a><span class="k">-</span><span class="w"> </span>A collaborator asks what changed since the last version
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a><span class="gs">**Prerequisites:**</span>
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a><span class="k">-</span><span class="w"> </span>Project must be a git repository OR the user can describe changes manually
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a><span class="k">-</span><span class="w"> </span>Must be invoked from the project root directory
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>Do NOT use this skill if:
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a><span class="k">-</span><span class="w"> </span>You need automated changelog generation from CI/CD (use a dedicated tool)
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a><span class="k">-</span><span class="w"> </span>The project has no version history or semantic versioning scheme
+<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>
+<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a><span class="gu">## Workflow</span>
+<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a>
+<a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a><span class="gu">### Step 1: Check for Existing Changelog</span>
+<a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a>
+<a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a>Check if a CHANGELOG.md file already exists in the current directory:
+<a id="__codelineno-11-46" name="__codelineno-11-46" href="#__codelineno-11-46"></a>
+<a id="__codelineno-11-47" name="__codelineno-11-47" href="#__codelineno-11-47"></a>```bash
+<a id="__codelineno-11-48" name="__codelineno-11-48" href="#__codelineno-11-48"></a>ls -la CHANGELOG.md 2&gt;/dev/null
+</code></pre></div>
+<p>If CHANGELOG.md exists, read its current contents to preserve them when
+writing the updated file.</p>
+<h3 id="step-2-gather-change-information_1">Step 2: Gather Change Information<a class="headerlink" href="#step-2-gather-change-information_1" title="Permanent link">&para;</a></h3>
+<p>Run the following command to get recent git commits:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>--since<span class="o">=</span><span class="s2">&quot;30 days ago&quot;</span><span class="w"> </span>--no-merges
+</code></pre></div>
+<p>If git is not available or the project is not a git repository, ask:
+"This project does not appear to use git. Please describe the changes
+made since the last release, one change per line."</p>
+<p>Wait for the user response before proceeding to Step 3.</p>
+<p>If git IS available, proceed automatically to Step 3.</p>
+<h3 id="step-3-confirm-scope-with-user_1">Step 3: Confirm Scope with User<a class="headerlink" href="#step-3-confirm-scope-with-user_1" title="Permanent link">&para;</a></h3>
+<p>Display the raw commit list to the user and ask:
+"Here are the commits from the last 30 days. Should I use all of them,
+or would you like to specify a different date range or version boundary?
+Also, what version number should I use? (Press Enter to use 'Unreleased')"</p>
+<p>Wait for user response before proceeding.</p>
+<h3 id="step-4-categorize-changes_1">Step 4: Categorize Changes<a class="headerlink" href="#step-4-categorize-changes_1" title="Permanent link">&para;</a></h3>
+<p>Review the commits or user-provided descriptions and categorize each
+into the appropriate Keep a Changelog section:</p>
+<ul>
+<li><strong>Added</strong>: New features or capabilities</li>
+<li><strong>Changed</strong>: Changes to existing functionality</li>
+<li><strong>Fixed</strong>: Bug fixes</li>
+<li><strong>Removed</strong>: Removed features</li>
+<li><strong>Deprecated</strong>: Features marked for future removal</li>
+<li><strong>Security</strong>: Security fixes or CVE mentions</li>
+</ul>
+<p>Omit sections that have no entries.</p>
+<p>Rewrite commit messages for readability. Remove conventional commit prefixes.
+Paraphrase cryptic references. Write entries as a human would read them.</p>
+<h3 id="step-5-format-the-changelog-entry_1">Step 5: Format the Changelog Entry<a class="headerlink" href="#step-5-format-the-changelog-entry_1" title="Permanent link">&para;</a></h3>
+<p>Format the new entry:</p>
+<div class="highlight"><pre><span></span><code>## [VERSION] - YYYY-MM-DD
+
+### Added
+- Item written in plain language
+
+### Fixed
+- Item written in plain language
+</code></pre></div>
+<p>Replace VERSION with the user-provided version or "Unreleased".
+Replace YYYY-MM-DD with today's date.</p>
+<h3 id="step-6-write-the-file_1">Step 6: Write the File<a class="headerlink" href="#step-6-write-the-file_1" title="Permanent link">&para;</a></h3>
+<p>If CHANGELOG.md did not exist: write the new entry with a standard header:</p>
+<div class="highlight"><pre><span></span><code># Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on Keep a Changelog (https://keepachangelog.com/en/1.0.0/).
+
+## [VERSION] - YYYY-MM-DD
+...entries...
+</code></pre></div>
+<p>If CHANGELOG.md already existed: prepend the new entry after the first
+line of the existing file header, before any existing version entries.
+Preserve all existing entries.</p>
+<p>Confirm with the user before writing:
+"I will prepend the new entry to your existing CHANGELOG.md. Confirm? (y/n)"</p>
+<p>Wait for confirmation. If "n", ask what revisions the user wants.</p>
+<h3 id="step-7-confirm-completion_1">Step 7: Confirm Completion<a class="headerlink" href="#step-7-confirm-completion_1" title="Permanent link">&para;</a></h3>
+<p>After writing, display:
+"CHANGELOG.md updated. Run <code>git diff CHANGELOG.md</code> to review."</p>
+<h2 id="output-files_1">Output Files<a class="headerlink" href="#output-files_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>CHANGELOG.md</code> — Created or updated in the current directory</li>
+</ul>
+<h2 id="quality-scoring">Quality Scoring<a class="headerlink" href="#quality-scoring" title="Permanent link">&para;</a></h2>
+<p>Evaluate the changelog entry before writing. Score each criterion.
+If total is below 75/100, flag gaps and offer to revise.</p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Points</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All commits accounted for</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Correct categorization</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Plain language (no raw prefixes or hashes)</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Completeness (no empty sections included)</td>
+<td>15</td>
+</tr>
+<tr>
+<td>Date accuracy</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Version format (Unreleased or X.Y.Z)</td>
+<td>10</td>
+</tr>
+<tr>
+<td>File integrity (existing history preserved)</td>
+<td>5</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>100</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="example-session">Example Session<a class="headerlink" href="#example-session" title="Permanent link">&para;</a></h2>
+<p>User: /skill changelog-generator</p>
+<p>Claude: Checking for CHANGELOG.md... Found. Reading current contents.</p>
+<p>Running git log for last 30 days... Found 12 commits.</p>
+<p>Here they are: [commit list]. Should I use all of them, or a different
+range? What version number? (Enter for Unreleased)</p>
+<p>User: All of them. Version 2.3.0.</p>
+<p>Claude: [formats entry, scores 95/100, confirms with user, writes file]
+"CHANGELOG.md updated. Run git diff CHANGELOG.md to review."</p>
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Running from a subdirectory: git log may produce incorrect results.
+  Verify you are in the project root.</li>
+<li>Including merge commits: always use --no-merges.</li>
+<li>30-day window misses release boundary: the Step 3 prompt catches this,
+  but display oldest/newest commit dates to make the window obvious.</li>
+<li>Conventional commit prefix pollution: strip feat:, fix:, chore: prefixes
+  and rewrite entries in plain language.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>---
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>## 3.10 Production-Readiness Checklist
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Your skill is production-ready when it satisfies all of the following:
+</code></pre></div>
+Frontmatter
+  [ ] name matches the directory name exactly
+  [ ] description is 2-4 sentences specifying trigger condition and output
+  [ ] description written from Claude's routing perspective, not documentation perspective</li>
+</ul>
+<p>Structure
+  [ ] Overview section explains purpose and primary output in 1-2 sentences
+  [ ] "When to Use" includes positive conditions, negative conditions, and prerequisites
+  [ ] Workflow steps are numbered and sequentially ordered
+  [ ] Each step specifies exactly what Claude should do (not just what the step is about)
+  [ ] Conditional logic is explicit ("If X, do Y. Otherwise, do Z.")
+  [ ] User dialog triggers are explicit ("Ask the user: '...'")
+  [ ] Destructive actions (file writes, overwrites) require explicit user confirmation</p>
+<p>Quality
+  [ ] Quality scoring rubric with specific criteria and point values
+  [ ] Minimum passing score defined (75/100 recommended)
+  [ ] Gap report behavior specified (what to do if score is below threshold)</p>
+<p>Documentation
+  [ ] Output files section lists every file the skill creates, with paths and formats
+  [ ] Example session shows correct interaction from invocation to completion
+  [ ] Common pitfalls section covers at least three known failure modes</p>
+<p>Testing
+  [ ] Skill has been invoked at least twice in separate sessions
+  [ ] Output is consistent between invocations
+  [ ] Conditional branches (e.g., git vs. no git) have each been tested
+  [ ] Quality scoring has been triggered at least once (introduce a flaw to test it)
+  [ ] Edge cases (empty input, existing files, user saying "no" at confirmations) tested
+```</p>
+<p>This checklist is the answer to "is my skill done?" If every item is checked, the skill will behave consistently, produce quality-gated output, and handle the failure cases you know about. New failure cases will be discovered through use and added to the common pitfalls section over time.</p>
+<hr />
+<h2 id="311-what-comes-next">3.11 What Comes Next<a class="headerlink" href="#311-what-comes-next" title="Permanent link">&para;</a></h2>
+<p>You have built a complete skill from scratch, understood how each component affects Claude's behavior, and established the iteration loop for improving skills over time. The <code>changelog-generator</code> demonstrates all the core patterns:</p>
+<ul>
+<li>Frontmatter for registration</li>
+<li>A "When to Use" section with positive conditions, negative conditions, and prerequisites</li>
+<li>Numbered workflow steps with explicit instructions</li>
+<li>Conditional logic for branching based on environment state</li>
+<li>User dialog triggers at decision points and before destructive actions</li>
+<li>Quality scoring with a rubric and a minimum threshold</li>
+<li>An example session showing correct behavior</li>
+<li>A common pitfalls section encoding known failure modes</li>
+</ul>
+<p>Chapter 4 goes deeper into the SKILL.md structure, examining each section in detail and explaining the design decisions behind the patterns you used in this chapter. Chapter 5 covers YAML frontmatter in depth, including the <code>allowed-tools</code> field and how to constrain skill capabilities. Chapter 6 addresses workflow design as a discipline — how to decompose complex tasks into workflow steps that produce consistent, high-quality output.</p>
+<div class="admonition tip">
+<p class="admonition-title">Build your own first skill in parallel</p>
+<p>The <code>changelog-generator</code> is a learning vehicle. Your most valuable next step is to identify a real workflow in your own work and build a skill for it using the same four-stage process. Use the production-readiness checklist at Stage 4. The workflow you chose when reading the "Before moving on" tip at the end of Chapter 1 is your starting point.</p>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Key terms from this chapter</p>
+<ul>
+<li><strong>Minimal viable skill</strong>: A SKILL.md containing only YAML frontmatter — the minimum for Claude Code to register the skill</li>
+<li><strong>Workflow step</strong>: A numbered instruction in the skill body specifying exactly what Claude should do at that stage of execution</li>
+<li><strong>User dialog trigger</strong>: An explicit instruction telling Claude to pause and ask the user a specific question before proceeding</li>
+<li><strong>Conditional logic</strong>: Branching instructions in the skill body that tell Claude to take different actions based on the current state</li>
+<li><strong>Destructive action confirmation</strong>: The pattern of requiring explicit user confirmation before writing, overwriting, or deleting files</li>
+<li><strong>Quality scoring rubric</strong>: A table of criteria and point values that Claude uses to evaluate its own output before delivering it</li>
+<li><strong>Minimum passing score</strong>: The threshold below which Claude must flag gaps and offer to revise rather than silently delivering substandard output</li>
+<li><strong>Iteration loop</strong>: The cycle of invoke, observe, compare, edit that refines a skill toward correct and consistent behavior</li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.code.annotate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,3020 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive knowledge base for building custom Claude Code skills — from single-purpose agents to meta-skill routers and full pipeline orchestration.">
+      
+      
+      
+        <link rel="canonical" href="https://yarmoluk.github.io/custom-skill-developer/chapters/06/">
+      
+      
+        <link rel="prev" href="../05/">
+      
+      
+        <link rel="next" href="../07/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Workflow Design - Custom Skill Developer Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-6-workflow-design" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Custom Skill Developer Guide" class="md-header__button md-logo" aria-label="Custom Skill Developer Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Custom Skill Developer Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Workflow Design
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Yarmoluk/custom-skill-developer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Yarmoluk/custom-skill-developer
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../course-description/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Course Description
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../01/" class="md-tabs__link">
+          
+  
+  
+  Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../04/" class="md-tabs__link">
+          
+  
+  
+  Skill Anatomy
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../08/" class="md-tabs__link">
+          
+  
+  
+  Advanced Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../12/" class="md-tabs__link">
+          
+  
+  
+  Specialized Skills
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../15/" class="md-tabs__link">
+          
+  
+  
+  Deployment
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../glossary.md" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Custom Skill Developer Guide" class="md-nav__button md-logo" aria-label="Custom Skill Developer Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Custom Skill Developer Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Yarmoluk/custom-skill-developer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Yarmoluk/custom-skill-developer
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../course-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Course Description
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What Are Claude Code Skills?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Skill Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill Anatomy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skill Anatomy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SKILL.md Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YAML Frontmatter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow Design
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#building-multi-step-workflows-that-execute-reliably" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building Multi-Step Workflows That Execute Reliably
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-anatomy-of-a-workflow-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Anatomy of a Workflow Step
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Anatomy of a Workflow Step">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-makes-a-good-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Makes a Good Step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-0-the-environment-setup-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0: The Environment Setup Pattern
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 0: The Environment Setup Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-three-jobs-of-step-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Three Jobs of Step 0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parallel-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallel Execution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parallel Execution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#caution-token-cost-of-parallelism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caution: Token Cost of Parallelism
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-dialog-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Dialog Triggers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User Dialog Triggers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-trigger-a-dialog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Trigger a Dialog
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#three-categories-of-dialog-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three Categories of Dialog Triggers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-to-avoid-in-dialog-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to Avoid in Dialog Triggers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditional-branching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional Branching
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conditional Branching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-file-existence-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: File Existence Branch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-quality-score-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Quality Score Branch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-skip-if-complete-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Skip-if-Complete Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-4-content-dependent-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 4: Content-Dependent Branch
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#missing-input-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Input Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unexpected-file-state-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unexpected File State Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-failure-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Failure Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-1-a-simple-single-purpose-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked Example 1: A Simple Single-Purpose Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-2-a-branching-content-generation-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked Example 2: A Branching Content-Generation Skill
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Worked Example 2: A Branching Content-Generation Skill">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-4a-quality-gate-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4a: Quality Gate (Creation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UPDATE WORKFLOW
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2b-analyze-existing-faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2b: Analyze Existing FAQ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3b-generate-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3b: Generate Additions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4b-quality-gate-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4b: Quality Gate (Update)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-write-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Write Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow-design-principles-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow Design Principles — Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Scoring Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Patterns
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meta-Skill Routers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Token Efficiency Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specialized Skills
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specialized Skills
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Format Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Generation Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Analysis & Validation Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deployment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation & Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing & Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing & Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#building-multi-step-workflows-that-execute-reliably" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building Multi-Step Workflows That Execute Reliably
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-anatomy-of-a-workflow-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Anatomy of a Workflow Step
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Anatomy of a Workflow Step">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-makes-a-good-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Makes a Good Step
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-0-the-environment-setup-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0: The Environment Setup Pattern
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 0: The Environment Setup Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-three-jobs-of-step-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Three Jobs of Step 0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parallel-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallel Execution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parallel Execution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#caution-token-cost-of-parallelism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caution: Token Cost of Parallelism
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-dialog-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Dialog Triggers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User Dialog Triggers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-trigger-a-dialog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Trigger a Dialog
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#three-categories-of-dialog-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three Categories of Dialog Triggers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-to-avoid-in-dialog-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to Avoid in Dialog Triggers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditional-branching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional Branching
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conditional Branching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-file-existence-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: File Existence Branch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-quality-score-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Quality Score Branch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-skip-if-complete-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Skip-if-Complete Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-4-content-dependent-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 4: Content-Dependent Branch
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#missing-input-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Input Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unexpected-file-state-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unexpected File State Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-failure-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Failure Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-1-a-simple-single-purpose-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked Example 1: A Simple Single-Purpose Skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-2-a-branching-content-generation-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked Example 2: A Branching Content-Generation Skill
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Worked Example 2: A Branching Content-Generation Skill">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-4a-quality-gate-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4a: Quality Gate (Creation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UPDATE WORKFLOW
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2b-analyze-existing-faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2b: Analyze Existing FAQ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3b-generate-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3b: Generate Additions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4b-quality-gate-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4b: Quality Gate (Update)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-write-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Write Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow-design-principles-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow Design Principles — Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="chapter-6-workflow-design">Chapter 6: Workflow Design<a class="headerlink" href="#chapter-6-workflow-design" title="Permanent link">&para;</a></h1>
+<h2 id="building-multi-step-workflows-that-execute-reliably">Building Multi-Step Workflows That Execute Reliably<a class="headerlink" href="#building-multi-step-workflows-that-execute-reliably" title="Permanent link">&para;</a></h2>
+<p>The workflow is the engine of a skill. Everything else in the SKILL.md file — frontmatter, overview, output summary — exists to support it. A well-designed workflow executes identically whether Claude runs it the first time or the hundredth time, whether the project is large or small, whether the user is experienced or a first-timer.</p>
+<p>This chapter covers the full architecture of skill workflows: the Step 0 environment setup pattern, sequential vs. parallel execution, user dialog triggers, conditional branching, error handling, and the quality gate pattern. Three worked examples of increasing complexity close the chapter.</p>
+<hr />
+<h2 id="the-anatomy-of-a-workflow-step">The Anatomy of a Workflow Step<a class="headerlink" href="#the-anatomy-of-a-workflow-step" title="Permanent link">&para;</a></h2>
+<p>Every step in a skill workflow follows the same structural pattern:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gu">### Step N: Descriptive Step Name</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>[One sentence explaining the purpose of this step]
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>[Detailed instructions for what Claude should do]
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>[Optional: User Dialog Triggers]
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>[Optional: Skip-if-complete detection]
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>[Optional: Decision table or threshold logic]
+</code></pre></div>
+<p>The step heading (<code>### Step N:</code>) is not just a label — it is a semantic anchor. When Claude is mid-execution and needs to reference another step, or when a user asks "what step are you on?", the step heading provides a clear, unambiguous reference point. Use consistent step numbering starting from Step 0.</p>
+<h3 id="what-makes-a-good-step">What Makes a Good Step<a class="headerlink" href="#what-makes-a-good-step" title="Permanent link">&para;</a></h3>
+<p>A well-designed step has three properties:</p>
+<ol>
+<li><strong>Single cohesive purpose</strong> — one step, one goal. "Validate input and generate content and write output" is three steps masquerading as one.</li>
+<li><strong>Clear completion criteria</strong> — Claude should know unambiguously when the step is done.</li>
+<li><strong>Explicit error handling</strong> — what should happen if the step fails or the inputs are not as expected?</li>
+</ol>
+<p>A poorly designed step is either too small ("Read the file") or too large ("Do everything"). The right granularity is a step that corresponds to a meaningful checkpoint — a point where you would naturally want to verify progress before continuing.</p>
+<hr />
+<h2 id="step-0-the-environment-setup-pattern">Step 0: The Environment Setup Pattern<a class="headerlink" href="#step-0-the-environment-setup-pattern" title="Permanent link">&para;</a></h2>
+<p>Step 0 is the most important step in any skill workflow. It is always the first step, always named "Setup" or "Environment Setup," and always performs the same core function: <strong>establishing the filesystem context that all subsequent steps depend on.</strong></p>
+<p>Without Step 0, every subsequent step that references a file path is a potential failure. With Step 0, paths are established once, verified once, and all subsequent steps operate with confidence.</p>
+<h3 id="the-three-jobs-of-step-0">The Three Jobs of Step 0<a class="headerlink" href="#the-three-jobs-of-step-0" title="Permanent link">&para;</a></h3>
+<p><strong>Job 1: Announce the skill and version</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="gu">### Step 0: Environment Setup</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Tell the user you are running [Skill Name] version [X.Y].
+</code></pre></div>
+<p>This announcement serves as an explicit confirmation that the correct skill loaded. If the wrong skill loaded, the user can stop execution immediately rather than after several steps of incorrect work.</p>
+<p><strong>Job 2: Detect the project root</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Detect the project root by looking for <span class="sb">`mkdocs.yml`</span> in the current directory.
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>If not found, check parent directories up to three levels up.
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>If <span class="sb">`mkdocs.yml`</span> is still not found, halt and ask:
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>&quot;I cannot detect an MkDocs project. Are you running this skill from the project&#39;s
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>root directory? The project root should contain mkdocs.yml.&quot;
+</code></pre></div>
+<p>The project root detection check is important because skills run from wherever the user starts Claude Code — which may not be the project root. A skill that assumes it is already in the project root will silently write files to the wrong location.</p>
+<p><strong>Job 3: Establish path variables</strong></p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Set the following path variables for use throughout this skill:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">-</span><span class="w"> </span>PROJECT_ROOT: directory containing mkdocs.yml
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">-</span><span class="w"> </span>DOCS_DIR: PROJECT_ROOT/docs
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">-</span><span class="w"> </span>LEARNING_GRAPH_DIR: DOCS_DIR/learning-graph
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">-</span><span class="w"> </span>LOG_DIR: PROJECT_ROOT/logs
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Create directories that do not exist:
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>```bash
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>mkdir -p $DOCS_DIR/learning-graph
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>mkdir -p $LOG_DIR
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Setting path variables in Step 0 gives every subsequent step a consistent reference. Step 3 that says &quot;write to `$DOCS_DIR/glossary.md`&quot; will always write to the same place regardless of where the user invoked Claude Code.
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>### A Complete Step 0 Template
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>```markdown
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>### Step 0: Environment Setup
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Tell the user you are running [Skill Name] version [X.Y].
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>Detect the project root by locating `mkdocs.yml` in the current directory or parent
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>directories. If not found, halt and ask the user to navigate to the project root before
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>continuing.
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>Set path variables:
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>- PROJECT_ROOT: directory containing mkdocs.yml
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>- DOCS_DIR: PROJECT_ROOT/docs
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>- LOG_DIR: PROJECT_ROOT/logs
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>Create required directories if they do not exist:
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>```bash
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>mkdir -p $LOG_DIR
+</code></pre></div></p>
+<p>Open the session log at <code>$LOG_DIR/[skill-name]-[timestamp].md</code> and record:
+- Skill name and version
+- Execution start timestamp
+- PROJECT_ROOT path
+- User's current working directory
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>---
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>## Sequential Execution
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>The default execution model for skill workflows is sequential: Step 0 runs, then Step 1, then Step 2, and so on. Each step completes before the next begins.
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Sequential execution is appropriate when:
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>- Each step depends on the output of the previous step
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>- The order of operations matters for correctness
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>- You want clear checkpoints between operations
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>```mermaid
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>graph LR
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    S0[Step 0: Setup] --&gt; S1[Step 1: Read Input]
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    S1 --&gt; S2[Step 2: Validate]
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    S2 --&gt; S3[Step 3: Generate]
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    S3 --&gt; S4[Step 4: Write Output]
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    S4 --&gt; S5[Step 5: Report]
+</code></pre></div></p>
+<p>Most skill workflows are sequential. The dependencies between steps — Step 3 needs the validated input from Step 2, Step 4 needs the generated content from Step 3 — enforce a natural ordering that sequential execution respects.</p>
+<hr />
+<h2 id="parallel-execution">Parallel Execution<a class="headerlink" href="#parallel-execution" title="Permanent link">&para;</a></h2>
+<p>Some steps can run simultaneously because they are independent of each other. You can instruct Claude to execute these steps in parallel:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="gu">### Step 2: Gather Context (Parallel)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Execute the following reads simultaneously:
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">-</span><span class="w"> </span>Read <span class="sb">`docs/course-description.md`</span> (course context for audience and vocabulary)
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="k">-</span><span class="w"> </span>Read <span class="sb">`docs/learning-graph/02-concept-list-v1.md`</span> (concept list to define)
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">-</span><span class="w"> </span>Read <span class="sb">`mkdocs.yml`</span> (navigation structure for output placement)
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Proceed to Step 3 once all three files are read.
+</code></pre></div>
+<p>Parallel execution is appropriate when:
+- Steps access different files with no overlapping writes
+- Steps are read-only operations
+- Time is a concern and steps are independent</p>
+<p>Use the word "simultaneously" or "in parallel" explicitly to signal to Claude that these steps can overlap. Do not use parallel execution for steps that write to the same file or that depend on each other's output.</p>
+<h3 id="caution-token-cost-of-parallelism">Caution: Token Cost of Parallelism<a class="headerlink" href="#caution-token-cost-of-parallelism" title="Permanent link">&para;</a></h3>
+<p>Reading multiple large files in parallel consumes context window space faster than reading them sequentially. For skills that run against large projects, consider whether parallel reads are necessary or whether sequential reads with explicit scope limits are more efficient.</p>
+<hr />
+<h2 id="user-dialog-triggers">User Dialog Triggers<a class="headerlink" href="#user-dialog-triggers" title="Permanent link">&para;</a></h2>
+<p>User dialog triggers are conditional pause points — moments where the skill stops, presents information to the user, and waits for input before continuing.</p>
+<p>The golden rule for user dialog triggers: <strong>ask only when you cannot proceed without user input, or when proceeding without asking would risk significant unwanted changes.</strong></p>
+<h3 id="when-to-trigger-a-dialog">When to Trigger a Dialog<a class="headerlink" href="#when-to-trigger-a-dialog" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="gs">**User Dialog Triggers:**</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">-</span><span class="w"> </span>If quality score &lt; 70: Ask &quot;The input quality score is [N]/100. Issues found:
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  [list]. Would you like to fix these issues before proceeding, or continue anyway?&quot;
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">-</span><span class="w"> </span>If output file already exists: Ask &quot;A glossary already exists at docs/glossary.md
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  ([N] words). Overwrite, append missing terms, or skip?&quot;
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="k">-</span><span class="w"> </span>If required input file is missing: Ask &quot;I cannot find docs/learning-graph/
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>  02-concept-list-v1.md. Would you like me to look for a concept list with a
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  different filename, or should we create one first?&quot;
+</code></pre></div>
+<h3 id="three-categories-of-dialog-triggers">Three Categories of Dialog Triggers<a class="headerlink" href="#three-categories-of-dialog-triggers" title="Permanent link">&para;</a></h3>
+<p><strong>Category 1: Quality gate triggers</strong></p>
+<p>These trigger when input quality falls below a threshold. The user is informed of the specific issue and given a choice about how to proceed.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>If the concept list quality score is below 70/100, halt and report:
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>&quot;Quality score: [N]/100. Issues found:
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">-</span><span class="w"> </span>[N] duplicate concepts
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">-</span><span class="w"> </span>[N] concepts exceed 32 characters
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">-</span><span class="w"> </span>[N] concepts not in Title Case
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Options:
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="k">1.</span> Fix issues automatically and continue
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="k">2.</span> Show me the problem concepts (I will fix manually)
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="k">3.</span> Continue anyway (glossary may have quality issues)&quot;
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>Wait for user selection before proceeding.
+</code></pre></div>
+<p><strong>Category 2: Destructive action triggers</strong></p>
+<p>These trigger before any operation that could overwrite or delete existing work.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Before writing docs/glossary.md, check if the file exists.
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>If it exists and contains more than 100 lines:
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Ask: &quot;docs/glossary.md already exists with [N] terms. How should I proceed?
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">1.</span> Overwrite completely
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="k">2.</span> Update existing terms and add missing ones
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="k">3.</span> Skip (keep the existing glossary)&quot;
+</code></pre></div>
+<p><strong>Category 3: Ambiguity resolution triggers</strong></p>
+<p>These trigger when the skill cannot determine the correct action from the available information.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>If the project contains multiple course description files (e.g., course-description.md
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>and course-description-v2.md), ask:
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>&quot;I found multiple course description files. Which should I use?
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">-</span><span class="w"> </span>course-description.md (last modified: [date])
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">-</span><span class="w"> </span>course-description-v2.md (last modified: [date])&quot;
+</code></pre></div>
+<h3 id="what-to-avoid-in-dialog-triggers">What to Avoid in Dialog Triggers<a class="headerlink" href="#what-to-avoid-in-dialog-triggers" title="Permanent link">&para;</a></h3>
+<p><strong>Avoid asking for information you can determine yourself:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a># Wrong: Claude can detect the language from file extensions
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Ask: &quot;What programming language does this project use?&quot;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a># Right: Check file extensions first, only ask if ambiguous
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Read the file extensions in the repository root. If .py files dominate, assume Python.
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>If unclear (mixed languages or no clear majority), ask the user.
+</code></pre></div></p>
+<p><strong>Avoid over-checking with the user:</strong></p>
+<p>A skill that asks for permission at every step is friction, not safety. Dialog triggers should be reserved for genuinely uncertain or high-stakes decisions. A skill that asks five questions before doing any work will be abandoned.</p>
+<p><strong>Avoid open-ended questions:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a># Wrong: Too open-ended, forces user to think about implementation
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Ask: &quot;How do you want me to handle the glossary?&quot;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a># Right: Specific options with clear implications
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Ask: &quot;The glossary already exists. Options:
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>1. Overwrite (replace all existing definitions)
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>2. Update (keep existing, fill in missing concepts)
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>3. Skip&quot;
+</code></pre></div>
+<hr />
+<h2 id="conditional-branching">Conditional Branching<a class="headerlink" href="#conditional-branching" title="Permanent link">&para;</a></h2>
+<p>Conditional branching allows a skill to follow different execution paths based on conditions it detects. The most common patterns are:</p>
+<h3 id="pattern-1-file-existence-branch">Pattern 1: File Existence Branch<a class="headerlink" href="#pattern-1-file-existence-branch" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="gu">### Step 1: Detect Project State</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Check if <span class="sb">`docs/course-description.md`</span> exists.
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="gs">**If the file does NOT exist:**</span> Follow the Creation Workflow starting at Step 2a.
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="gs">**If the file DOES exist:**</span> Follow the Analysis Workflow starting at Step 2b.
+</code></pre></div>
+<p>This pattern is used extensively in the course-description-analyzer skill, which can either create a course description from scratch or validate an existing one. The branch point is a clear binary check.</p>
+<h3 id="pattern-2-quality-score-branch">Pattern 2: Quality Score Branch<a class="headerlink" href="#pattern-2-quality-score-branch" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="gu">### Step 3: Quality Gate</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Calculate the input quality score (see Quality Scoring section).
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="gs">**Score 85-100:**</span> Proceed directly to Step 4. No user dialog required.
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="gs">**Score 70-84:**</span> Proceed to Step 4 with a note: &quot;Input quality is good but not
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  excellent. [Specific issue]. Continuing.&quot;
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="gs">**Score 50-69:**</span> Trigger User Dialog — present issues and ask how to proceed.
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="gs">**Score &lt; 50:**</span> Halt. Report: &quot;Input quality is too low to produce acceptable
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>  output. Quality score: [N]/100. Critical issues: [list]. Please address these
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>  issues and re-run the skill.&quot;
+</code></pre></div>
+<p>The quality score branch creates four tiers of response rather than a binary pass/fail. This graduated response is more useful — it does not interrupt the user unnecessarily for minor issues, but it does halt for serious problems.</p>
+<h3 id="pattern-3-skip-if-complete-detection">Pattern 3: Skip-if-Complete Detection<a class="headerlink" href="#pattern-3-skip-if-complete-detection" title="Permanent link">&para;</a></h3>
+<p>Skip-if-complete detection checks whether a step's output already exists before executing it. This prevents redundant work when a skill is partially re-run.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="gu">### Step 5: Generate Concept List</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Before generating, check for existing concept list files:
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="gs">**If `docs/learning-graph/02-concept-list-v1.md` exists:**</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>Read the file and count concepts
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>If concept count &gt;= 180: Ask &quot;A concept list with [N] concepts already exists.
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    Skip this step and use the existing list?&quot; (Default: yes)
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>If concept count &lt; 180: Note &quot;Existing concept list has only [N] concepts
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    (target: 200). Regenerating.&quot; and proceed.
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="gs">**If no concept list exists:**</span> Generate the concept list now.
+</code></pre></div>
+<p>Skip-if-complete detection is especially valuable in long-running skills (10+ steps) where earlier steps may have already completed in a previous session. Re-running the entire skill from the beginning when only the last two steps need to be redone wastes tokens and time.</p>
+<h3 id="pattern-4-content-dependent-branch">Pattern 4: Content-Dependent Branch<a class="headerlink" href="#pattern-4-content-dependent-branch" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="gu">### Step 4: Determine Output Format</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Read the <span class="sb">`site_url`</span> field from <span class="sb">`mkdocs.yml`</span>.
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="gs">**If `site_url` is set:**</span> Assume public deployment. Include badges and live-site links
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>  in the README.
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="gs">**If `site_url` is not set:**</span> Assume private/development project. Generate a minimal
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>  README without deployment links.
+</code></pre></div>
+<hr />
+<h2 id="error-handling-patterns">Error Handling Patterns<a class="headerlink" href="#error-handling-patterns" title="Permanent link">&para;</a></h2>
+<p>Errors in skill workflows fall into three categories: missing inputs, unexpected file states, and execution failures. Each requires a different handling pattern.</p>
+<h3 id="missing-input-handling">Missing Input Handling<a class="headerlink" href="#missing-input-handling" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="gu">### Step 1: Validate Required Inputs</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Check that the following required files exist:
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>| File | Required For |
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>|------|-------------|
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>| <span class="sb">`docs/course-description.md`</span> | Context for all definitions |
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>| <span class="sb">`docs/learning-graph/02-concept-list-v1.md`</span> | The concepts to define |
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="gs">**If any required file is missing:**</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>Report clearly which file is missing and why it is needed:
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>&quot;Required file not found: docs/learning-graph/02-concept-list-v1.md
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>This file contains the concept list that the glossary generator will define.
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>To create it, run the learning-graph-generator skill first, then return to
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>this skill.&quot;
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>Halt. Do not proceed to Step 2 without all required inputs.
+</code></pre></div>
+<p>The error message should:
+1. State exactly what is missing
+2. Explain what the missing thing is used for
+3. Tell the user how to get it</p>
+<h3 id="unexpected-file-state-handling">Unexpected File State Handling<a class="headerlink" href="#unexpected-file-state-handling" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>If <span class="sb">`docs/learning-graph/02-concept-list-v1.md`</span> exists but is empty (0 bytes):
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>Report: &quot;Found docs/learning-graph/02-concept-list-v1.md but it is empty. This
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>file may have been created but not populated. Please check if the learning graph
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>generator completed successfully.&quot;
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>Halt.
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>If the file exists but contains fewer than 10 lines:
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>Report: &quot;Found docs/learning-graph/02-concept-list-v1.md but it contains only
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>[N] lines, which is too few to be a complete concept list. Minimum expected: 50 lines.&quot;
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>Trigger User Dialog: &quot;Continue with partial concept list, or halt to investigate?&quot;
+</code></pre></div>
+<h3 id="execution-failure-handling">Execution Failure Handling<a class="headerlink" href="#execution-failure-handling" title="Permanent link">&para;</a></h3>
+<p>When a bash command or file operation fails, the skill should report the failure explicitly rather than silently continuing:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Run:
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>```bash
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>mkdir -p docs/learning-graph
+</code></pre></div>
+<p>If this command fails (e.g., due to permission errors), report:
+"Failed to create docs/learning-graph/ directory. This may be a file permission
+issue. Error: [error message]. Please check that you have write permissions in
+this project directory."
+Halt.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>### The Halt vs. Ask Decision
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>When an error occurs, the skill must decide: halt completely, or pause and ask the user how to proceed?
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>Use **halt** when:
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>- A required input is completely missing and cannot be substituted
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>- A write operation would overwrite something irreplaceable
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>- The error state suggests the project is in an unexpected configuration
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>Use **ask** when:
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>- There is a reasonable alternative path the user might prefer
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>- The issue is recoverable without starting over
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>- The severity is unclear (low quality vs. no quality)
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>---
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>## The Quality Gate Pattern
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>The quality gate is a specific pattern that appears at the end of generation steps. It evaluates the generated output against a rubric and makes a proceed/stop decision.
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>```mermaid
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>graph TD
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>    A[Generate Output] --&gt; B{Score Output}
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>    B --&gt; |Score &gt;= 85| C[Proceed Immediately]
+<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a>    B --&gt; |Score 70-84| D[Proceed with Notes]
+<a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a>    B --&gt; |Score 50-69| E[Ask User: Revise or Proceed?]
+<a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a>    B --&gt; |Score &lt; 50| F[Halt: Too Low to Proceed]
+<a id="__codelineno-20-28" name="__codelineno-20-28" href="#__codelineno-20-28"></a>    E --&gt; |User: Revise| A
+<a id="__codelineno-20-29" name="__codelineno-20-29" href="#__codelineno-20-29"></a>    E --&gt; |User: Proceed| G[Write Output with Warning]
+<a id="__codelineno-20-30" name="__codelineno-20-30" href="#__codelineno-20-30"></a>    C --&gt; G
+<a id="__codelineno-20-31" name="__codelineno-20-31" href="#__codelineno-20-31"></a>    D --&gt; G
+</code></pre></div></p>
+<p>The quality gate sits between generation and output writing. It serves two purposes:</p>
+<ol>
+<li><strong>Self-correction</strong>: If the score is low, Claude revises before asking — it does not immediately interrupt the user with low-quality output.</li>
+<li><strong>User transparency</strong>: When the score is borderline, the user is informed and given agency over whether to proceed.</li>
+</ol>
+<p>A complete quality gate implementation looks like this:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="gu">### Step 4: Quality Gate</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>After generating all definitions, calculate the overall quality score using the
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>rubric in the Quality Scoring section below.
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>Apply the following threshold logic:
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="gs">**Score 85-100 (Excellent):**</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>Proceed to Step 5 without interruption. Note the score in the session log.
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="gs">**Score 70-84 (Good):**</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>Proceed to Step 5. Inform the user:
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>&quot;Output quality score: [N]/100. [N] definitions could be improved. Continuing.&quot;
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>Log the specific definitions that scored below 80.
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="gs">**Score 50-69 (Needs Work):**</span>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>Before writing output, present the issues to the user:
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>&quot;Quality score: [N]/100. [N] definitions have significant issues:
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="k">-</span><span class="w"> </span>[<span class="nl">Definition 1</span>]: <span class="na">[Issue]</span>
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a><span class="k">-</span><span class="w"> </span>[<span class="nl">Definition 2</span>]: <span class="na">[Issue]</span>
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>Options:
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a><span class="k">1.</span> Auto-fix the flagged definitions and continue
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a><span class="k">2.</span> Show me each flagged definition for manual review
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a><span class="k">3.</span> Save as-is and address issues later&quot;
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a><span class="gs">**Score &lt; 50 (Insufficient):**</span>
+<a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>Halt. Do not write output. Report:
+<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>&quot;Output quality score: [N]/100 — below the minimum threshold of 50 to produce
+<a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a>useful output. Critical issues: [list]. This typically means the input concept
+<a id="__codelineno-21-30" name="__codelineno-21-30" href="#__codelineno-21-30"></a>list has fundamental problems. Please review the concept list and re-run.&quot;
+</code></pre></div>
+<hr />
+<h2 id="worked-example-1-a-simple-single-purpose-skill">Worked Example 1: A Simple Single-Purpose Skill<a class="headerlink" href="#worked-example-1-a-simple-single-purpose-skill" title="Permanent link">&para;</a></h2>
+<p><strong>Context:</strong> A skill that checks whether all required files for a chapter exist before running the chapter content generator.</p>
+<p>This is a simple skill — three steps, no generation, read-only — that demonstrates clean workflow structure.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="gu">## Workflow</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="gu">### Step 0: Environment Setup</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>Tell the user you are running Chapter Prerequisite Checker version 1.0.
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>Detect project root by locating mkdocs.yml. If not found, halt with:
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>&quot;Cannot detect MkDocs project root. Please run from the project directory.&quot;
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>Set path variables:
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="k">-</span><span class="w"> </span>PROJECT_ROOT: directory containing mkdocs.yml
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="k">-</span><span class="w"> </span>DOCS_DIR: PROJECT_ROOT/docs
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="gu">### Step 1: Read Chapter Configuration</span>
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a>Read mkdocs.yml and extract the nav section.
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>Read the list of chapters from the nav entries under the &quot;Chapters&quot; section.
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a>
+<a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a>If the nav section has no &quot;Chapters&quot; entries, halt with:
+<a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a>&quot;No chapters found in mkdocs.yml nav. Has the book-chapter-generator been run?&quot;
+<a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a>
+<a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a><span class="gu">### Step 2: Check Prerequisites for Each Chapter</span>
+<a id="__codelineno-22-23" name="__codelineno-22-23" href="#__codelineno-22-23"></a>
+<a id="__codelineno-22-24" name="__codelineno-22-24" href="#__codelineno-22-24"></a>For each chapter in the nav:
+<a id="__codelineno-22-25" name="__codelineno-22-25" href="#__codelineno-22-25"></a>
+<a id="__codelineno-22-26" name="__codelineno-22-26" href="#__codelineno-22-26"></a><span class="k">1.</span> Check that the chapter&#39;s markdown file exists in DOCS_DIR
+<a id="__codelineno-22-27" name="__codelineno-22-27" href="#__codelineno-22-27"></a><span class="k">2.</span> Check that <span class="sb">`docs/learning-graph/learning-graph.json`</span> exists
+<a id="__codelineno-22-28" name="__codelineno-22-28" href="#__codelineno-22-28"></a><span class="k">3.</span> Check that <span class="sb">`docs/course-description.md`</span> exists
+<a id="__codelineno-22-29" name="__codelineno-22-29" href="#__codelineno-22-29"></a>
+<a id="__codelineno-22-30" name="__codelineno-22-30" href="#__codelineno-22-30"></a>Build a report table:
+<a id="__codelineno-22-31" name="__codelineno-22-31" href="#__codelineno-22-31"></a>
+<a id="__codelineno-22-32" name="__codelineno-22-32" href="#__codelineno-22-32"></a>| Chapter | Markdown File | Status |
+<a id="__codelineno-22-33" name="__codelineno-22-33" href="#__codelineno-22-33"></a>|---------|--------------|--------|
+<a id="__codelineno-22-34" name="__codelineno-22-34" href="#__codelineno-22-34"></a>| Chapter 1: [title] | docs/chapters/01.md | Ready / Missing |
+<a id="__codelineno-22-35" name="__codelineno-22-35" href="#__codelineno-22-35"></a>| ... | ... | ... |
+<a id="__codelineno-22-36" name="__codelineno-22-36" href="#__codelineno-22-36"></a>
+<a id="__codelineno-22-37" name="__codelineno-22-37" href="#__codelineno-22-37"></a><span class="gu">### Step 3: Report Results</span>
+<a id="__codelineno-22-38" name="__codelineno-22-38" href="#__codelineno-22-38"></a>
+<a id="__codelineno-22-39" name="__codelineno-22-39" href="#__codelineno-22-39"></a>If all chapters are ready: Report &quot;All [N] chapters have prerequisite files.
+<a id="__codelineno-22-40" name="__codelineno-22-40" href="#__codelineno-22-40"></a>Ready to run chapter-content-generator.&quot;
+<a id="__codelineno-22-41" name="__codelineno-22-41" href="#__codelineno-22-41"></a>
+<a id="__codelineno-22-42" name="__codelineno-22-42" href="#__codelineno-22-42"></a>If any chapters are missing files: Report:
+<a id="__codelineno-22-43" name="__codelineno-22-43" href="#__codelineno-22-43"></a>&quot;[N] of [N] chapters are missing prerequisite files:
+<a id="__codelineno-22-44" name="__codelineno-22-44" href="#__codelineno-22-44"></a>[table of missing files]
+<a id="__codelineno-22-45" name="__codelineno-22-45" href="#__codelineno-22-45"></a>Run the book-chapter-generator skill to create the missing chapter files.&quot;
+</code></pre></div>
+<p>This example demonstrates: Step 0 environment setup, clean error handling, a simple linear flow with no branching, and a useful report output.</p>
+<hr />
+<h2 id="worked-example-2-a-branching-content-generation-skill">Worked Example 2: A Branching Content-Generation Skill<a class="headerlink" href="#worked-example-2-a-branching-content-generation-skill" title="Permanent link">&para;</a></h2>
+<p><strong>Context:</strong> A skill that either creates or updates a FAQ document depending on whether one already exists. Moderate complexity — branching at Step 1, quality gate at Step 4.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="gu">## Workflow</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="gu">### Step 0: Environment Setup</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>Tell the user you are running FAQ Generator version 2.1.
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>Detect project root by locating mkdocs.yml. Halt if not found.
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>Set path variables:
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="k">-</span><span class="w"> </span>PROJECT_ROOT: directory containing mkdocs.yml
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="k">-</span><span class="w"> </span>DOCS_DIR: PROJECT_ROOT/docs
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="k">-</span><span class="w"> </span>FAQ_PATH: DOCS_DIR/faq.md
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a><span class="k">-</span><span class="w"> </span>LOG_DIR: PROJECT_ROOT/logs
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>Create LOG_DIR if it does not exist.
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>Open session log at LOG_DIR/faq-generator-[timestamp].md.
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a><span class="gu">### Step 1: Detect Project State</span>
+<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a>
+<a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a>Check whether FAQ_PATH exists.
+<a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a>
+<a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a><span class="gs">**If FAQ_PATH does NOT exist:**</span>
+<a id="__codelineno-23-24" name="__codelineno-23-24" href="#__codelineno-23-24"></a>→ Follow the Creation Workflow (Steps 2a through 4a)
+<a id="__codelineno-23-25" name="__codelineno-23-25" href="#__codelineno-23-25"></a>
+<a id="__codelineno-23-26" name="__codelineno-23-26" href="#__codelineno-23-26"></a><span class="gs">**If FAQ_PATH DOES exist:**</span>
+<a id="__codelineno-23-27" name="__codelineno-23-27" href="#__codelineno-23-27"></a>Read FAQ_PATH and count existing questions (count lines beginning with &quot;##&quot;).
+<a id="__codelineno-23-28" name="__codelineno-23-28" href="#__codelineno-23-28"></a>→ Follow the Update Workflow (Steps 2b through 4b)
+<a id="__codelineno-23-29" name="__codelineno-23-29" href="#__codelineno-23-29"></a>
+<a id="__codelineno-23-30" name="__codelineno-23-30" href="#__codelineno-23-30"></a><span class="gu">### CREATION WORKFLOW</span>
+<a id="__codelineno-23-31" name="__codelineno-23-31" href="#__codelineno-23-31"></a>
+<a id="__codelineno-23-32" name="__codelineno-23-32" href="#__codelineno-23-32"></a><span class="gu">### Step 2a: Read Source Material</span>
+<a id="__codelineno-23-33" name="__codelineno-23-33" href="#__codelineno-23-33"></a>
+<a id="__codelineno-23-34" name="__codelineno-23-34" href="#__codelineno-23-34"></a>Read the following files to gather content for FAQ generation:
+<a id="__codelineno-23-35" name="__codelineno-23-35" href="#__codelineno-23-35"></a><span class="k">-</span><span class="w"> </span>docs/course-description.md
+<a id="__codelineno-23-36" name="__codelineno-23-36" href="#__codelineno-23-36"></a><span class="k">-</span><span class="w"> </span>docs/glossary.md (if it exists)
+<a id="__codelineno-23-37" name="__codelineno-23-37" href="#__codelineno-23-37"></a><span class="k">-</span><span class="w"> </span>docs/learning-graph/02-concept-list-v1.md (if it exists)
+<a id="__codelineno-23-38" name="__codelineno-23-38" href="#__codelineno-23-38"></a>
+<a id="__codelineno-23-39" name="__codelineno-23-39" href="#__codelineno-23-39"></a>If course-description.md does not exist, halt:
+<a id="__codelineno-23-40" name="__codelineno-23-40" href="#__codelineno-23-40"></a>&quot;Cannot generate FAQ without docs/course-description.md. Run the
+<a id="__codelineno-23-41" name="__codelineno-23-41" href="#__codelineno-23-41"></a>course-description-analyzer skill first.&quot;
+<a id="__codelineno-23-42" name="__codelineno-23-42" href="#__codelineno-23-42"></a>
+<a id="__codelineno-23-43" name="__codelineno-23-43" href="#__codelineno-23-43"></a><span class="gu">### Step 3a: Generate FAQ</span>
+<a id="__codelineno-23-44" name="__codelineno-23-44" href="#__codelineno-23-44"></a>
+<a id="__codelineno-23-45" name="__codelineno-23-45" href="#__codelineno-23-45"></a>Generate 20-30 questions based on the source material. Organize questions into categories:
+<a id="__codelineno-23-46" name="__codelineno-23-46" href="#__codelineno-23-46"></a>
+<a id="__codelineno-23-47" name="__codelineno-23-47" href="#__codelineno-23-47"></a><span class="k">1.</span> Course Overview Questions (5-7 questions)
+<a id="__codelineno-23-48" name="__codelineno-23-48" href="#__codelineno-23-48"></a><span class="k">2.</span> Concept and Terminology Questions (8-10 questions)
+<a id="__codelineno-23-49" name="__codelineno-23-49" href="#__codelineno-23-49"></a><span class="k">3.</span> Learning Path Questions (4-6 questions)
+<a id="__codelineno-23-50" name="__codelineno-23-50" href="#__codelineno-23-50"></a><span class="k">4.</span> Practical Application Questions (4-6 questions)
+<a id="__codelineno-23-51" name="__codelineno-23-51" href="#__codelineno-23-51"></a>
+<a id="__codelineno-23-52" name="__codelineno-23-52" href="#__codelineno-23-52"></a>Format each question as an H2 heading followed by a paragraph answer:
+<a id="__codelineno-23-53" name="__codelineno-23-53" href="#__codelineno-23-53"></a>```markdown
+<a id="__codelineno-23-54" name="__codelineno-23-54" href="#__codelineno-23-54"></a><span class="gu">## What is a learning graph?</span>
+<a id="__codelineno-23-55" name="__codelineno-23-55" href="#__codelineno-23-55"></a>
+<a id="__codelineno-23-56" name="__codelineno-23-56" href="#__codelineno-23-56"></a>A learning graph is a directed acyclic graph of concepts that represents
+<a id="__codelineno-23-57" name="__codelineno-23-57" href="#__codelineno-23-57"></a>the order in which concepts should be learned to achieve mastery...
+</code></pre></div>
+<h3 id="step-4a-quality-gate-creation">Step 4a: Quality Gate (Creation)<a class="headerlink" href="#step-4a-quality-gate-creation" title="Permanent link">&para;</a></h3>
+<p>Score the generated FAQ:</p>
+<ul>
+<li>Coverage: Do the questions address the most likely student questions? (40 pts)</li>
+<li>Accuracy: Are the answers consistent with source material? (30 pts)</li>
+<li>Clarity: Are questions and answers clearly written? (30 pts)</li>
+</ul>
+<p>If total score &gt;= 70: Proceed to write output.
+If score &lt; 70: Revise the lowest-scoring section before proceeding.</p>
+<p>Skip to Step 5.</p>
+<h3 id="update-workflow">UPDATE WORKFLOW<a class="headerlink" href="#update-workflow" title="Permanent link">&para;</a></h3>
+<h3 id="step-2b-analyze-existing-faq">Step 2b: Analyze Existing FAQ<a class="headerlink" href="#step-2b-analyze-existing-faq" title="Permanent link">&para;</a></h3>
+<p>Read FAQ_PATH and extract all existing questions.
+Read docs/course-description.md and docs/glossary.md for new content.</p>
+<p>Identify concepts or topics covered in the course description or glossary that
+are NOT addressed in the existing FAQ.</p>
+<p>If fewer than 5 new topics found: Report "Existing FAQ appears comprehensive.
+Found [N] potential additions. Continue to add them? (yes/no)"</p>
+<h3 id="step-3b-generate-additions">Step 3b: Generate Additions<a class="headerlink" href="#step-3b-generate-additions" title="Permanent link">&para;</a></h3>
+<p>For each identified gap, generate 1-2 new questions and answers.
+Determine the appropriate category for each new question.
+Prepare additions without modifying existing content yet.</p>
+<h3 id="step-4b-quality-gate-update">Step 4b: Quality Gate (Update)<a class="headerlink" href="#step-4b-quality-gate-update" title="Permanent link">&para;</a></h3>
+<p>Review proposed additions:</p>
+<ul>
+<li>Are the new questions non-redundant with existing questions? (50 pts)</li>
+<li>Are the answers accurate and consistent with existing content? (50 pts)</li>
+</ul>
+<p>If score &gt;= 70: Proceed.
+If score &lt; 70: Remove or revise the redundant/inaccurate additions.</p>
+<h3 id="step-5-write-output">Step 5: Write Output<a class="headerlink" href="#step-5-write-output" title="Permanent link">&para;</a></h3>
+<p><strong>Creation:</strong> Write the complete FAQ to FAQ_PATH.
+<strong>Update:</strong> Append approved additions to the appropriate sections in FAQ_PATH.</p>
+<p>Update mkdocs.yml if FAQ is not already in the nav:
+Under the appropriate section, add: <code>- FAQ: faq.md</code></p>
+<p>Log session results:
+- Questions created/added: [N]
+- Quality score: [N]/100
+- Timestamp</p>
+<p>Report to user:
+"FAQ [created/updated]. Added [N] questions. Quality score: [N]/100.
+[Any notes on low-scoring sections or skipped topics]"
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>This example demonstrates: early branching at the workflow level, two distinct sub-workflows with appropriate skip points, quality gates adapted to each sub-workflow, and a unified output step.
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>---
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>## Worked Example 3: A Multi-Phase Pipeline Skill with Rich Branching
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>**Context:** A comprehensive chapter content generator that orchestrates multiple phases — planning, generation, quality scoring, revision, and output — with complex branching and user dialog throughout.
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>This is a full-complexity skill representative of production-grade workflow design.
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>```markdown
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>## Workflow
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>### Step 0: Environment Setup
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a>Tell the user you are running Chapter Content Generator version 3.0.
+<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>
+<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a>Detect project root by locating mkdocs.yml. If not found, halt.
+<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a>
+<a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a>Set path variables:
+<a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a>- PROJECT_ROOT: directory containing mkdocs.yml
+<a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a>- DOCS_DIR: PROJECT_ROOT/docs
+<a id="__codelineno-24-23" name="__codelineno-24-23" href="#__codelineno-24-23"></a>- CHAPTERS_DIR: DOCS_DIR/chapters
+<a id="__codelineno-24-24" name="__codelineno-24-24" href="#__codelineno-24-24"></a>- LEARNING_GRAPH_DIR: DOCS_DIR/learning-graph
+<a id="__codelineno-24-25" name="__codelineno-24-25" href="#__codelineno-24-25"></a>- LOG_DIR: PROJECT_ROOT/logs
+<a id="__codelineno-24-26" name="__codelineno-24-26" href="#__codelineno-24-26"></a>
+<a id="__codelineno-24-27" name="__codelineno-24-27" href="#__codelineno-24-27"></a>Create LOG_DIR and CHAPTERS_DIR if they do not exist.
+<a id="__codelineno-24-28" name="__codelineno-24-28" href="#__codelineno-24-28"></a>
+<a id="__codelineno-24-29" name="__codelineno-24-29" href="#__codelineno-24-29"></a>Check for required dependencies:
+<a id="__codelineno-24-30" name="__codelineno-24-30" href="#__codelineno-24-30"></a>
+<a id="__codelineno-24-31" name="__codelineno-24-31" href="#__codelineno-24-31"></a>| Required File | Status |
+<a id="__codelineno-24-32" name="__codelineno-24-32" href="#__codelineno-24-32"></a>|--------------|--------|
+<a id="__codelineno-24-33" name="__codelineno-24-33" href="#__codelineno-24-33"></a>| docs/course-description.md | [Check: exists / missing] |
+<a id="__codelineno-24-34" name="__codelineno-24-34" href="#__codelineno-24-34"></a>| docs/learning-graph/learning-graph.json | [Check: exists / missing] |
+<a id="__codelineno-24-35" name="__codelineno-24-35" href="#__codelineno-24-35"></a>| docs/learning-graph/02-concept-list-v1.md | [Check: exists / missing] |
+<a id="__codelineno-24-36" name="__codelineno-24-36" href="#__codelineno-24-36"></a>
+<a id="__codelineno-24-37" name="__codelineno-24-37" href="#__codelineno-24-37"></a>If any required file is missing, halt with specific instructions on which
+<a id="__codelineno-24-38" name="__codelineno-24-38" href="#__codelineno-24-38"></a>skill to run to create the missing file.
+<a id="__codelineno-24-39" name="__codelineno-24-39" href="#__codelineno-24-39"></a>
+<a id="__codelineno-24-40" name="__codelineno-24-40" href="#__codelineno-24-40"></a>### Step 1: Determine Scope
+<a id="__codelineno-24-41" name="__codelineno-24-41" href="#__codelineno-24-41"></a>
+<a id="__codelineno-24-42" name="__codelineno-24-42" href="#__codelineno-24-42"></a>Ask: &quot;Which chapters should I generate?
+<a id="__codelineno-24-43" name="__codelineno-24-43" href="#__codelineno-24-43"></a>1. All chapters listed in mkdocs.yml
+<a id="__codelineno-24-44" name="__codelineno-24-44" href="#__codelineno-24-44"></a>2. A specific chapter (I will ask which one)
+<a id="__codelineno-24-45" name="__codelineno-24-45" href="#__codelineno-24-45"></a>3. Only chapters with empty or missing content files&quot;
+<a id="__codelineno-24-46" name="__codelineno-24-46" href="#__codelineno-24-46"></a>
+<a id="__codelineno-24-47" name="__codelineno-24-47" href="#__codelineno-24-47"></a>Wait for user selection.
+<a id="__codelineno-24-48" name="__codelineno-24-48" href="#__codelineno-24-48"></a>
+<a id="__codelineno-24-49" name="__codelineno-24-49" href="#__codelineno-24-49"></a>**If option 1 selected:**
+<a id="__codelineno-24-50" name="__codelineno-24-50" href="#__codelineno-24-50"></a>Read mkdocs.yml and extract all chapter file paths from the nav section.
+<a id="__codelineno-24-51" name="__codelineno-24-51" href="#__codelineno-24-51"></a>Store as CHAPTER_LIST.
+<a id="__codelineno-24-52" name="__codelineno-24-52" href="#__codelineno-24-52"></a>
+<a id="__codelineno-24-53" name="__codelineno-24-53" href="#__codelineno-24-53"></a>**If option 2 selected:**
+<a id="__codelineno-24-54" name="__codelineno-24-54" href="#__codelineno-24-54"></a>List all chapters from mkdocs.yml nav with their current word counts.
+<a id="__codelineno-24-55" name="__codelineno-24-55" href="#__codelineno-24-55"></a>Ask user to select which chapter(s) to generate.
+<a id="__codelineno-24-56" name="__codelineno-24-56" href="#__codelineno-24-56"></a>
+<a id="__codelineno-24-57" name="__codelineno-24-57" href="#__codelineno-24-57"></a>**If option 3 selected:**
+<a id="__codelineno-24-58" name="__codelineno-24-58" href="#__codelineno-24-58"></a>Scan CHAPTERS_DIR for .md files. Count words in each.
+<a id="__codelineno-24-59" name="__codelineno-24-59" href="#__codelineno-24-59"></a>Build CHAPTER_LIST from files with fewer than 200 words.
+<a id="__codelineno-24-60" name="__codelineno-24-60" href="#__codelineno-24-60"></a>Report: &quot;Found [N] chapters with insufficient content. Generating those [N] chapters.&quot;
+<a id="__codelineno-24-61" name="__codelineno-24-61" href="#__codelineno-24-61"></a>
+<a id="__codelineno-24-62" name="__codelineno-24-62" href="#__codelineno-24-62"></a>### Step 2: Load Context (Parallel)
+<a id="__codelineno-24-63" name="__codelineno-24-63" href="#__codelineno-24-63"></a>
+<a id="__codelineno-24-64" name="__codelineno-24-64" href="#__codelineno-24-64"></a>Load the following files simultaneously:
+<a id="__codelineno-24-65" name="__codelineno-24-65" href="#__codelineno-24-65"></a>- docs/course-description.md (audience, objectives, vocabulary level)
+<a id="__codelineno-24-66" name="__codelineno-24-66" href="#__codelineno-24-66"></a>- docs/learning-graph/learning-graph.json (concept dependencies)
+<a id="__codelineno-24-67" name="__codelineno-24-67" href="#__codelineno-24-67"></a>- docs/learning-graph/02-concept-list-v1.md (complete concept list)
+<a id="__codelineno-24-68" name="__codelineno-24-68" href="#__codelineno-24-68"></a>- docs/glossary.md (if exists — for terminology consistency)
+<a id="__codelineno-24-69" name="__codelineno-24-69" href="#__codelineno-24-69"></a>
+<a id="__codelineno-24-70" name="__codelineno-24-70" href="#__codelineno-24-70"></a>Extract from the learning graph:
+<a id="__codelineno-24-71" name="__codelineno-24-71" href="#__codelineno-24-71"></a>- Total concepts: [N]
+<a id="__codelineno-24-72" name="__codelineno-24-72" href="#__codelineno-24-72"></a>- Taxonomy distribution by category
+<a id="__codelineno-24-73" name="__codelineno-24-73" href="#__codelineno-24-73"></a>- For each chapter: which concepts are introduced, which are prerequisites
+<a id="__codelineno-24-74" name="__codelineno-24-74" href="#__codelineno-24-74"></a>
+<a id="__codelineno-24-75" name="__codelineno-24-75" href="#__codelineno-24-75"></a>### Step 3: Generate Chapter Plan
+<a id="__codelineno-24-76" name="__codelineno-24-76" href="#__codelineno-24-76"></a>
+<a id="__codelineno-24-77" name="__codelineno-24-77" href="#__codelineno-24-77"></a>For each chapter in CHAPTER_LIST, create a content plan:
+</code></pre></div>
+Chapter [N]: [Title]
+- Target concepts from learning graph: [list]
+- Prerequisite concepts (from earlier chapters): [list]
+- Bloom's Taxonomy levels to address: [Remember, Understand, Apply, ...]
+- Recommended structure:
+  - Introduction (~300 words)
+  - Section 1: [Concept group] (~500 words)
+  - Section 2: [Concept group] (~500 words)
+  - Worked Example (~400 words)
+  - Practice Exercises (5-8 questions)
+  - Summary (~200 words)
+- Estimated total: [N] words
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Present the plan summary to the user:
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>&quot;Content plan complete. [N] chapters planned, estimated [N] words total.
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>Proceed with generation? (yes/no/adjust plan)&quot;
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>Wait for user response before proceeding to Step 4.
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>### Step 4: Generate Content (Per-Chapter Loop)
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>For each chapter in CHAPTER_LIST:
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>#### 4.1: Skip-if-Complete Check
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>Read the existing chapter file if it exists.
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>If word count &gt; 800: Ask &quot;Chapter [N] already has [N] words. Skip, overwrite, or append?&quot;
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>#### 4.2: Generate Chapter Draft
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>Generate the chapter following the plan from Step 3.
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>
+<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a>Requirements:
+<a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a>- Introduce each target concept before using it
+<a id="__codelineno-25-22" name="__codelineno-25-22" href="#__codelineno-25-22"></a>- Do not use concepts not yet introduced (reference learning graph for ordering)
+<a id="__codelineno-25-23" name="__codelineno-25-23" href="#__codelineno-25-23"></a>- Include at least 2 worked examples per section
+<a id="__codelineno-25-24" name="__codelineno-25-24" href="#__codelineno-25-24"></a>- Include 5-8 practice exercises at varying Bloom&#39;s levels
+<a id="__codelineno-25-25" name="__codelineno-25-25" href="#__codelineno-25-25"></a>- Use MkDocs Material admonitions for tips, warnings, and notes
+<a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a>- Code examples (if applicable to course domain) must be runnable
+<a id="__codelineno-25-27" name="__codelineno-25-27" href="#__codelineno-25-27"></a>
+<a id="__codelineno-25-28" name="__codelineno-25-28" href="#__codelineno-25-28"></a>#### 4.3: Per-Chapter Quality Gate
+<a id="__codelineno-25-29" name="__codelineno-25-29" href="#__codelineno-25-29"></a>
+<a id="__codelineno-25-30" name="__codelineno-25-30" href="#__codelineno-25-30"></a>Score the draft using the Chapter Quality Rubric (see Quality Scoring section):
+<a id="__codelineno-25-31" name="__codelineno-25-31" href="#__codelineno-25-31"></a>
+<a id="__codelineno-25-32" name="__codelineno-25-32" href="#__codelineno-25-32"></a>**Score &gt;= 80:** Write to file. Continue to next chapter.
+<a id="__codelineno-25-33" name="__codelineno-25-33" href="#__codelineno-25-33"></a>**Score 70-79:** Write to file. Note improvement areas in session log.
+<a id="__codelineno-25-34" name="__codelineno-25-34" href="#__codelineno-25-34"></a>**Score &lt; 70:** Revise the specific failing sections. Re-score. If still &lt; 70
+<a id="__codelineno-25-35" name="__codelineno-25-35" href="#__codelineno-25-35"></a>  after revision, write with a warning comment at the top of the file:
+<a id="__codelineno-25-36" name="__codelineno-25-36" href="#__codelineno-25-36"></a>  &lt;!-- QUALITY SCORE: [N]/100 — needs revision --&gt;
+<a id="__codelineno-25-37" name="__codelineno-25-37" href="#__codelineno-25-37"></a>
+<a id="__codelineno-25-38" name="__codelineno-25-38" href="#__codelineno-25-38"></a>#### 4.4: Write Chapter
+<a id="__codelineno-25-39" name="__codelineno-25-39" href="#__codelineno-25-39"></a>
+<a id="__codelineno-25-40" name="__codelineno-25-40" href="#__codelineno-25-40"></a>Write the chapter to CHAPTERS_DIR/[chapter-number]/index.md.
+<a id="__codelineno-25-41" name="__codelineno-25-41" href="#__codelineno-25-41"></a>
+<a id="__codelineno-25-42" name="__codelineno-25-42" href="#__codelineno-25-42"></a>Verify mkdocs.yml includes this chapter in the nav. If missing, add it.
+<a id="__codelineno-25-43" name="__codelineno-25-43" href="#__codelineno-25-43"></a>
+<a id="__codelineno-25-44" name="__codelineno-25-44" href="#__codelineno-25-44"></a>Log chapter completion:
+<a id="__codelineno-25-45" name="__codelineno-25-45" href="#__codelineno-25-45"></a>- Chapter: [title]
+<a id="__codelineno-25-46" name="__codelineno-25-46" href="#__codelineno-25-46"></a>- Words: [N]
+<a id="__codelineno-25-47" name="__codelineno-25-47" href="#__codelineno-25-47"></a>- Quality score: [N]/100
+<a id="__codelineno-25-48" name="__codelineno-25-48" href="#__codelineno-25-48"></a>- Concepts covered: [N]
+<a id="__codelineno-25-49" name="__codelineno-25-49" href="#__codelineno-25-49"></a>- Time: [timestamp]
+<a id="__codelineno-25-50" name="__codelineno-25-50" href="#__codelineno-25-50"></a>
+<a id="__codelineno-25-51" name="__codelineno-25-51" href="#__codelineno-25-51"></a>### Step 5: Final Report
+<a id="__codelineno-25-52" name="__codelineno-25-52" href="#__codelineno-25-52"></a>
+<a id="__codelineno-25-53" name="__codelineno-25-53" href="#__codelineno-25-53"></a>After all chapters are generated, produce a summary report:
+</code></pre></div>
+Chapter Content Generation Complete
+====================================
+Chapters generated: [N]
+Total words: [N]
+Average quality score: [N]/100
+Lowest quality chapter: [title] ([N]/100)
+Highest quality chapter: [title] ([N]/100)</p>
+<p>Chapters needing attention (score &lt; 75):
+- [Chapter title]: [N]/100 — [Key issue]</p>
+<p>Next recommended step: Run book-metrics-generator to validate cross-chapter
+concept coverage.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Write this report to LOG_DIR/chapter-generation-[timestamp].md.
+</code></pre></div></p>
+<p>This example demonstrates: multi-phase scope selection at the start, parallel context loading, a planning step with user approval gate, a per-chapter generation loop with skip-if-complete detection, per-item quality scoring with automated revision, and a comprehensive final report.</p>
+<hr />
+<h2 id="workflow-design-principles-summary">Workflow Design Principles — Summary<a class="headerlink" href="#workflow-design-principles-summary" title="Permanent link">&para;</a></h2>
+<p>The following principles apply across all three examples and should guide your own workflow design:</p>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Step 0 is always environment setup</td>
+<td>Detect root, set paths, create dirs, open log</td>
+</tr>
+<tr>
+<td>Steps have single cohesive purpose</td>
+<td>One step = one meaningful checkpoint</td>
+</tr>
+<tr>
+<td>Error messages name the solution</td>
+<td>"Run skill X to create the missing file"</td>
+</tr>
+<tr>
+<td>Dialog triggers are minimum-necessary</td>
+<td>Only ask when you cannot proceed without input</td>
+</tr>
+<tr>
+<td>Skip-if-complete before overwriting</td>
+<td>Always check before destructive operations</td>
+</tr>
+<tr>
+<td>Quality gates separate generation from output</td>
+<td>Score first, write second</td>
+</tr>
+<tr>
+<td>Branching is declared at the branch point</td>
+<td>Make the decision logic explicit and readable</td>
+</tr>
+<tr>
+<td>Session logs capture everything</td>
+<td>Score, decisions, timestamps, file paths</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="key-takeaways">Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Step 0 is the most important step in any skill — it establishes the environment that all subsequent steps depend on</li>
+<li>User dialog triggers should be minimum-necessary: ask only when proceeding without input would risk unwanted changes or produce incorrect results</li>
+<li>Conditional branching (if X exists, follow path A; else follow path B) is the primary mechanism for handling different project states</li>
+<li>Skip-if-complete detection prevents redundant work in multi-step skills</li>
+<li>The quality gate pattern separates generation from output writing, creating a self-evaluation checkpoint before any file is saved</li>
+<li>Error handling should name the problem, explain why it matters, and tell the user how to fix it</li>
+<li>Session logging makes skills auditable, debuggable, and reproducible</li>
+</ul>
+<p>In Chapter 7, we examine the quality scoring system in depth — how to design rubrics, decompose quality into weighted sub-categories, and calibrate thresholds that produce consistent, useful results.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.code.annotate", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
