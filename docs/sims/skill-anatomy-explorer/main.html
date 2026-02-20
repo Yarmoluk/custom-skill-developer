@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Anatomy Explorer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0C0C10;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+      color: #E5E5EA;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #app {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* LEFT PANEL — diagram */
+    #left-panel {
+      width: 340px;
+      min-width: 280px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #28282D;
+      overflow: hidden;
+    }
+
+    #panel-header {
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid #28282D;
+    }
+
+    #panel-header h2 {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #8E8E93;
+    }
+
+    #file-tree {
+      padding: 10px 14px;
+      border-bottom: 1px solid #28282D;
+      font-size: 11.5px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      line-height: 1.7;
+    }
+
+    .tree-line {
+      color: #636366;
+    }
+
+    .tree-line.highlight {
+      color: #007AFF;
+      font-weight: 700;
+    }
+
+    #anatomy-diagram {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 12px 10px;
+    }
+
+    #anatomy-diagram::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    #anatomy-diagram::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    #anatomy-diagram::-webkit-scrollbar-thumb {
+      background: #3A3A3C;
+      border-radius: 2px;
+    }
+
+    .section-block {
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+
+    .section-block:hover {
+      filter: brightness(1.15);
+      transform: translateX(2px);
+    }
+
+    .section-block.active {
+      border-color: rgba(255,255,255,0.25);
+      filter: brightness(1.2);
+    }
+
+    .section-block .badge {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 5px;
+      border-radius: 3px;
+      background: rgba(0,0,0,0.3);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .section-block .label {
+      font-size: 12px;
+      font-weight: 500;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .section-block .token-pill {
+      font-size: 10px;
+      color: rgba(255,255,255,0.5);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* color themes */
+    .blue-block   { background: rgba(0, 122, 255, 0.18); }
+    .purple-block { background: rgba(88, 86, 214, 0.18); }
+    .green-block  { background: rgba(52, 199, 89, 0.18); }
+    .orange-block { background: rgba(255, 159, 10, 0.18); }
+    .white-block  { background: rgba(255, 255, 255, 0.07); }
+
+    .blue-block   .badge { background: #007AFF; color: #fff; }
+    .purple-block .badge { background: #5856D6; color: #fff; }
+    .green-block  .badge { background: #34C759; color: #000; }
+    .orange-block .badge { background: #FF9F0A; color: #000; }
+    .white-block  .badge { background: #48484A; color: #fff; }
+
+    /* RIGHT PANEL — detail */
+    #right-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #detail-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px;
+    }
+
+    #detail-area::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    #detail-area::-webkit-scrollbar-thumb {
+      background: #3A3A3C;
+      border-radius: 2px;
+    }
+
+    #detail-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      opacity: 0.4;
+      text-align: center;
+      gap: 8px;
+    }
+
+    #detail-placeholder .icon {
+      font-size: 32px;
+    }
+
+    #detail-placeholder p {
+      font-size: 13px;
+      color: #636366;
+    }
+
+    #detail-content {
+      display: none;
+    }
+
+    #detail-content.visible {
+      display: block;
+    }
+
+    .detail-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .detail-color-bar {
+      width: 4px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      align-self: stretch;
+      min-height: 40px;
+    }
+
+    .detail-title-group {
+      flex: 1;
+    }
+
+    .detail-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #F2F2F7;
+      margin-bottom: 3px;
+    }
+
+    .detail-subtitle {
+      font-size: 12px;
+      color: #8E8E93;
+    }
+
+    .meta-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .chip {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.03em;
+    }
+
+    .chip-required    { background: rgba(255,159,10,0.2); color: #FF9F0A; border: 1px solid rgba(255,159,10,0.35); }
+    .chip-optional    { background: rgba(88,86,214,0.2); color: #9B99E8; border: 1px solid rgba(88,86,214,0.35); }
+    .chip-tokens      { background: rgba(52,199,89,0.15); color: #34C759; border: 1px solid rgba(52,199,89,0.3); }
+    .chip-type        { background: rgba(0,122,255,0.15); color: #007AFF; border: 1px solid rgba(0,122,255,0.3); }
+
+    .detail-section {
+      margin-bottom: 16px;
+    }
+
+    .detail-section h4 {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #636366;
+      margin-bottom: 7px;
+    }
+
+    .detail-section p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #C7C7CC;
+    }
+
+    .code-block {
+      background: #111115;
+      border: 1px solid #28282D;
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 11.5px;
+      line-height: 1.65;
+      color: #C7C7CC;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .code-block .kw  { color: #007AFF; }
+    .code-block .str { color: #34C759; }
+    .code-block .cm  { color: #636366; font-style: italic; }
+    .code-block .hl  { color: #FF9F0A; }
+
+    /* BOTTOM PANEL — progressive disclosure */
+    #bottom-panel {
+      border-top: 1px solid #28282D;
+      padding: 12px 20px;
+      flex-shrink: 0;
+    }
+
+    #bottom-panel h3 {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #636366;
+      margin-bottom: 10px;
+    }
+
+    .tier-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tier-card {
+      flex: 1;
+      background: #191920;
+      border: 1px solid #28282D;
+      border-radius: 8px;
+      padding: 10px 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tier-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+    }
+
+    .tier-card.t1::before { background: #007AFF; }
+    .tier-card.t2::before { background: #5856D6; }
+    .tier-card.t3::before { background: #34C759; }
+
+    .tier-card .tier-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+
+    .tier-card.t1 .tier-label { color: #007AFF; }
+    .tier-card.t2 .tier-label { color: #9B99E8; }
+    .tier-card.t3 .tier-label { color: #34C759; }
+
+    .tier-card .tier-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #F2F2F7;
+      margin-bottom: 2px;
+    }
+
+    .tier-card .tier-detail {
+      font-size: 11px;
+      color: #636366;
+    }
+
+    .tier-card .tier-tokens {
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+
+    .tier-card.t1 .tier-tokens { color: #007AFF; }
+    .tier-card.t2 .tier-tokens { color: #9B99E8; }
+    .tier-card.t3 .tier-tokens { color: #34C759; }
+
+    /* connector arrow between tiers */
+    .tier-arrow {
+      display: flex;
+      align-items: center;
+      color: #3A3A3C;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    /* hint bar at very top */
+    #hint-bar {
+      padding: 6px 16px;
+      background: rgba(0,122,255,0.08);
+      border-bottom: 1px solid rgba(0,122,255,0.15);
+      font-size: 11px;
+      color: #636366;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    #hint-bar span {
+      color: #007AFF;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- LEFT -->
+  <div id="left-panel">
+
+    <div id="panel-header">
+      <h2>SKILL.md Anatomy</h2>
+    </div>
+
+    <div id="file-tree">
+      <div class="tree-line">my-skill-name/</div>
+      <div class="tree-line highlight">├── SKILL.md          ← you are here</div>
+      <div class="tree-line">├── scripts/</div>
+      <div class="tree-line">├── references/</div>
+      <div class="tree-line">└── assets/</div>
+    </div>
+
+    <div id="anatomy-diagram">
+
+      <div class="section-block blue-block" data-section="frontmatter">
+        <span class="badge">YAML</span>
+        <span class="label">Frontmatter</span>
+        <span class="token-pill">~100 tok</span>
+      </div>
+
+      <div class="section-block white-block" data-section="title">
+        <span class="badge">H1</span>
+        <span class="label">Title</span>
+        <span class="token-pill">~5 tok</span>
+      </div>
+
+      <div class="section-block purple-block" data-section="overview">
+        <span class="badge">##</span>
+        <span class="label">Overview / Purpose</span>
+        <span class="token-pill">~80 tok</span>
+      </div>
+
+      <div class="section-block green-block" data-section="triggers">
+        <span class="badge">##</span>
+        <span class="label">When to Activate</span>
+        <span class="token-pill">~120 tok</span>
+      </div>
+
+      <div class="section-block orange-block" data-section="workflow">
+        <span class="badge">###</span>
+        <span class="label">Workflow Steps (0–N)</span>
+        <span class="token-pill">~1200 tok</span>
+      </div>
+
+      <div class="section-block blue-block" data-section="output">
+        <span class="badge">##</span>
+        <span class="label">Output Files Summary</span>
+        <span class="token-pill">~150 tok</span>
+      </div>
+
+      <div class="section-block purple-block" data-section="example">
+        <span class="badge">##</span>
+        <span class="label">Example Session</span>
+        <span class="token-pill">~300 tok</span>
+      </div>
+
+      <div class="section-block orange-block" data-section="pitfalls">
+        <span class="badge">##</span>
+        <span class="label">Common Pitfalls</span>
+        <span class="token-pill">~200 tok</span>
+      </div>
+
+      <div class="section-block green-block" data-section="rubric">
+        <span class="badge">##</span>
+        <span class="label">Quality Scoring Rubric</span>
+        <span class="token-pill">~400 tok</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div id="right-panel">
+
+    <div id="hint-bar">
+      Click any block to explore &nbsp;|&nbsp; <span>9 sections</span> — 5 required, 4 optional
+    </div>
+
+    <div id="detail-area">
+
+      <div id="detail-placeholder">
+        <div class="icon">◈</div>
+        <p>Select a section to see<br>details, token cost, and examples</p>
+      </div>
+
+      <div id="detail-content"></div>
+
+    </div>
+
+    <div id="bottom-panel">
+      <h3>Progressive Disclosure — 3-Tier Token Model</h3>
+      <div class="tier-row">
+
+        <div class="tier-card t1">
+          <div class="tier-label">Tier 1 — Always Loaded</div>
+          <div class="tier-name">Metadata</div>
+          <div class="tier-detail">YAML frontmatter + title. Loaded every session for skill registry.</div>
+          <div class="tier-tokens">~100 tokens</div>
+        </div>
+
+        <div class="tier-arrow">→</div>
+
+        <div class="tier-card t2">
+          <div class="tier-label">Tier 2 — On Invocation</div>
+          <div class="tier-name">Instructions</div>
+          <div class="tier-detail">Full SKILL.md body. Loaded into context only when skill is called.</div>
+          <div class="tier-tokens">&lt; 5,000 tokens</div>
+        </div>
+
+        <div class="tier-arrow">→</div>
+
+        <div class="tier-card t3">
+          <div class="tier-label">Tier 3 — On Demand</div>
+          <div class="tier-name">Resources</div>
+          <div class="tier-detail">Files in references/ and assets/. Fetched only when a step needs them.</div>
+          <div class="tier-tokens">As needed</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  const SECTIONS = {
+    frontmatter: {
+      title: 'YAML Frontmatter',
+      subtitle: 'Top of SKILL.md — machine-readable metadata block',
+      color: '#007AFF',
+      required: true,
+      type: 'Structure',
+      tokens: '~100 tokens',
+      what: 'The YAML frontmatter is the identity card of your skill. Claude Code reads this block to register the skill in its internal directory. The name field must exactly match the directory name. The description field is the most important line you will write — it is what Claude sees in its skill registry and uses to decide when to invoke your skill.',
+      fields: [
+        { key: 'name', req: true, desc: 'Must match the folder name exactly. Used for invocation.' },
+        { key: 'description', req: true, desc: 'Shown in skill registry. Write from Claude\'s perspective.' },
+        { key: 'license', req: false, desc: 'MIT, proprietary, etc. Signals shareability.' },
+        { key: 'compatibility', req: false, desc: 'Claude Code version constraints.' },
+        { key: 'metadata', req: false, desc: 'Arbitrary key-value pairs for custom tooling.' },
+        { key: 'allowed-tools', req: false, desc: 'Constrains which tools this skill can use.' },
+      ],
+      example: `<span class="cm">---</span>
+<span class="kw">name:</span> <span class="str">market-analysis-generator</span>
+<span class="kw">description:</span> <span class="str">&gt;</span>
+  <span class="str">Use this skill when the user needs a structured competitive</span>
+  <span class="str">market analysis. Produces a five-section markdown report with</span>
+  <span class="str">TAM/SAM/SOM estimates and a battlecard appendix.</span>
+<span class="kw">license:</span> <span class="str">MIT</span>
+<span class="kw">allowed-tools:</span>
+  <span class="str">- read_file</span>
+  <span class="str">- write_file</span>
+  <span class="str">- execute_bash</span>
+<span class="cm">---</span>`
+    },
+
+    title: {
+      title: 'H1 Title',
+      subtitle: 'First line after frontmatter — human-readable skill name',
+      color: '#EBEBF0',
+      required: true,
+      type: 'Structure',
+      tokens: '~5 tokens',
+      what: 'A single H1 heading that names the skill for human readers. This is not used by Claude Code\'s routing system — that uses the YAML name field — but it anchors the skill\'s identity for anyone reading the file. Keep it to 3–6 words, title case, no version numbers.',
+      fields: null,
+      example: `<span class="hl"># Market Analysis Generator</span>`
+    },
+
+    overview: {
+      title: 'Overview / Purpose',
+      subtitle: '## Overview — one-paragraph mission statement',
+      color: '#5856D6',
+      required: true,
+      type: 'Content',
+      tokens: '~80 tokens',
+      what: 'A single tight paragraph answering three questions: what does this skill produce, why does it exist, and what standard does the output meet? Avoid restating the description from the frontmatter. The overview should go deeper — the frontmatter description is a hook, the overview is the contract.',
+      fields: null,
+      example: `<span class="hl">## Overview</span>
+
+This skill produces a structured competitive market analysis from
+a company name or product category as input. The output is a five-
+section markdown report covering market sizing (TAM/SAM/SOM),
+top three competitors, differentiation vectors, buyer persona
+summary, and a one-page battlecard. Every report follows the
+Forrester Competitive Framework to ensure comparability across
+multiple analyses in the same research project.`
+    },
+
+    triggers: {
+      title: 'When to Activate',
+      subtitle: '## When to Use This Skill — explicit invocation conditions',
+      color: '#34C759',
+      required: true,
+      type: 'Content',
+      tokens: '~120 tokens',
+      what: 'Explicit conditions that should and should not trigger this skill. This section trains Claude to make correct routing decisions when multiple skills are available. Include positive triggers (use when...), negative triggers (do not use when...), and prerequisites (what must exist before invocation). This is especially critical for meta-skill routers.',
+      fields: null,
+      example: `<span class="hl">## When to Use This Skill</span>
+
+<span class="str">Use this skill when:</span>
+- User requests a market analysis, competitive overview, or TAM estimate
+- User provides a company name, product category, or market vertical
+- At least one competitor is known or can be inferred from context
+
+<span class="str">Do NOT use this skill when:</span>
+- User only wants a single competitor profile (use competitor-profiler)
+- Analysis is for a regulated industry requiring legal review flags
+- No market context is available — prompt for category first
+
+<span class="str">Prerequisites:</span>
+- Target company or market category name
+- Optional: known competitors, target geography, year for TAM`
+    },
+
+    workflow: {
+      title: 'Workflow Steps (Step 0 through Step N)',
+      subtitle: '### Step N — numbered sequential execution instructions',
+      color: '#FF9F0A',
+      required: true,
+      type: 'Content',
+      tokens: '~1,200 tokens',
+      what: 'The core of the skill. Each step is a ### heading with a numbered action name, followed by specific instructions for what Claude should do. Step 0 is always context gathering / prerequisite validation. Steps increment from there. Each step should be independently understandable — Claude executes steps sequentially and must know exactly what to do without re-reading previous steps.',
+      fields: [
+        { key: 'Step 0', req: true, desc: 'Context gathering. Validate prerequisites. Prompt user for missing info.' },
+        { key: 'Step 1', req: true, desc: 'First substantive action. Should produce a concrete artifact.' },
+        { key: 'Step N', req: false, desc: 'Continue as needed. Each step = one logical unit of work.' },
+        { key: 'Dialog triggers', req: false, desc: 'Mark steps that pause for user approval: "PAUSE: confirm before proceeding."' },
+      ],
+      example: `<span class="hl">## Workflow</span>
+
+<span class="hl">### Step 0: Context Validation</span>
+Read the user's request and extract:
+1. Target market or company name
+2. Known competitors (if any)
+3. Target geography (default: North America)
+4. Analysis year (default: current year)
+
+If market name is missing, ask: "What market or company should
+I analyze?" Do not proceed until this is provided.
+
+<span class="hl">### Step 1: Market Sizing</span>
+Research and estimate TAM, SAM, and SOM using the following
+method: source three data points per level, cite each source
+inline, and present a low/mid/high range for each estimate.
+Flag any estimate with &lt;2 sources as "low confidence."
+
+<span class="hl">### Step 2: Competitive Landscape</span>
+Identify the top three competitors and for each produce:
+- Company name, founding year, funding stage
+- Primary value proposition (one sentence)
+- Known weaknesses relative to the target market
+
+<span class="cm">... continue through all steps ...</span>`
+    },
+
+    output: {
+      title: 'Output Files Summary',
+      subtitle: '## Output Files — what the skill creates and where',
+      color: '#007AFF',
+      required: true,
+      type: 'Content',
+      tokens: '~150 tokens',
+      what: 'A precise specification of every file the skill creates: path, filename pattern, format, and a one-line description of its contents. This section functions as a contract between this skill and any downstream skills or humans that will consume its output. Without it, output paths vary across invocations and pipelines break.',
+      fields: null,
+      example: `<span class="hl">## Output Files</span>
+
+The skill creates the following files in the current directory:
+
+| File | Format | Description |
+|------|--------|-------------|
+| <span class="str">market-analysis.md</span> | Markdown | Full five-section analysis report |
+| <span class="str">battlecard.md</span> | Markdown | One-page competitor battlecard |
+| <span class="str">market-data.json</span> | JSON | Structured TAM/SAM/SOM data for downstream skills |
+
+<span class="cm">All files are UTF-8 encoded. Filenames are kebab-case.</span>
+<span class="cm">The skill confirms file paths after writing each file.</span>`
+    },
+
+    example: {
+      title: 'Example Session',
+      subtitle: '## Example Session — sample invocation with expected output',
+      color: '#5856D6',
+      required: false,
+      type: 'Documentation',
+      tokens: '~300 tokens',
+      what: 'A concrete example showing a real invocation and the resulting behavior. This serves two purposes: it teaches new users what to expect, and it gives Claude a behavioral reference point. Write it as a realistic dialogue — user input, Claude confirmation, step execution markers, and final output summary. Do not fabricate plausible-sounding but incorrect data.',
+      fields: null,
+      example: `<span class="hl">## Example Session</span>
+
+<span class="str">User:</span> /skill market-analysis-generator
+
+<span class="str">Claude:</span> I'll run the Market Analysis Generator skill.
+To start, what market or company should I analyze?
+
+<span class="str">User:</span> Analyze the competitive landscape for B2B CPQ software
+in North America, 2025.
+
+<span class="str">Claude:</span> Got it. Beginning Step 0 — context validated.
+Running Step 1: Market Sizing...
+
+[Step 1 complete] TAM: $4.2B–$6.8B | SAM: $1.1B–$1.9B | SOM: $80M–$140M
+Sources: Gartner 2024, IDC Q3 2024, Forrester Wave CPQ 2024.
+
+Running Step 2: Competitive Landscape...
+Identified: Salesforce CPQ, Conga, DealHub...
+
+<span class="cm">... session continues through all steps ...</span>
+
+[Complete] Files written:
+- market-analysis.md (2,847 words)
+- battlecard.md (412 words)
+- market-data.json
+
+Quality score: 91/100`
+    },
+
+    pitfalls: {
+      title: 'Common Pitfalls',
+      subtitle: '## Common Pitfalls — failure modes and how to prevent them',
+      color: '#FF9F0A',
+      required: false,
+      type: 'Documentation',
+      tokens: '~200 tokens',
+      what: 'A short list of the most frequent ways this skill fails or produces substandard output, and how to avoid each one. This section is written in retrospect — it captures lessons from real invocations. Update it whenever you discover a new failure mode. Pitfalls are more valuable than examples because they teach Claude where to apply extra caution.',
+      fields: null,
+      example: `<span class="hl">## Common Pitfalls</span>
+
+<span class="hl">Missing market context before Step 1</span>
+If the user provides only a company name without a market category,
+TAM estimates will be inconsistent. Always resolve market category
+at Step 0 before proceeding.
+
+<span class="hl">Hallucinated competitor funding data</span>
+Funding rounds and revenue estimates for private companies are
+frequently hallucinated. Flag any funding figure not supported
+by a cited source as "unverified estimate."
+
+<span class="hl">Overloaded Step 2</span>
+Attempting to profile more than three competitors in one step
+degrades quality across all profiles. If user requests more than
+three, run Step 2 in batches of three and aggregate.
+
+<span class="hl">JSON output format drift</span>
+market-data.json must match the schema in references/schema.json.
+Validate the JSON structure before writing the file.`
+    },
+
+    rubric: {
+      title: 'Quality Scoring Rubric',
+      subtitle: '## Quality Scoring — self-evaluation criteria',
+      color: '#34C759',
+      required: false,
+      type: 'Quality Gate',
+      tokens: '~400 tokens',
+      what: 'A numbered rubric that Claude uses to evaluate its own output before declaring completion. Each criterion has a name, maximum point value, and clear pass/fail condition. The total should sum to 100. Claude calculates a score, lists any criteria that were not fully met, and either delivers the output (if score meets threshold) or flags gaps for review. This is the mechanism that makes skills self-correcting.',
+      fields: [
+        { key: 'Criterion name', req: true, desc: 'Clear, evaluable statement. Avoid vague terms like "good quality."' },
+        { key: 'Point value', req: true, desc: 'Weighted by importance. High-value criteria = must-haves.' },
+        { key: 'Pass condition', req: true, desc: 'Specific and testable. "All three competitors have sources cited."' },
+        { key: 'Threshold', req: true, desc: 'Minimum score to deliver. Recommended: 75 for drafts, 90 for production.' },
+      ],
+      example: `<span class="hl">## Quality Scoring Rubric</span>
+
+Claude evaluates the output against this rubric before completing.
+Minimum passing score: <span class="hl">80 / 100</span>.
+
+| Criterion | Points | Pass Condition |
+|-----------|--------|----------------|
+| TAM/SAM/SOM present | 20 | All three estimates with low/mid/high ranges |
+| Sources cited | 20 | Every estimate has ≥1 inline citation |
+| Three competitors profiled | 20 | All fields complete, no "unknown" placeholders |
+| Battlecard generated | 15 | File exists, under 500 words |
+| JSON schema valid | 15 | Matches references/schema.json exactly |
+| Conclusion section present | 10 | ≥150 words with actionable recommendation |
+
+If score &lt; 80: list unmet criteria and request user decision
+to continue or abort. Do not silently deliver a failing output.`
+    }
+  };
+
+  let activeSection = null;
+
+  function renderDetail(key) {
+    const s = SECTIONS[key];
+    if (!s) return;
+
+    activeSection = key;
+
+    // update active state on blocks
+    document.querySelectorAll('.section-block').forEach(el => {
+      el.classList.toggle('active', el.dataset.section === key);
+    });
+
+    // build chips
+    const reqChip = s.required
+      ? `<span class="chip chip-required">Required</span>`
+      : `<span class="chip chip-optional">Optional</span>`;
+    const tokenChip = `<span class="chip chip-tokens">${s.tokens}</span>`;
+    const typeChip  = `<span class="chip chip-type">${s.type}</span>`;
+
+    // build fields table if present
+    let fieldsHtml = '';
+    if (s.fields && s.fields.length > 0) {
+      const rows = s.fields.map(f =>
+        `<tr>
+          <td style="font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#007AFF;padding:5px 8px;border-bottom:1px solid #1C1C22;white-space:nowrap">${f.key}</td>
+          <td style="padding:5px 8px;border-bottom:1px solid #1C1C22;">${f.req ? '<span style="color:#FF9F0A;font-size:10px;font-weight:700;">REQ</span>' : '<span style="color:#636366;font-size:10px;">opt</span>'}</td>
+          <td style="padding:5px 8px;border-bottom:1px solid #1C1C22;font-size:12px;color:#C7C7CC;line-height:1.4">${f.desc}</td>
+        </tr>`
+      ).join('');
+
+      fieldsHtml = `
+        <div class="detail-section">
+          <h4>${s.fields[0].key === 'Step 0' ? 'Step Reference' : 'Fields'}</h4>
+          <table style="width:100%;border-collapse:collapse;background:#111115;border:1px solid #28282D;border-radius:6px;overflow:hidden;font-size:12px;">
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+    }
+
+    const html = `
+      <div class="detail-header">
+        <div class="detail-color-bar" style="background:${s.color};"></div>
+        <div class="detail-title-group">
+          <div class="detail-title">${s.title}</div>
+          <div class="detail-subtitle">${s.subtitle}</div>
+        </div>
+      </div>
+
+      <div class="meta-chips">
+        ${reqChip}
+        ${tokenChip}
+        ${typeChip}
+      </div>
+
+      <div class="detail-section">
+        <h4>What this section does</h4>
+        <p>${s.what}</p>
+      </div>
+
+      ${fieldsHtml}
+
+      <div class="detail-section">
+        <h4>Example</h4>
+        <div class="code-block">${s.example}</div>
+      </div>
+    `;
+
+    const content = document.getElementById('detail-content');
+    const placeholder = document.getElementById('detail-placeholder');
+    content.innerHTML = html;
+    placeholder.style.display = 'none';
+    content.classList.add('visible');
+  }
+
+  // wire up blocks
+  document.querySelectorAll('.section-block').forEach(el => {
+    el.addEventListener('click', () => {
+      renderDetail(el.dataset.section);
+    });
+
+    // keyboard accessibility
+    el.setAttribute('tabindex', '0');
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        renderDetail(el.dataset.section);
+      }
+    });
+  });
+
+  // auto-open frontmatter on load
+  setTimeout(() => renderDetail('frontmatter'), 120);
+</script>
+
+</body>
+</html>

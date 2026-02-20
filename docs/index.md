@@ -1,45 +1,82 @@
+<div class="cognify-banner" markdown>
+![Cognify — Custom Skill Developer](images/banner.png)
+</div>
+
 # Custom Skill Developer Guide
 
-A comprehensive knowledge base for building custom Claude Code skills — from single-purpose agents to meta-skill routers and full pipeline orchestration.
+**The comprehensive guide to building Agent Skills for the [agentskills.io](https://agentskills.io) open standard.**
+
+17 chapters. 55,000+ words. From your first skill to meta-skill routers, quality scoring systems, and multi-skill pipeline orchestration.
+
+Built from the experience of creating 20+ production Agent Skills for business operations.
+
+<div class="cognify-stats" markdown>
+<div class="cognify-stat">
+  <div class="number" style="color: #007AFF;">17</div>
+  <div class="label">Chapters</div>
+</div>
+<div class="cognify-stat">
+  <div class="number" style="color: #5856D6;">55K</div>
+  <div class="label">Words</div>
+</div>
+<div class="cognify-stat">
+  <div class="number" style="color: #34C759;">200</div>
+  <div class="label">Concepts</div>
+</div>
+<div class="cognify-stat">
+  <div class="number" style="color: #FF9F0A;">20+</div>
+  <div class="label">Skills Built</div>
+</div>
+</div>
+
+---
 
 ## What You'll Learn
 
-Skills are the most powerful extension mechanism in Claude Code. They transform Claude from a general-purpose assistant into a domain expert that follows structured workflows, enforces quality standards, and produces consistent, production-quality output every time.
-
-This guide teaches you to build them from scratch.
-
-## Who This Is For
-
-You already use Claude Code and existing skills. Now you want to create your own — whether that's a skill for your specific domain, a meta-skill that routes to multiple sub-skills, or a full pipeline that chains skills together in dependency order.
-
-No traditional programming background required. If you can write markdown and think in systems, you can build skills.
-
-## Guide Structure
-
 | Section | Chapters | What You'll Build |
 |---------|----------|-------------------|
-| **Foundations** | 1-3 | Your first working skill |
+| **Foundations** | 1-3 | Your first working skill — from zero to production |
 | **Skill Anatomy** | 4-7 | Production-quality skill definitions with quality scoring |
 | **Advanced Patterns** | 8-11 | Meta-skill routers, token-efficient designs, pipelines |
 | **Specialized Skills** | 12-14 | Data transformation, code generation, and analysis skills |
 | **Deployment** | 15-17 | Installation, testing, and distribution to other users |
 
-## The Skill Architecture at a Glance
+[Start Chapter 1](chapters/01/index.md){ .cognify-cta }
 
-```
-~/.claude/skills/
-├── my-skill/
-│   └── SKILL.md          ← The skill definition (markdown + YAML)
-├── my-meta-skill/
-│   ├── SKILL.md           ← Router logic
-│   └── references/        ← Sub-skill guides (lazy-loaded)
-│       ├── variant-a-guide.md
-│       └── variant-b-guide.md
-└── ...
-```
+---
 
-Every skill is a markdown file. Claude reads it, follows the workflow, and produces structured output. That simplicity is what makes the system powerful — and extensible.
+## Who This Is For
 
-## Get Started
+You already use AI agents and existing skills. Now you want to create your own — whether that's a skill for your specific domain, a meta-skill that routes to multiple sub-skills, or a full pipeline that chains skills together in dependency order.
 
-Head to [Chapter 1: What Are Claude Code Skills?](chapters/01/index.md) to begin.
+No traditional programming background required. If you can write markdown and think in systems, you can build skills.
+
+---
+
+## The Cognify Ecosystem
+
+This guide is part of a three-layer stack for the Agent Skills ecosystem:
+
+| Layer | Project | Purpose |
+|-------|---------|---------|
+| **Education** | [Custom Skill Developer](https://yarmoluk.github.io/custom-skill-developer/) | Teaches how to build production skills |
+| **Tooling** | [Skill Quality Analyzer](https://github.com/Yarmoluk/skill-quality-analyzer) | Audits skills against the spec (100-point rubric) |
+| **Product** | [Cognify Skills](https://github.com/Yarmoluk/cognify-skills) | 19 production business operations skills |
+
+---
+
+## Cross-Platform Compatibility
+
+Skills built with this guide work everywhere the [agentskills.io](https://agentskills.io) standard is supported:
+
+**Claude Code** | **Claude.ai** | **VS Code** | **Cursor** | **OpenAI Codex** | **Gemini CLI** | and 20+ more
+
+---
+
+## Want Custom Skills Built for Your Business?
+
+I build production Agent Skills for companies — workflow automation, sales enablement, operations, and domain-specific AI expertise packaged as reusable skills.
+
+**Daniel Yarmoluk** — [GitHub](https://github.com/Yarmoluk) | [LinkedIn](https://linkedin.com/in/danielyarmoluk) | daniel.yarmoluk@gmail.com
+
+[Get Started](chapters/01/index.md){ .cognify-cta }

@@ -1,5 +1,5 @@
-site_name: Custom Skill Developer Guide
-site_description: A comprehensive knowledge base for building custom Claude Code skills — from single-purpose agents to meta-skill routers and full pipeline orchestration.
+site_name: "Cognify | Custom Skill Developer"
+site_description: The comprehensive guide to building Agent Skills for the agentskills.io open standard — from first skill to meta-skill routers, quality scoring, and pipeline orchestration.
 site_url: https://yarmoluk.github.io/custom-skill-developer/
 repo_url: https://github.com/Yarmoluk/custom-skill-developer
 repo_name: Yarmoluk/custom-skill-developer
@@ -19,21 +19,33 @@ theme:
     - content.code.annotate
     - search.suggest
     - search.highlight
+  custom_dir: docs/overrides
   palette:
-    - scheme: default
-      primary: deep purple
-      accent: amber
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
     - scheme: slate
-      primary: deep purple
-      accent: amber
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+    - scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
   icon:
     repo: fontawesome/brands/github
+
+extra_css:
+  - stylesheets/cognify.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Yarmoluk
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/in/danielyarmoluk
+  generator: false
 
 plugins:
   - search
@@ -88,6 +100,10 @@ nav:
     - Installation & Registry: chapters/15/index.md
     - Testing & Debugging: chapters/16/index.md
     - Publishing & Distribution: chapters/17/index.md
+  - Interactive:
+    - Skill Anatomy Explorer: sims/skill-anatomy-explorer/index.md
+    - Meta-Skill Routing Simulator: sims/routing-decision-tree/index.md
+    - Quality Score Calculator: sims/quality-score-calculator/index.md
   - Reference:
     - Glossary: glossary.md
     - FAQ: faq.md

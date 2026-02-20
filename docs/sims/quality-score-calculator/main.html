@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill Quality Score Calculator</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0C0C10;
+      color: #E5E5EA;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 12px;
+      color: #8E8E93;
+      margin-bottom: 16px;
+    }
+
+    /* ── Preset buttons ── */
+    .presets {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .preset-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid #28282D;
+      background: #191920;
+      color: #E5E5EA;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .preset-btn:hover { background: #28282D; border-color: #48484D; }
+
+    /* ── Main layout ── */
+    .layout {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    /* ── Score ring ── */
+    .score-panel {
+      flex: 0 0 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      position: sticky;
+      top: 16px;
+    }
+
+    .ring-wrap {
+      position: relative;
+      width: 140px;
+      height: 140px;
+    }
+
+    .ring-svg {
+      width: 140px;
+      height: 140px;
+      transform: rotate(-90deg);
+    }
+
+    .ring-bg {
+      fill: none;
+      stroke: #28282D;
+      stroke-width: 10;
+    }
+
+    .ring-fg {
+      fill: none;
+      stroke: #34C759;
+      stroke-width: 10;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.4s ease, stroke 0.4s ease;
+      stroke-dasharray: 376;
+      stroke-dashoffset: 376;
+    }
+
+    .ring-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #total-score {
+      font-size: 38px;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1;
+      transition: color 0.4s;
+    }
+
+    #total-label {
+      font-size: 11px;
+      color: #8E8E93;
+      margin-top: 2px;
+    }
+
+    .grade-badge {
+      font-size: 28px;
+      font-weight: 800;
+      padding: 4px 16px;
+      border-radius: 10px;
+      background: #191920;
+      border: 2px solid #28282D;
+      transition: color 0.4s, border-color 0.4s;
+    }
+
+    /* ── Verdict ── */
+    .verdict-box {
+      background: #191920;
+      border: 1px solid #28282D;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12px;
+      line-height: 1.5;
+      text-align: center;
+      color: #AEAEB2;
+      transition: border-color 0.4s;
+      max-width: 160px;
+    }
+
+    /* ── Sliders panel ── */
+    .sliders-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .dim-card {
+      background: #191920;
+      border: 1px solid #28282D;
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+
+    .dim-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+
+    .dim-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+
+    .dim-score {
+      font-size: 13px;
+      font-weight: 700;
+      color: #007AFF;
+      min-width: 42px;
+      text-align: right;
+    }
+
+    .dim-tip {
+      font-size: 11px;
+      color: #636366;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    /* ── Custom range slider ── */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: #28282D;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #007AFF;
+      cursor: pointer;
+      border: 2px solid #0C0C10;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #007AFF;
+      cursor: pointer;
+      border: 2px solid #0C0C10;
+    }
+
+    /* dynamic track fill via JS background gradient */
+
+    /* ── Grade colors ── */
+    .grade-a { color: #34C759; border-color: #34C759; }
+    .grade-b { color: #007AFF; border-color: #007AFF; }
+    .grade-c { color: #FF9F0A; border-color: #FF9F0A; }
+    .grade-d { color: #FF3B30; border-color: #FF3B30; }
+    .grade-f { color: #8E1F1A; border-color: #8E1F1A; }
+
+    .score-a { color: #34C759; }
+    .score-b { color: #007AFF; }
+    .score-c { color: #FF9F0A; }
+    .score-d { color: #FF3B30; }
+    .score-f { color: #8E1F1A; }
+
+    .ring-a { stroke: #34C759; }
+    .ring-b { stroke: #007AFF; }
+    .ring-c { stroke: #FF9F0A; }
+    .ring-d { stroke: #FF3B30; }
+    .ring-f { stroke: #8E1F1A; }
+
+    .verdict-a { border-color: #34C759; }
+    .verdict-b { border-color: #007AFF; }
+    .verdict-c { border-color: #FF9F0A; }
+    .verdict-d { border-color: #FF3B30; }
+    .verdict-f { border-color: #8E1F1A; }
+  </style>
+</head>
+<body>
+
+  <h1>Skill Quality Score Calculator</h1>
+  <p class="subtitle">Adjust each dimension to score your Agent Skill</p>
+
+  <div class="presets">
+    <button class="preset-btn" onclick="loadPreset('minimal')">Minimal Skill</button>
+    <button class="preset-btn" onclick="loadPreset('good')">Good Skill</button>
+    <button class="preset-btn" onclick="loadPreset('production')">Production Skill</button>
+  </div>
+
+  <div class="layout">
+
+    <!-- Left: Score ring + grade + verdict -->
+    <div class="score-panel">
+      <div class="ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 140 140">
+          <circle class="ring-bg" cx="70" cy="70" r="60" />
+          <circle class="ring-fg" id="ring-fg" cx="70" cy="70" r="60" />
+        </svg>
+        <div class="ring-center">
+          <span id="total-score">0</span>
+          <span id="total-label">/ 100</span>
+        </div>
+      </div>
+
+      <div class="grade-badge" id="grade-badge">F</div>
+
+      <div class="verdict-box" id="verdict-box">
+        Start with Chapter 3: Your First Skill.
+      </div>
+    </div>
+
+    <!-- Right: Dimension sliders -->
+    <div class="sliders-panel" id="sliders-panel"></div>
+
+  </div>
+
+  <script>
+    const DIMS = [
+      {
+        id: 'frontmatter',
+        name: 'Frontmatter Compliance',
+        max: 20,
+        tip: 'Checks required fields: name, description, version, author, category, tags, and proper YAML syntax.',
+      },
+      {
+        id: 'structure',
+        name: 'Structure Compliance',
+        max: 20,
+        tip: 'Validates that the skill file uses all required top-level sections in the correct order.',
+      },
+      {
+        id: 'workflow',
+        name: 'Workflow Quality',
+        max: 15,
+        tip: 'Evaluates step clarity, error handling paths, and logical flow through the workflow graph.',
+      },
+      {
+        id: 'scoring',
+        name: 'Quality Scoring System',
+        max: 15,
+        tip: 'Presence and specificity of internal success metrics, rubrics, or self-evaluation criteria.',
+      },
+      {
+        id: 'tokens',
+        name: 'Token Efficiency',
+        max: 10,
+        tip: 'Measures prompt conciseness — no unnecessary repetition, bloat, or over-specified instructions.',
+      },
+      {
+        id: 'ecosystem',
+        name: 'Ecosystem Quality',
+        max: 10,
+        tip: 'Integration with other skills, proper tool declarations, and metadata that aids discovery.',
+      },
+      {
+        id: 'crossplatform',
+        name: 'Cross-Platform Readiness',
+        max: 10,
+        tip: 'Skill works correctly across Claude.ai, Claude Code CLI, and API integrations without modification.',
+      },
+    ];
+
+    // Build slider cards
+    const panel = document.getElementById('sliders-panel');
+    DIMS.forEach(dim => {
+      const card = document.createElement('div');
+      card.className = 'dim-card';
+      card.innerHTML = `
+        <div class="dim-header">
+          <span class="dim-name">${dim.name}</span>
+          <span class="dim-score" id="score-${dim.id}">0 / ${dim.max}</span>
+        </div>
+        <div class="dim-tip">${dim.tip}</div>
+        <input
+          type="range"
+          id="slider-${dim.id}"
+          min="0"
+          max="${dim.max}"
+          value="0"
+          oninput="onSlide('${dim.id}', ${dim.max})"
+        />
+      `;
+      panel.appendChild(card);
+    });
+
+    // Ring circumference (r=60): 2πr ≈ 376.99
+    const CIRC = 2 * Math.PI * 60;
+    const ringEl = document.getElementById('ring-fg');
+    ringEl.style.strokeDasharray = CIRC;
+    ringEl.style.strokeDashoffset = CIRC;
+
+    function gradeInfo(score) {
+      if (score >= 85) return { letter: 'A', cls: 'a', verdict: 'Production ready. Ship it.' };
+      if (score >= 70) return { letter: 'B', cls: 'b', verdict: 'Solid foundation. Address the gaps before publishing.' };
+      if (score >= 55) return { letter: 'C', cls: 'c', verdict: 'Needs work. Focus on the lowest-scoring dimensions.' };
+      if (score >= 40) return { letter: 'D', cls: 'd', verdict: 'Significant gaps. Review the guide chapters for each weak area.' };
+      return { letter: 'F', cls: 'f', verdict: 'Start with Chapter 3: Your First Skill.' };
+    }
+
+    function updateTrack(el, val, max) {
+      const pct = (val / max) * 100;
+      el.style.background = `linear-gradient(to right, #007AFF ${pct}%, #28282D ${pct}%)`;
+    }
+
+    function recalc() {
+      let total = 0;
+      DIMS.forEach(dim => {
+        total += parseInt(document.getElementById('slider-' + dim.id).value, 10);
+      });
+
+      // Update total number
+      document.getElementById('total-score').textContent = total;
+
+      // Ring
+      const offset = CIRC - (total / 100) * CIRC;
+      ringEl.style.strokeDashoffset = offset;
+
+      // Grade
+      const g = gradeInfo(total);
+      const scoreEl = document.getElementById('total-score');
+      const badge = document.getElementById('grade-badge');
+      const verdict = document.getElementById('verdict-box');
+
+      // Remove old grade classes
+      ['a','b','c','d','f'].forEach(c => {
+        scoreEl.classList.remove('score-' + c);
+        badge.classList.remove('grade-' + c);
+        ringEl.classList.remove('ring-' + c);
+        verdict.classList.remove('verdict-' + c);
+      });
+
+      scoreEl.classList.add('score-' + g.cls);
+      badge.classList.add('grade-' + g.cls);
+      badge.textContent = g.letter;
+      ringEl.classList.add('ring-' + g.cls);
+      verdict.textContent = g.verdict;
+      verdict.classList.add('verdict-' + g.cls);
+    }
+
+    function onSlide(id, max) {
+      const slider = document.getElementById('slider-' + id);
+      const val = parseInt(slider.value, 10);
+      document.getElementById('score-' + id).textContent = `${val} / ${max}`;
+      updateTrack(slider, val, max);
+      recalc();
+    }
+
+    // Presets
+    const PRESETS = {
+      minimal:    [12, 8, 5, 0, 8, 4, 3],
+      good:       [17, 16, 11, 10, 7, 8, 7],
+      production: [20, 19, 14, 14, 9, 9, 9],
+    };
+
+    function loadPreset(key) {
+      const vals = PRESETS[key];
+      DIMS.forEach((dim, i) => {
+        const slider = document.getElementById('slider-' + dim.id);
+        slider.value = vals[i];
+        document.getElementById('score-' + dim.id).textContent = `${vals[i]} / ${dim.max}`;
+        updateTrack(slider, vals[i], dim.max);
+      });
+      recalc();
+    }
+
+    // Initial render
+    recalc();
+  </script>
+</body>
+</html>
