@@ -90,7 +90,7 @@ draw.text((70, title_y + 90), subtitle, fill=(140, 150, 165), font=font_subtitle
 pills = [
     "17 Chapters",
     "55K Words",
-    "3 MicroSims",
+    "4 MicroSims",
     "Quality Scoring",
     "Meta-Skill Routing",
     "Pipeline Orchestration",
