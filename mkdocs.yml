@@ -105,5 +105,6 @@ nav:
     - Meta-Skill Routing Simulator: sims/routing-decision-tree/index.md
     - Quality Score Calculator: sims/quality-score-calculator/index.md
   - Reference:
+    - References: references.md
     - Glossary: glossary.md
     - FAQ: faq.md
