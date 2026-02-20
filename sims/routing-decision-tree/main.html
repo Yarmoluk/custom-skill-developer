@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meta-Skill Routing Simulator</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0C0C10;
+      color: #E8E8F0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    .header {
+      padding: 12px 20px 8px;
+      border-bottom: 1px solid #28282D;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .cognify-badge {
+      background: linear-gradient(135deg, #007AFF, #5856D6);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .header-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #E8E8F0;
+    }
+
+    .header-sub {
+      font-size: 11px;
+      color: #666;
+      margin-left: auto;
+    }
+
+    /* ── Input row ── */
+    .input-row {
+      padding: 10px 20px 8px;
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+      border-bottom: 1px solid #28282D;
+    }
+
+    .text-input {
+      flex: 1;
+      background: #191920;
+      border: 1px solid #28282D;
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: #E8E8F0;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .text-input:focus {
+      border-color: #007AFF;
+    }
+
+    .route-btn {
+      background: linear-gradient(135deg, #007AFF, #5856D6);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+
+    .route-btn:hover { opacity: 0.85; }
+    .route-btn:active { opacity: 0.7; }
+
+    /* ── Example chips ── */
+    .examples-row {
+      padding: 6px 20px 8px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    .example-chip {
+      background: #191920;
+      border: 1px solid #28282D;
+      border-radius: 20px;
+      color: #999;
+      font-size: 11px;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .example-chip:hover {
+      border-color: #007AFF;
+      color: #007AFF;
+    }
+
+    /* ── Main canvas area ── */
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      grid-template-rows: 1fr auto;
+      gap: 0;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    /* ── Canvas ── */
+    #sim-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .canvas-wrap {
+      position: relative;
+      overflow: hidden;
+      grid-row: 1 / 3;
+    }
+
+    /* ── Routing table panel ── */
+    .routing-panel {
+      background: #191920;
+      border-left: 1px solid #28282D;
+      padding: 12px;
+      overflow-y: auto;
+      grid-row: 1 / 2;
+    }
+
+    .panel-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .route-entry {
+      background: #0C0C10;
+      border: 1px solid #28282D;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-bottom: 6px;
+      transition: border-color 0.3s, background 0.3s;
+    }
+
+    .route-entry.active {
+      border-color: #34C759;
+      background: rgba(52, 199, 89, 0.08);
+    }
+
+    .route-entry.partial {
+      border-color: #FF9F0A;
+      background: rgba(255, 159, 10, 0.05);
+    }
+
+    .route-file {
+      font-size: 11px;
+      font-weight: 600;
+      color: #007AFF;
+      margin-bottom: 3px;
+    }
+
+    .route-entry.active .route-file { color: #34C759; }
+    .route-entry.partial .route-file { color: #FF9F0A; }
+
+    .route-keywords {
+      font-size: 10px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .kw-match {
+      color: #FF9F0A;
+      font-weight: 600;
+    }
+
+    /* ── Token savings panel ── */
+    .savings-panel {
+      background: #191920;
+      border-left: 1px solid #28282D;
+      border-top: 1px solid #28282D;
+      padding: 12px;
+      grid-row: 2 / 3;
+    }
+
+    .savings-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .savings-bar-wrap {
+      background: #0C0C10;
+      border-radius: 4px;
+      height: 20px;
+      overflow: hidden;
+      margin-bottom: 6px;
+      position: relative;
+    }
+
+    .savings-bar-bg {
+      position: absolute;
+      inset: 0;
+      background: #28282D;
+      border-radius: 4px;
+    }
+
+    .savings-bar-fill {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      background: linear-gradient(90deg, #34C759, #007AFF);
+      border-radius: 4px;
+      transition: width 0.6s ease;
+    }
+
+    .savings-label {
+      font-size: 10px;
+      color: #34C759;
+      font-weight: 600;
+    }
+
+    .savings-detail {
+      font-size: 10px;
+      color: #555;
+      margin-top: 4px;
+    }
+
+    /* ── Idle hint ── */
+    .idle-hint {
+      font-size: 12px;
+      color: #444;
+      text-align: center;
+      padding: 20px;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="cognify-badge">Cognify</div>
+  <div class="header-title">Meta-Skill Routing Simulator</div>
+  <div class="header-sub">Agent Skills Ecosystem</div>
+</div>
+
+<!-- Input -->
+<div class="input-row">
+  <input
+    id="request-input"
+    class="text-input"
+    type="text"
+    placeholder="Type a visualization request..."
+    autocomplete="off"
+    spellcheck="false"
+  />
+  <button class="route-btn" id="route-btn">Route</button>
+</div>
+
+<!-- Example chips -->
+<div class="examples-row" id="examples-row">
+  <div class="example-chip" data-text="Create a bar chart showing sales by quarter">Bar chart example</div>
+  <div class="example-chip" data-text="Show a timeline of project milestones">Timeline example</div>
+  <div class="example-chip" data-text="Build a network graph of concept dependencies">Network graph example</div>
+  <div class="example-chip" data-text="Make a map of store locations">Map example</div>
+</div>
+
+<!-- Main area -->
+<div class="main">
+  <div class="canvas-wrap" id="canvas-wrap">
+    <canvas id="sim-canvas"></canvas>
+  </div>
+
+  <!-- Routing table panel -->
+  <div class="routing-panel" id="routing-panel">
+    <div class="panel-title">Routing Table</div>
+    <div id="route-entries"></div>
+  </div>
+
+  <!-- Token savings panel -->
+  <div class="savings-panel" id="savings-panel">
+    <div class="savings-title">Token Efficiency</div>
+    <div class="savings-bar-wrap">
+      <div class="savings-bar-bg"></div>
+      <div class="savings-bar-fill" id="savings-bar" style="width:0%"></div>
+    </div>
+    <div class="savings-label" id="savings-label">—</div>
+    <div class="savings-detail" id="savings-detail">Route a request to see savings</div>
+  </div>
+</div>
+
+<script>
+// ── Routing table data ──────────────────────────────────────────────────────
+const ROUTES = [
+  {
+    keywords: ["chart", "bar", "line", "pie", "donut", "graph", "plot"],
+    file: "chartjs-guide.md",
+    lib: "Chart.js",
+    tokens: 800,
+    color: "#007AFF"
+  },
+  {
+    keywords: ["timeline", "dates", "chronological", "milestones", "schedule"],
+    file: "timeline-guide.md",
+    lib: "vis-timeline",
+    tokens: 750,
+    color: "#5856D6"
+  },
+  {
+    keywords: ["network", "nodes", "edges", "dependencies", "connections", "relationships"],
+    file: "vis-network-guide.md",
+    lib: "vis-network",
+    tokens: 900,
+    color: "#FF9F0A"
+  },
+  {
+    keywords: ["map", "geographic", "location", "coordinates", "store", "address"],
+    file: "map-guide.md",
+    lib: "Leaflet",
+    tokens: 700,
+    color: "#34C759"
+  },
+  {
+    keywords: ["flowchart", "sequence", "diagram", "flow", "process"],
+    file: "mermaid-guide.md",
+    lib: "Mermaid",
+    tokens: 650,
+    color: "#FF453A"
+  },
+  {
+    keywords: ["simulation", "physics", "animation", "particles", "motion"],
+    file: "p5-guide.md",
+    lib: "p5.js",
+    tokens: 850,
+    color: "#30D158"
+  },
+  {
+    keywords: ["venn", "overlap", "sets", "intersection", "union"],
+    file: "venn-guide.md",
+    lib: "Venn.js",
+    tokens: 600,
+    color: "#BF5AF2"
+  }
+];
+
+const TOTAL_TOKENS = ROUTES.reduce((s, r) => s + r.tokens, 0); // ~5250
+
+// ── Build routing table entries ─────────────────────────────────────────────
+const entriesEl = document.getElementById("route-entries");
+ROUTES.forEach((route, i) => {
+  const div = document.createElement("div");
+  div.className = "route-entry";
+  div.id = `route-entry-${i}`;
+  div.innerHTML = `
+    <div class="route-file">${route.file}</div>
+    <div class="route-keywords" id="route-kw-${i}">${route.keywords.join(", ")}</div>
+  `;
+  entriesEl.appendChild(div);
+});
+
+// ── Canvas setup ────────────────────────────────────────────────────────────
+const canvas = document.getElementById("sim-canvas");
+const ctx = canvas.getContext("2d");
+const wrap = document.getElementById("canvas-wrap");
+
+function resize() {
+  canvas.width = wrap.clientWidth;
+  canvas.height = wrap.clientHeight;
+}
+resize();
+window.addEventListener("resize", () => { resize(); if (!animating) drawIdle(); });
+
+// ── Animation state ─────────────────────────────────────────────────────────
+let animating = false;
+let animFrame = null;
+let phase = "idle"; // idle | flowing | extracting | routing | matched
+let phaseProgress = 0; // 0..1
+let matchedRoute = null;
+let partialMatches = [];
+let extractedKeywords = [];
+let highlightedKws = [];
+let requestText = "";
+let particleT = 0;
+
+// Phase durations in ms
+const PHASE_DUR = {
+  flowing: 700,
+  extracting: 600,
+  routing: 800,
+  matched: 2000
+};
+
+let phaseStart = 0;
+let currentPhase = null;
+const phases = ["flowing", "extracting", "routing", "matched"];
+let phaseIdx = 0;
+
+// ── Color helpers ────────────────────────────────────────────────────────────
+function hex(h) {
+  const r = parseInt(h.slice(1,3),16), g = parseInt(h.slice(3,5),16), b = parseInt(h.slice(5,7),16);
+  return {r,g,b};
+}
+function rgba(h, a) {
+  const {r,g,b} = hex(h);
+  return `rgba(${r},${g},${b},${a})`;
+}
+function lerp(a,b,t) { return a + (b-a)*t; }
+function easeOut(t) { return 1 - Math.pow(1-t, 3); }
+function easeInOut(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+
+// ── Layout constants ─────────────────────────────────────────────────────────
+function layout() {
+  const W = canvas.width, H = canvas.height;
+  const cx = W * 0.5;
+  // Input node
+  const inputX = W * 0.12, inputY = H * 0.18;
+  // Router node
+  const routerX = cx, routerY = H * 0.38;
+  // Output nodes
+  const n = ROUTES.length;
+  const outNodes = ROUTES.map((r, i) => {
+    const t = (i / (n-1)) * 0.8 + 0.1;
+    return { x: W * t, y: H * 0.78, route: r, i };
+  });
+  return { W, H, cx, inputX, inputY, routerX, routerY, outNodes };
+}
+
+// ── Draw idle state ──────────────────────────────────────────────────────────
+function drawIdle() {
+  const { W, H, inputX, inputY, routerX, routerY, outNodes } = layout();
+  ctx.clearRect(0, 0, W, H);
+
+  // Background grid (subtle)
+  drawGrid(W, H);
+
+  // Static connections
+  outNodes.forEach(node => {
+    drawLine(routerX, routerY, node.x, node.y, rgba("#28282D", 0.8), 1, [4,4]);
+  });
+  drawLine(inputX, inputY, routerX, routerY, rgba("#28282D", 0.8), 1, [4,4]);
+
+  // Router node
+  drawRouterNode(routerX, routerY, "#28282D", "#555", 0);
+
+  // Input node
+  drawInputNode(inputX, inputY, "#28282D", "#444", "REQUEST");
+
+  // Output nodes
+  outNodes.forEach(node => {
+    drawOutputNode(node.x, node.y, "#28282D", "#333", node.route.file.replace("-guide.md",""), 0);
+  });
+
+  // Hint
+  ctx.save();
+  ctx.font = "12px -apple-system, sans-serif";
+  ctx.fillStyle = "#333";
+  ctx.textAlign = "center";
+  ctx.fillText("Type a request above and click Route", W/2, H * 0.5);
+  ctx.restore();
+}
+
+// ── Grid ─────────────────────────────────────────────────────────────────────
+function drawGrid(W, H) {
+  ctx.save();
+  ctx.strokeStyle = "rgba(40,40,45,0.4)";
+  ctx.lineWidth = 0.5;
+  const step = 30;
+  for (let x = 0; x < W; x += step) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+  }
+  for (let y = 0; y < H; y += step) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+// ── Draw line ────────────────────────────────────────────────────────────────
+function drawLine(x1,y1,x2,y2,color,width,dash=[]) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.setLineDash(dash);
+  ctx.beginPath();
+  ctx.moveTo(x1,y1);
+  ctx.lineTo(x2,y2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+}
+
+// ── Animated line (partial draw) ─────────────────────────────────────────────
+function drawLinePart(x1,y1,x2,y2,color,width,t) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.shadowColor = color;
+  ctx.shadowBlur = 6;
+  ctx.beginPath();
+  ctx.moveTo(x1,y1);
+  ctx.lineTo(lerp(x1,x2,t), lerp(y1,y2,t));
+  ctx.stroke();
+  ctx.restore();
+}
+
+// ── Node drawing ─────────────────────────────────────────────────────────────
+function drawInputNode(x,y,bgColor,borderColor,label) {
+  ctx.save();
+  ctx.fillStyle = bgColor;
+  ctx.strokeStyle = borderColor;
+  ctx.lineWidth = 1.5;
+  roundRect(x-50, y-18, 100, 36, 8);
+  ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#888";
+  ctx.font = "10px -apple-system, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(label, x, y);
+  ctx.restore();
+}
+
+function drawRouterNode(x,y,bgColor,borderColor,glowAmt) {
+  ctx.save();
+  if (glowAmt > 0) {
+    ctx.shadowColor = "#007AFF";
+    ctx.shadowBlur = 20 * glowAmt;
+  }
+  ctx.fillStyle = bgColor;
+  ctx.strokeStyle = borderColor;
+  ctx.lineWidth = 1.5;
+  const r = 36;
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI*2);
+  ctx.fill(); ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // Inner ring
+  ctx.strokeStyle = glowAmt > 0 ? rgba("#007AFF", 0.4 * glowAmt) : "#28282D";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(x, y, r-8, 0, Math.PI*2);
+  ctx.stroke();
+
+  ctx.fillStyle = glowAmt > 0 ? "#007AFF" : "#555";
+  ctx.font = `bold 10px -apple-system, sans-serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("META", x, y-7);
+  ctx.fillText("ROUTER", x, y+6);
+  ctx.restore();
+}
+
+function drawOutputNode(x,y,bgColor,borderColor,label,glowAmt,glowColor) {
+  ctx.save();
+  const r = 28;
+  if (glowAmt > 0 && glowColor) {
+    ctx.shadowColor = glowColor;
+    ctx.shadowBlur = 18 * glowAmt;
+  }
+  ctx.fillStyle = bgColor;
+  ctx.strokeStyle = glowAmt > 0 ? glowColor : borderColor;
+  ctx.lineWidth = glowAmt > 0 ? 2 : 1;
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI*2);
+  ctx.fill(); ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  ctx.fillStyle = glowAmt > 0 ? (glowColor || "#aaa") : "#444";
+  ctx.font = `bold 9px -apple-system, sans-serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  // Wrap label
+  const parts = label.split("-");
+  if (parts.length > 1) {
+    ctx.fillText(parts[0], x, y-6);
+    ctx.fillText(parts.slice(1).join("-"), x, y+6);
+  } else {
+    ctx.fillText(label, x, y);
+  }
+  ctx.restore();
+
+  // Label below
+  ctx.save();
+  ctx.fillStyle = glowAmt > 0 ? rgba(glowColor||"#aaa", 0.9) : "#333";
+  ctx.font = `9px -apple-system, sans-serif`;
+  ctx.textAlign = "center";
+  ctx.fillText(label+"-guide.md", x, y+r+12);
+  ctx.restore();
+}
+
+// ── RoundRect ────────────────────────────────────────────────────────────────
+function roundRect(x,y,w,h,r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
+
+// ── Particle system ───────────────────────────────────────────────────────────
+function drawParticle(x,y,color,size=3) {
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.shadowColor = color;
+  ctx.shadowBlur = 8;
+  ctx.beginPath();
+  ctx.arc(x,y,size,0,Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+}
+
+// ── Main draw frame ───────────────────────────────────────────────────────────
+function draw(ts) {
+  const { W, H, inputX, inputY, routerX, routerY, outNodes } = layout();
+  ctx.clearRect(0,0,W,H);
+  drawGrid(W,H);
+
+  const elapsed = ts - phaseStart;
+  const t = Math.min(elapsed / PHASE_DUR[currentPhase], 1);
+  const te = easeOut(t);
+  const ti = easeInOut(t);
+
+  // ── Draw static background edges ──────────────────────────────────────────
+  outNodes.forEach(node => {
+    const isPartial = partialMatches.includes(node.i);
+    const isMatch = matchedRoute && node.i === matchedRoute.i;
+    const color = isMatch
+      ? rgba(node.route.color, 0.12)
+      : isPartial ? rgba(node.route.color, 0.06)
+      : rgba("#28282D", 0.5);
+    drawLine(routerX, routerY, node.x, node.y, color, 1, [4,4]);
+  });
+
+  // ── PHASE: flowing ─────────────────────────────────────────────────────────
+  if (currentPhase === "flowing") {
+    // Packet traveling from input → router
+    drawLine(inputX, inputY, routerX, routerY, rgba("#28282D", 0.6), 1, [4,4]);
+    drawLinePart(inputX, inputY, routerX, routerY, "#007AFF", 2, te);
+    const px = lerp(inputX, routerX, te);
+    const py = lerp(inputY, routerY, te);
+    drawParticle(px, py, "#007AFF", 4);
+
+    drawInputNode(inputX, inputY, "#191920", "#007AFF", "REQUEST");
+    drawRouterNode(routerX, routerY, "#191920", "#007AFF", te * 0.5);
+
+    // Draw request text near input
+    ctx.save();
+    ctx.fillStyle = rgba("#007AFF", 0.8);
+    ctx.font = "10px -apple-system, sans-serif";
+    ctx.textAlign = "left";
+    const maxW = 120;
+    const truncated = requestText.length > 28 ? requestText.slice(0,26)+"…" : requestText;
+    ctx.fillText(`"${truncated}"`, inputX-45, inputY-26);
+    ctx.restore();
+
+    outNodes.forEach(node => {
+      drawOutputNode(node.x, node.y, "#0C0C10", "#1a1a20", node.route.file.replace("-guide.md",""), 0, null);
+    });
+  }
+
+  // ── PHASE: extracting ─────────────────────────────────────────────────────
+  else if (currentPhase === "extracting") {
+    drawLine(inputX, inputY, routerX, routerY, "#007AFF", 2);
+    drawInputNode(inputX, inputY, "#191920", "#007AFF", "REQUEST");
+    drawRouterNode(routerX, routerY, "#191920", "#007AFF", 0.7 + 0.3*Math.sin(ts*0.005));
+
+    // Keyword tokens bursting from router
+    extractedKeywords.forEach((kw, ki) => {
+      const angle = -Math.PI*0.7 + (ki / Math.max(extractedKeywords.length-1,1)) * Math.PI*1.4;
+      const dist = 70 * te;
+      const kx = routerX + Math.cos(angle) * dist;
+      const ky = routerY + Math.sin(angle) * dist;
+      const opacity = te;
+
+      ctx.save();
+      ctx.globalAlpha = opacity;
+      ctx.fillStyle = rgba(matchedRoute && highlightedKws.includes(kw) ? "#FF9F0A" : "#555", 0.15);
+      ctx.strokeStyle = matchedRoute && highlightedKws.includes(kw) ? "#FF9F0A" : "#28282D";
+      ctx.lineWidth = 1;
+      roundRect(kx - 28, ky - 10, 56, 20, 4);
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = matchedRoute && highlightedKws.includes(kw) ? "#FF9F0A" : "#555";
+      ctx.font = "9px monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(kw, kx, ky);
+      ctx.restore();
+    });
+
+    outNodes.forEach(node => {
+      drawOutputNode(node.x, node.y, "#0C0C10", "#1a1a20", node.route.file.replace("-guide.md",""), 0, null);
+    });
+  }
+
+  // ── PHASE: routing ─────────────────────────────────────────────────────────
+  else if (currentPhase === "routing") {
+    drawLine(inputX, inputY, routerX, routerY, "#007AFF", 2);
+    drawInputNode(inputX, inputY, "#191920", "#007AFF", "REQUEST");
+    drawRouterNode(routerX, routerY, "#191920", "#007AFF", 1);
+
+    // Keywords drifting up
+    extractedKeywords.forEach((kw, ki) => {
+      const angle = -Math.PI*0.7 + (ki / Math.max(extractedKeywords.length-1,1)) * Math.PI*1.4;
+      const dist = 70;
+      const kx = routerX + Math.cos(angle) * dist;
+      const ky = routerY + Math.sin(angle) * dist;
+      const isHit = highlightedKws.includes(kw);
+
+      ctx.save();
+      ctx.globalAlpha = isHit ? 1 : 0.3;
+      ctx.fillStyle = rgba(isHit ? "#FF9F0A" : "#555", isHit ? 0.15 : 0.05);
+      ctx.strokeStyle = isHit ? "#FF9F0A" : "#28282D";
+      ctx.lineWidth = isHit ? 1.5 : 1;
+      roundRect(kx-28, ky-10, 56, 20, 4);
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = isHit ? "#FF9F0A" : "#444";
+      ctx.font = "9px monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(kw, kx, ky);
+      ctx.restore();
+    });
+
+    // Routing beam to matched node
+    if (matchedRoute) {
+      const node = outNodes[matchedRoute.i];
+      drawLinePart(routerX, routerY, node.x, node.y, matchedRoute.color, 2.5, te);
+      const px = lerp(routerX, node.x, te);
+      const py = lerp(routerY, node.y, te);
+      drawParticle(px, py, matchedRoute.color, 5);
+    }
+
+    outNodes.forEach(node => {
+      const isMatch = matchedRoute && node.i === matchedRoute.i;
+      const isPartial = partialMatches.includes(node.i);
+      drawOutputNode(
+        node.x, node.y,
+        isMatch ? rgba(node.route.color, 0.08) : "#0C0C10",
+        isMatch ? "#28282D" : "#1a1a20",
+        node.route.file.replace("-guide.md",""),
+        isPartial ? 0.2 : 0,
+        node.route.color
+      );
+    });
+  }
+
+  // ── PHASE: matched ─────────────────────────────────────────────────────────
+  else if (currentPhase === "matched") {
+    const pulse = 0.7 + 0.3 * Math.sin(ts * 0.004);
+
+    drawLine(inputX, inputY, routerX, routerY, "#007AFF", 2);
+    drawInputNode(inputX, inputY, "#191920", "#007AFF", "REQUEST");
+    drawRouterNode(routerX, routerY, "#191920", "#007AFF", 0.8);
+
+    outNodes.forEach(node => {
+      const isMatch = matchedRoute && node.i === matchedRoute.i;
+      const isPartial = partialMatches.includes(node.i);
+      const glow = isMatch ? pulse : (isPartial ? 0.15 : 0);
+      drawOutputNode(
+        node.x, node.y,
+        isMatch ? rgba(node.route.color, 0.15) : "#0C0C10",
+        isMatch ? "#28282D" : "#1a1a20",
+        node.route.file.replace("-guide.md",""),
+        glow,
+        isMatch ? node.route.color : (isPartial ? node.route.color : null)
+      );
+    });
+
+    if (matchedRoute) {
+      const node = outNodes[matchedRoute.i];
+      // Glowing beam
+      ctx.save();
+      ctx.strokeStyle = rgba(matchedRoute.color, 0.4);
+      ctx.lineWidth = 2;
+      ctx.shadowColor = matchedRoute.color;
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.moveTo(routerX, routerY);
+      ctx.lineTo(node.x, node.y);
+      ctx.stroke();
+      ctx.restore();
+
+      // Detail card
+      const cardX = W * 0.05, cardY = H * 0.04;
+      const cardW = Math.min(W * 0.55, 260), cardH = 70;
+      ctx.save();
+      ctx.fillStyle = rgba(matchedRoute.color, 0.08);
+      ctx.strokeStyle = matchedRoute.color;
+      ctx.lineWidth = 1.5;
+      ctx.shadowColor = matchedRoute.color;
+      ctx.shadowBlur = 12;
+      roundRect(cardX, cardY, cardW, cardH, 8);
+      ctx.fill(); ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      ctx.fillStyle = matchedRoute.color;
+      ctx.font = "bold 11px -apple-system, sans-serif";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "top";
+      ctx.fillText("MATCHED: " + matchedRoute.file, cardX+12, cardY+10);
+      ctx.fillStyle = "#888";
+      ctx.font = "10px -apple-system, sans-serif";
+      ctx.fillText("Library: " + matchedRoute.lib, cardX+12, cardY+28);
+      ctx.fillStyle = "#34C759";
+      ctx.font = "10px -apple-system, sans-serif";
+      ctx.fillText("Loaded: " + matchedRoute.tokens + " tokens  |  Skipped: " + (TOTAL_TOKENS - matchedRoute.tokens) + " tokens", cardX+12, cardY+46);
+      ctx.restore();
+    }
+
+    // Keywords (dimmed)
+    extractedKeywords.forEach((kw, ki) => {
+      const angle = -Math.PI*0.7 + (ki / Math.max(extractedKeywords.length-1,1)) * Math.PI*1.4;
+      const dist = 70;
+      const kx = routerX + Math.cos(angle) * dist;
+      const ky = routerY + Math.sin(angle) * dist;
+      const isHit = highlightedKws.includes(kw);
+
+      ctx.save();
+      ctx.globalAlpha = isHit ? 0.9 : 0.2;
+      ctx.fillStyle = rgba(isHit ? "#FF9F0A" : "#555", 0.12);
+      ctx.strokeStyle = isHit ? "#FF9F0A" : "#28282D";
+      ctx.lineWidth = isHit ? 1.5 : 1;
+      roundRect(kx-28, ky-10, 56, 20, 4);
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = isHit ? "#FF9F0A" : "#444";
+      ctx.font = "9px monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(kw, kx, ky);
+      ctx.restore();
+    });
+  }
+
+  // ── Advance phase ─────────────────────────────────────────────────────────
+  if (t >= 1) {
+    phaseIdx++;
+    if (phaseIdx < phases.length) {
+      currentPhase = phases[phaseIdx];
+      phaseStart = ts;
+      animFrame = requestAnimationFrame(draw);
+    } else {
+      // Done
+      animating = false;
+      animFrame = null;
+    }
+    return;
+  }
+
+  animFrame = requestAnimationFrame(draw);
+}
+
+// ── Route logic ──────────────────────────────────────────────────────────────
+function tokenize(text) {
+  return text.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(Boolean);
+}
+
+function findRoute(text) {
+  const tokens = tokenize(text);
+  let best = null, bestScore = 0;
+  const partials = [];
+
+  ROUTES.forEach((route, i) => {
+    const hits = route.keywords.filter(kw => tokens.some(t => t.includes(kw) || kw.includes(t)));
+    if (hits.length > 0) {
+      partials.push(i);
+      if (hits.length > bestScore) {
+        bestScore = hits.length;
+        best = { ...route, i, hits };
+      }
+    }
+  });
+
+  return { matched: best, partials: partials.filter(i => !best || i !== best.i) };
+}
+
+function extractKeywords(text) {
+  const tokens = tokenize(text);
+  // Pick words that are "interesting" (length ≥ 3, not stopwords)
+  const stop = new Set(["the","a","an","of","in","to","for","and","or","is","are","with","by","on","at","from","that","this","create","make","build","show","display","generate","using","get","set","put","add","give","list"]);
+  const kws = tokens.filter(t => t.length >= 3 && !stop.has(t));
+  // Unique, max 6
+  return [...new Set(kws)].slice(0,6);
+}
+
+function startRouting(text) {
+  if (animating) {
+    cancelAnimationFrame(animFrame);
+    animating = false;
+  }
+
+  requestText = text.trim();
+  if (!requestText) return;
+
+  const { matched, partials } = findRoute(requestText);
+  matchedRoute = matched ? { ...matched } : null;
+  partialMatches = partials;
+  extractedKeywords = extractKeywords(requestText);
+  highlightedKws = matched ? extractedKeywords.filter(kw =>
+    matched.keywords.some(mk => kw.includes(mk) || mk.includes(kw))
+  ) : [];
+
+  // Update routing table UI
+  ROUTES.forEach((route, i) => {
+    const entry = document.getElementById(`route-entry-${i}`);
+    const kwEl = document.getElementById(`route-kw-${i}`);
+    entry.classList.remove("active","partial");
+    if (matched && i === matched.i) {
+      entry.classList.add("active");
+      // Highlight matched keywords
+      kwEl.innerHTML = route.keywords.map(kw =>
+        matched.hits.includes(kw) ? `<span class="kw-match">${kw}</span>` : kw
+      ).join(", ");
+    } else if (partials.includes(i)) {
+      entry.classList.add("partial");
+      kwEl.innerHTML = route.keywords.join(", ");
+    } else {
+      kwEl.innerHTML = route.keywords.join(", ");
+    }
+    entry.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  });
+
+  // Update savings panel
+  if (matched) {
+    const saved = TOTAL_TOKENS - matched.tokens;
+    const pct = (saved / TOTAL_TOKENS) * 100;
+    document.getElementById("savings-bar").style.width = pct.toFixed(0) + "%";
+    document.getElementById("savings-label").textContent =
+      `Loaded 1 reference (~${matched.tokens} tokens) instead of all 7 (~${TOTAL_TOKENS} tokens)`;
+    document.getElementById("savings-detail").textContent =
+      `Saved ~${saved} tokens (${pct.toFixed(0)}% reduction) — routed to ${matched.file}`;
+  } else {
+    document.getElementById("savings-bar").style.width = "0%";
+    document.getElementById("savings-label").textContent = "No route matched";
+    document.getElementById("savings-detail").textContent = "Try a more specific visualization keyword";
+  }
+
+  // Start animation
+  animating = true;
+  phaseIdx = 0;
+  currentPhase = phases[0];
+  phaseStart = performance.now();
+  animFrame = requestAnimationFrame(draw);
+}
+
+// ── Controls ─────────────────────────────────────────────────────────────────
+document.getElementById("route-btn").addEventListener("click", () => {
+  const val = document.getElementById("request-input").value;
+  startRouting(val);
+});
+
+document.getElementById("request-input").addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    const val = document.getElementById("request-input").value;
+    startRouting(val);
+  }
+});
+
+document.querySelectorAll(".example-chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    const text = chip.dataset.text;
+    document.getElementById("request-input").value = text;
+    startRouting(text);
+  });
+});
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+drawIdle();
+</script>
+</body>
+</html>
