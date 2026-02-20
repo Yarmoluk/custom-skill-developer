@@ -105,6 +105,11 @@ nav:
     - Meta-Skill Routing Simulator: sims/routing-decision-tree/index.md
     - Quality Score Calculator: sims/quality-score-calculator/index.md
     - Cognify Ecosystem Graph: sims/cognify-ecosystem/index.md
+  - Analytics:
+    - Learning Graph: learning-graph/index.md
+    - Book Metrics: learning-graph/book-metrics.md
+    - Chapter Metrics: learning-graph/chapter-metrics.md
+    - Cognify Skills Scorecard: scorecard.md
   - Reference:
     - References: references.md
     - Glossary: glossary.md
