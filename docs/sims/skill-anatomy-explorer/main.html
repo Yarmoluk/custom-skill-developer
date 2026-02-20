@@ -313,9 +313,10 @@
       background: #191920;
       border: 1px solid #28282D;
       border-radius: 8px;
-      padding: 10px 12px;
+      padding: 10px 14px;
       position: relative;
-      overflow: hidden;
+      overflow: visible;
+      min-width: 0;
     }
 
     .tier-card::before {
@@ -332,11 +333,12 @@
     .tier-card.t3::before { background: #34C759; }
 
     .tier-card .tier-label {
-      font-size: 9px;
+      font-size: 8.5px;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       margin-bottom: 3px;
+      white-space: nowrap;
     }
 
     .tier-card.t1 .tier-label { color: #007AFF; }
@@ -344,15 +346,17 @@
     .tier-card.t3 .tier-label { color: #34C759; }
 
     .tier-card .tier-name {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       color: #F2F2F7;
       margin-bottom: 2px;
+      white-space: nowrap;
     }
 
     .tier-card .tier-detail {
-      font-size: 11px;
+      font-size: 10px;
       color: #636366;
+      line-height: 1.4;
     }
 
     .tier-card .tier-tokens {
@@ -370,8 +374,9 @@
       display: flex;
       align-items: center;
       color: #3A3A3C;
-      font-size: 14px;
+      font-size: 12px;
       flex-shrink: 0;
+      padding: 0 2px;
     }
 
     /* hint bar at very top */
