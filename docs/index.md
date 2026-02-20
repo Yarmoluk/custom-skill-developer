@@ -4,7 +4,7 @@
 
 # Custom Skill Developer Guide
 
-**The comprehensive guide to building Agent Skills for the [agentskills.io](https://agentskills.io) open standard.**
+**The comprehensive guide to building production Agent Skills — Claude Code-first, cross-platform compatible via the [agentskills.io](https://agentskills.io) open standard.**
 
 17 chapters. 55,000+ words. From your first skill to meta-skill routers, quality scoring systems, and multi-skill pipeline orchestration.
 

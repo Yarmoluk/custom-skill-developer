@@ -2,7 +2,7 @@
 
 Before you can build effective skills, you need a precise mental model of what they are and how they work. The word "skill" gets used loosely in AI conversations to mean anything from a prompt template to a fine-tuned model. In Claude Code, a skill has a specific, technical meaning — and that specificity is what makes skills powerful.
 
-This chapter defines skills from first principles, explains how they execute, and establishes the conceptual vocabulary you will use throughout this guide.
+This guide teaches skill development primarily for Claude Code, producing skills that are also compatible with the open [agentskills.io](https://agentskills.io) specification. This chapter defines skills from first principles, explains how they execute, and establishes the conceptual vocabulary you will use throughout this guide.
 
 ---
 
@@ -29,20 +29,7 @@ A skill is not:
 
 ## 1.2 The Standard Operating Procedure Analogy
 
-The clearest real-world analogy for a Claude Code skill is a **Standard Operating Procedure (SOP)** — the kind used in hospitals, manufacturing plants, and professional service firms.
-
-A hospital SOP for preparing a patient for surgery does not say "do surgery well." It says:
-
-1. Verify patient identity against two identifiers.
-2. Confirm the surgical site is marked.
-3. Administer the pre-op checklist in order.
-4. Document completion of each step before proceeding.
-
-The SOP achieves consistency because it specifies exactly what to do, in what order, with explicit checkpoints. Any qualified staff member following the SOP produces a predictable result. The quality of the outcome does not depend on which person executes it on a given day.
-
-Claude Code skills work the same way. The skill definition is the SOP. Claude is the staff member executing it. The numbered workflow steps ensure that each invocation follows the same sequence. Quality scoring rubrics ensure that each output meets the same baseline standard.
-
-This analogy has one important extension: Claude can interpret context and adapt within steps in ways that a human following a written SOP cannot. Claude brings reasoning capability to each step. The skill constrains the workflow; Claude applies judgment within it.
+The clearest real-world analogy for a Claude Code skill is a **Standard Operating Procedure (SOP)**. A hospital SOP does not say "do surgery well" — it specifies exactly what to do, in what order, with explicit checkpoints. Claude Code skills work the same way: the skill definition is the SOP, Claude is the executor, and the numbered steps ensure each invocation follows the same sequence. The key difference is that Claude brings reasoning capability to each step — the skill constrains the workflow; Claude applies judgment within it.
 
 ---
 
@@ -77,7 +64,7 @@ flowchart TD
 
 Several points in this diagram are worth examining closely.
 
-**Path resolution.** Claude Code looks for skills in two locations: `~/.claude/skills/` (global, available in all projects) and `.claude/skills/` (project-local, available only in the current project). Project-local skills take precedence over global skills with the same name. The skill directory must be named to match the skill's `name` field in the YAML frontmatter.
+**Path resolution.** Claude Code looks for skills in two locations: `~/.claude/skills/` (global, available in all projects) and `.claude/skills/` (project-local, available only in the current project). For cross-platform compatibility with the agentskills.io open standard, skills can also live at `.github/skills/my-skill/SKILL.md` in a repository, making them accessible to any compatible agent runtime. Project-local skills take precedence over global skills with the same name. The skill directory must be named to match the skill's `name` field in the YAML frontmatter.
 
 **YAML frontmatter parsing.** The frontmatter at the top of `SKILL.md` tells Claude Code that this file is a skill definition. Without valid frontmatter, the file will not be recognized as a skill. Claude Code uses the `description` field from the frontmatter when generating the list of available skills for its own reference.
 
@@ -105,16 +92,20 @@ description: >
   This description appears in Claude's system prompt as part of the skill registry.
   Write it from Claude's perspective: "Use this skill when..."
 license: MIT
-allowed-tools:
-  - read_file
-  - write_file
-  - execute_bash
+allowed-tools: Bash(git:*) Read Write
+compatibility:
+  claude-code: ">=1.0"
+metadata:
+  version: "1.0.0"
+  author: your-github-username
 ---
 ```
 
 The `name` field must match the directory name exactly. The `description` field is the most important — it is what appears in the skill registry that Claude sees at the start of every session. A poorly written description causes Claude to invoke the wrong skill or miss opportunities to use the right one.
 
-The `allowed-tools` field is optional and constrains which Claude Code tools the skill can use. Omitting it grants the skill access to all available tools. Specifying it provides an explicit contract about what the skill will and will not do.
+The `allowed-tools` field is optional and uses space-delimited format per the agentskills.io spec (e.g., `Bash(git:*) Read Write`). Omitting it grants the skill access to all available tools. Specifying it provides an explicit contract about what the skill will and will not do.
+
+The `compatibility` and `metadata` fields are also optional. `compatibility` specifies minimum runtime versions; `metadata` carries arbitrary key-value pairs like version numbers and author attribution. Both follow the agentskills.io open standard and are ignored by runtimes that do not recognize them.
 
 ### The Markdown Body
 
@@ -153,13 +144,11 @@ A sample invocation showing user input and expected behavior.
 What goes wrong and how to prevent it.
 ```
 
-This structure is a convention, not a hard requirement enforced by Claude Code. But following it consistently makes skills easier to read, debug, and extend — especially when you are working with skills written by others.
+The agentskills.io spec places no format restrictions on the body — any markdown structure is valid. This 10-section layout is a best practice convention, not a hard requirement enforced by Claude Code or the spec. Following it consistently makes skills easier to read, debug, and extend, especially when you are working with skills written by others.
 
 ---
 
 ## 1.5 Ad-Hoc Prompting vs. Skill-Based Execution
-
-The difference between asking Claude something directly and invoking a skill is not merely syntactic. It represents a fundamentally different relationship between the human and the AI.
 
 | Dimension | Ad-Hoc Prompting | Skill-Based Execution |
 |---|---|---|
@@ -174,7 +163,7 @@ The difference between asking Claude something directly and invoking a skill is 
 | **Documentation** | The prompt is the only record | SKILL.md is a complete specification and documentation artifact |
 | **Composability** | Prompts do not chain automatically | Skills can invoke other skills (meta-skills) |
 
-The practical implication is this: if you find yourself copying and pasting the same long prompt into Claude more than twice, you should probably write a skill. If the output of that task needs to meet a consistent standard every time, you definitely should.
+If you find yourself copying and pasting the same long prompt into Claude more than twice, you should probably write a skill. If the output needs to meet a consistent standard every time, you definitely should.
 
 ---
 
@@ -219,25 +208,14 @@ Specialized skills often push the boundaries of what skills can do: executing ba
 
 ---
 
-## 1.7 Why Skills Matter: The Four Arguments
+## 1.7 Why Skills Matter
 
-If you are considering investing time in building custom skills, these are the four strongest arguments for doing so.
+Skills are worth building when consistency, quality, and delegation matter:
 
-### Consistency
-
-When Claude generates content in an ad-hoc conversation, the output varies based on how you phrased the request, what was in the conversation history, and the stochastic nature of language model outputs. Skills reduce this variance by providing Claude with a precise, stable specification. The same skill invoked on Monday and Friday produces outputs that follow the same structure, meet the same standards, and complete the same steps — even if the actual content differs.
-
-### Quality
-
-Skills embed quality standards into the workflow itself. A skill that produces a glossary can instruct Claude to apply ISO 11179 standards to every definition: precise, concise, distinct, non-circular, free of business rules. An ad-hoc prompt can include similar instructions, but they are easy to forget, easy to omit, and not enforced at completion. Skills make quality criteria persistent and enforceable.
-
-### Reproducibility
-
-Skills make complex multi-step workflows reproducible. A workflow that once required careful manual orchestration — tell Claude to do step one, wait for output, review it, then tell Claude to do step two — can be encoded in a skill and re-executed consistently. This is particularly valuable for workflows you run repeatedly: generating chapters for new textbooks, analyzing new codebases, or producing reports on new datasets.
-
-### Delegation
-
-Skills change the nature of the collaboration between human and AI. Instead of supervising every step, you define the workflow once, specify the checkpoints where human input is required, and then let Claude execute. You review at the checkpoints and at the final output. This is a fundamentally more efficient use of your time than prompt-by-prompt supervision.
+- **Consistency** — the same skill invoked on Monday and Friday follows the same workflow and produces outputs with the same structure, regardless of how you phrase the request
+- **Quality** — quality criteria are embedded in the skill and enforced at completion, not left to memory or human review
+- **Reproducibility** — complex multi-step workflows that once required manual orchestration run reliably from a single command
+- **Delegation** — you define the checkpoints; Claude handles the steps between them
 
 ---
 
@@ -255,41 +233,7 @@ This guide teaches you to apply the same methodology to your own domains. The in
 
 ---
 
-## 1.9 Skills as a Design Artifact
-
-One aspect of skills that is easy to underestimate is their value as documentation. When you write a skill, you are not just encoding a workflow for Claude to execute — you are producing a specification of how a task should be done. That specification is readable by humans, versionable with git, and improvable over time.
-
-This matters for teams. When multiple people collaborate on the same workflows — writing chapters, analyzing data, generating reports — the skill definition becomes the shared agreement about what the workflow is and what the output should look like. Instead of each team member developing their own ad-hoc approach to the same task, the skill is the single source of truth.
-
-It also matters for personal productivity. The common pattern among experienced skill builders is that the act of writing a skill clarifies their thinking about the task itself. You cannot write a precise numbered workflow for a task you do not fully understand. The discipline of specifying every step, every conditional branch, every output format forces you to think through the task more rigorously than you would in the course of just doing it.
-
-This is not unique to AI systems. The same phenomenon occurs when engineers write design documents, when surgeons follow surgical protocols, and when pilots run preflight checklists. The process of creating the procedure produces insights about the procedure that would not otherwise surface.
-
-Consider this when deciding whether to write a skill. The investment is not just the time spent writing the markdown file. It also produces a cleaner, more explicit understanding of the workflow — which benefits you whether or not you end up invoking the skill frequently.
-
-### Version Control and Collaborative Skills
-
-Because skills are plain text files, they benefit from all the same version control practices you apply to code. A mature skill ecosystem keeps skills in a git repository, tracks changes with meaningful commit messages, and tags stable releases.
-
-The commit history of a skill definition is a record of how your understanding of a workflow evolved. Early versions tend to be too vague (steps that are really just headers for vague actions). Later versions become more precise as failure modes are discovered and fixed. Reading the commit history of a well-maintained skill is instructive: you can see which pitfalls were added after real failures, which quality criteria were tightened after substandard output was discovered, and which conditional branches were added to handle edge cases.
-
-For teams, pull requests against skill definitions serve the same purpose as pull requests against code: they create a forum for discussing whether the proposed workflow change is correct, complete, and consistent with the skill's purpose. This is a higher-quality process than the alternative — each person silently adjusting their prompts based on private experience without sharing the improvements.
-
-### When Not to Build a Skill
-
-Not every workflow benefits from being encoded as a skill. There are cases where ad-hoc prompting is the right approach.
-
-**One-time tasks.** If you need to do something once and never again, the investment in writing and testing a skill is not justified. Ad-hoc prompting is appropriate for unique, non-recurring tasks.
-
-**Exploratory work.** When you are still figuring out what the workflow should be — experimenting with different approaches, trying different output formats, discovering what the task actually requires — building a skill prematurely locks in design choices that may need to change. Do the exploratory work ad-hoc first. Write the skill once the workflow is understood.
-
-**Simple single-step tasks.** A skill's value comes from encoding multi-step workflows with quality gates and decision points. A task that has one step and produces one output with no quality concerns does not benefit from being a skill. "Summarize this document" is not a skill; it is a prompt.
-
-**Tasks with radically variable structure.** Some tasks are so context-dependent that no general workflow can be specified. If the right approach varies completely based on factors that cannot be anticipated in the skill definition, a skill will be too rigid to be useful. This is rare — most variation can be handled with conditional logic — but it does occur.
-
-The skill vs. ad-hoc decision comes down to this: if you are doing the same thing more than twice, if the quality of the output matters, and if the workflow has defined steps, a skill will pay back its construction cost quickly.
-
-## 1.10 What Comes Next
+## 1.9 What Comes Next
 
 You now have the conceptual foundation for the rest of this guide:
 
@@ -299,15 +243,17 @@ You now have the conceptual foundation for the rest of this guide:
 - They differ from ad-hoc prompting in persistence, consistency, quality, reusability, shareability, and composability
 - They fall into three categories: book generation, analysis, and specialized
 
-Chapter 2 maps the full skill ecosystem — the 30-skill limit, how skills are discovered, and the taxonomy of skill types from individual skills to meta-skill routers.
+Chapter 2 maps the full skill ecosystem — how skills are discovered, the taxonomy of skill types from individual skills to meta-skill routers, and Claude Code's 30-skill-per-session implementation limit (a Claude Code constraint, not a spec requirement).
 
 !!! tip "Before moving on"
     Think about a workflow you currently execute through ad-hoc Claude conversations. Does it have defined steps? Does the output need to meet a consistent standard? Does it produce files you use downstream? If yes to two or more of these, it is a strong candidate for a skill. Keep it in mind as you read the next two chapters.
 
 !!! example "Key terms from this chapter"
     - **Skill**: A markdown-defined autonomous workflow for Claude Code, stored as `SKILL.md`
-    - **YAML frontmatter**: Metadata block at the top of `SKILL.md` containing `name`, `description`, `license`, and `allowed-tools`
+    - **YAML frontmatter**: Metadata block at the top of `SKILL.md` containing `name`, `description`, `license`, `allowed-tools`, and optional `compatibility` and `metadata` fields
+    - **allowed-tools**: Space-delimited list of permitted tools per the agentskills.io spec (e.g., `Bash(git:*) Read Write`)
     - **Workflow steps**: Numbered sequential instructions in the skill body that Claude executes in order
     - **User dialog trigger**: A defined pause point where the skill prompts the user for input or approval
     - **Quality scoring**: A rubric embedded in the skill that Claude uses to evaluate its own output before completing
     - **Meta-skill**: A skill that routes to other skills based on context, consolidating multiple specialized skills into one entry point
+    - **agentskills.io**: Open standard for portable, cross-platform skill definitions; the format this guide produces

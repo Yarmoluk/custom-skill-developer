@@ -139,10 +139,6 @@ and produces alphabetically ordered entries with relevant examples.
 
 The overview is important for two reasons. First, it gives Claude immediate context for interpreting every subsequent instruction. If Step 4 says "generate a definition," Claude already knows from the overview that the definition must meet ISO 11179 standards — it does not need to be told again. Second, the overview is what a new user will read to determine whether this skill is appropriate for their current task.
 
-**What happens if the overview is missing?**
-
-Claude will proceed through the workflow steps without the broader context that the overview provides. This may cause it to interpret ambiguous instructions in unexpected ways. The behavior will appear correct until an edge case arises that the steps do not explicitly address.
-
 ---
 
 ### When to Use This Skill
@@ -176,7 +172,7 @@ The section also helps with skill discovery. When a user describes what they wan
 
 The workflow is the most important section of any SKILL.md file. It is a numbered sequence of steps that Claude executes in order. Each step is a heading (`### Step N: Step Name`) followed by detailed instructions.
 
-The standard numbering convention starts at Step 0, not Step 1. Step 0 is always environment setup.
+The standard numbering convention starts at Step 0, not Step 1. Step 0 is conventionally reserved for environment setup — this is a pattern from the McCreary skill methodology, not an agentskills.io spec requirement, but it is widely used because it separates configuration concerns cleanly from execution.
 
 ```markdown
 ## Workflow
@@ -257,11 +253,7 @@ This section documents every file the skill creates, organized by priority.
 
 The three-tier classification (Required / Recommended / Optional) serves a specific purpose. It tells Claude — and the user — which outputs are essential for success, which are valuable but skippable under time pressure, and which are extras that add value but do not block downstream steps.
 
-Without this section, Claude may produce different files on different runs depending on how it interprets the workflow steps. The Output Files Summary creates a contract: if the skill completes successfully, these files will exist.
-
-**What happens if this section is missing?**
-
-Claude will still produce files, but there is no explicit contract about what those files should be. Different runs may produce different outputs. Downstream skills that depend on specific file paths from this skill may break unpredictably.
+Without this section, Claude may produce different files on different runs depending on how it interprets the workflow steps. The Output Files Summary creates a contract: if the skill completes successfully, these files will exist. Downstream skills that depend on specific file paths from this skill can rely on that contract.
 
 ---
 
@@ -409,7 +401,7 @@ the output against a 100-point rubric before delivery.
 ## Workflow
 
 ### Step 0: Environment Setup
-# Step 0 is always environment setup. Never skip it.
+# Step 0 is a McCreary methodology convention: always environment setup, always first.
 
 Tell the user you are running README Generator version 1.2.
 
@@ -563,33 +555,38 @@ Good: `result = transform_csv("input.csv", delimiter=",")`
 
 ---
 
-## Why Every Section Is Non-Optional
+## Why These Sections Belong in Production Skills
 
-Consider what happens when you remove each section from a SKILL.md:
+The agentskills.io spec imposes no body format restrictions — these sections are conventions that produce reliable, high-quality skills. The spec's exact language: "There are no format restrictions. Write whatever helps agents perform the task effectively."
 
-| Missing Section | Consequence |
-|----------------|-------------|
-| Frontmatter | Skill cannot be loaded or invoked |
-| H1 Title | Claude has no named reference point; logs become ambiguous |
-| Overview | Ambiguous step instructions are interpreted inconsistently |
-| When to Use | Users invoke at wrong time in workflow; dependencies not met |
-| Workflow Steps | Skill has no instructions — produces arbitrary output |
-| Step 0 | Path variables undefined; filesystem operations fail |
-| Output Files Summary | No contract on deliverables; downstream skills break |
-| Example Session | No reference for expected interaction pattern |
-| Common Pitfalls | Known failure modes repeat across runs |
-| Quality Scoring | No self-validation; output quality is unpredictable |
+That said, each section exists because it prevents a specific class of failure:
 
-The sections are not decorative. Each one either makes Claude's behavior more consistent, protects against a known failure mode, or creates a contract that other parts of your system can depend on.
+| Section | What It Prevents |
+|---------|-----------------|
+| Frontmatter | Skill cannot be loaded or invoked without it — this is a spec requirement |
+| H1 Title | Without it, Claude has no named reference point; logs become ambiguous |
+| Overview | Without context, ambiguous step instructions are interpreted inconsistently |
+| When to Use | Without it, users invoke at wrong time in workflow; dependencies not met |
+| Workflow Steps | Without instructions, the skill produces arbitrary output — also a spec requirement |
+| Step 0 | Without it, path variables are undefined; filesystem operations fail |
+| Output Files Summary | Without a contract on deliverables, downstream skills break unpredictably |
+| Example Session | Without a reference, expected interaction patterns drift across runs |
+| Common Pitfalls | Without explicit anti-patterns, known failure modes repeat |
+| Quality Scoring | Without self-validation, output quality is unpredictable |
+
+The sections are not decorative. The spec gives you total freedom over the body — these conventions are how experienced skill authors use that freedom to produce consistent, reproducible behavior.
 
 ---
 
 ## The Directory Structure for a Skill
 
-A SKILL.md file lives inside a directory that may contain supporting files:
+A SKILL.md file lives inside a directory that may contain supporting files. Skills can be installed in two locations:
+
+- `~/.claude/skills/` — user-level installation, available across all projects on the machine
+- `.github/skills/` — repository-level installation, committed to the project and portable across teams
 
 ```
-~/.claude/skills/
+~/.claude/skills/          # or .github/skills/ for repo-level installs
 └── my-skill/
     ├── SKILL.md              ← Required. The skill definition.
     ├── assets/
@@ -610,9 +607,10 @@ The SKILL.md file is the only required file. Supporting assets extend the skill'
 - Every SKILL.md contains two logical sections: YAML frontmatter and a markdown body
 - The frontmatter is Claude Code's configuration layer — name, description, license, allowed-tools
 - The markdown body is Claude's instruction set — every section shapes how it interprets and executes the workflow
-- Step 0 is always environment setup and always the first workflow step
+- Step 0 is a McCreary methodology convention for environment setup — widely used but not an agentskills.io spec requirement
 - The Output Files Summary creates a binding contract on what the skill produces
 - Quality scoring sections transform the skill from a generator into a self-validating system
-- No section is optional — each one prevents a specific class of failure
+- The agentskills.io spec imposes no body format restrictions — the 10-section convention is best practice, not a requirement
+- Skills install to `~/.claude/skills/` (user-level) or `.github/skills/` (repo-level, portable across teams)
 
 In Chapter 5, we examine the YAML frontmatter in depth, including how the `description` field becomes part of Claude's system prompt and how `allowed-tools` glob patterns control execution permissions.

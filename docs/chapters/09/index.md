@@ -24,7 +24,7 @@ In a typical Claude Code session with a complex project, the context might look 
 | Conversation history | Grows linearly |
 | Claude's output so far | Grows linearly |
 
-The context window for Claude Sonnet is 200,000 tokens. That sounds large until you realize a multi-hour deep work session with file reads, iterations, and conversation history can consume 80,000-150,000 tokens. A bloated skill definition is dead weight from the moment the session starts.
+The context window for Claude Sonnet is 200,000 tokens (context windows vary by model and platform — Claude Sonnet supports 200K tokens, but other models or deployment environments may differ). That sounds large until you realize a multi-hour deep work session with file reads, iterations, and conversation history can consume 80,000-150,000 tokens. A bloated skill definition is dead weight from the moment the session starts.
 
 ### The Cascade Effect
 
@@ -55,9 +55,11 @@ Tiered retrieval is the organizing principle of token-efficient skill design. In
 
 ### Tier 0: MCP Server Metadata (0 tokens)
 
+> **Note:** This tier describes how skill discovery works in Claude Code specifically. Other platforms and environments may discover or surface skills differently — for example, through tool registries, API manifests, or explicit user configuration. The zero-token-at-discovery principle is a Claude Code implementation detail, not part of the agentskills.io skill spec itself.
+
 The MCP (Model Context Protocol) server maintains a registry of installed skills. Claude can query this registry to get a skill's name, description, and invocation syntax without reading the skill file itself.
 
-A skill's MCP metadata — its name, one-line description, and invocation signature — is retrieved from the server at essentially zero token cost to the context window. This is how skill discovery works: Claude can list available skills and describe them without loading any of them.
+A skill's MCP metadata — its name, one-line description, and invocation signature — is retrieved from the server at essentially zero token cost to the context window. This is how skill discovery works in Claude Code: Claude can list available skills and describe them without loading any of them.
 
 Design implication: your one-line description in the YAML frontmatter needs to be precise enough that a user can select the right skill from a list. This description lives at Tier 0. It needs to work without any supporting context.
 
@@ -387,7 +389,7 @@ Run this checklist on every skill before deploying it:
 
 Token efficiency is an engineering discipline, not an afterthought. The key principles:
 
-**Tiered retrieval** classifies information into tiers by when it is needed: MCP metadata (0 tokens), SKILL.md (loaded on invoke), reference guides (loaded on demand), project files (loaded when needed by the workflow).
+**Tiered retrieval** classifies information into tiers by when it is needed: discovery metadata (0 tokens, surfaced via MCP in Claude Code or equivalent mechanisms on other platforms), SKILL.md (loaded on invoke), reference guides (loaded on demand), project files (loaded when needed by the workflow). Note that MCP is a separate protocol that complements the skill system — it handles discovery and invocation routing in Claude Code, but is not part of the agentskills.io skill spec itself.
 
 **Lazy loading** defers reference guide reads until routing resolves, and defers project file reads until the specific workflow step that requires them.
 
